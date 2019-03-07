@@ -1,0 +1,9 @@
+diff a/GitTutorial/GitTutorial/GitTutorial.cpp b/GitTutorial/GitTutorial/GitTutorial.cpp	(rejected hunks)
+@@ -0,5 +0,6 @@
+ void Guess(int number)
+ {
+ }
++int main(array<System::String^>^ args)
+ {
+ }
+\ No newline at end of file
