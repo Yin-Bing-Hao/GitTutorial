@@ -91,6 +91,7 @@ namespace game_framework {
 		int map[COL][ROW];
 		const int X, Y;
 		const int MW, MH;
+		
 	};
 
 	class CGameStateRun : public CGameState {

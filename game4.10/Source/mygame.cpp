@@ -408,69 +408,48 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
     //
 }
-
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     const char KEY_LEFT  = 0x25; // keyboard左箭頭
     const char KEY_UP    = 0x26; // keyboard上箭頭
     const char KEY_RIGHT = 0x27; // keyboard右箭頭
     const char KEY_DOWN  = 0x28; // keyboard下箭頭
-	/*if (isMovingLeft && x >= index_x * 20)
-		x -= STEP_SIZE;
+		if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
+		{
 
-	if (isMovingRight && this->GetX2() <= (index_x + 1) * 20)
-		x += STEP_SIZE;
+				map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
+				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+				people.MoveLeftIndex();
 
-	if (isMovingUp && y >= index_y * 20)
-		y -= STEP_SIZE;
 
-	if (isMovingDown && this->GetY2() <= (index_y + 1) * 20)
-		y += STEP_SIZE;
-		*/
-    if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
-    {
-        
-        people.SetMovingLeft(true);
-        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1 && people.GetX1() < people.GetIndexX()*20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveLeftIndex();
-        }
-    }
+		}
 
-    if (nChar == KEY_RIGHT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
-    {
-        people.SetMovingRight(true);
-        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1 && people.GetX2() > (people.GetIndexX() + 1) * 20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveRightIndex();
-        }
-    }
+		if (nChar == KEY_RIGHT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
+		{
 
-    if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
-    {
-        people.SetMovingUp(true);
-        if(map.GetIndexValue(people.GetIndexY() -1, people.GetIndexX()) != 1 && people.GetY1() < people.GetIndexY() * 20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveUpIndex();
-        }
-    }
+				map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
+				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+				people.MoveRightIndex();
 
-    if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
-    {
-        people.SetMovingDown(true);
-        if(map.GetIndexValue(people.GetIndexY()+1, people.GetIndexX()) != 1 && people.GetY2() > (people.GetIndexY() + 1) * 20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveDownIndex();
-        }
-    }
+		}
+
+		if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY()-1, people.GetIndexX()) != 1)
+		{
+				map.SetIndexValue(people.GetIndexY()-1, people.GetIndexX(), 2);
+				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+				people.MoveUpIndex();
+
+		}
+
+		if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY()+1, people.GetIndexX()) != 1)
+		{
+				map.SetIndexValue(people.GetIndexY()+1, people.GetIndexX(), 2);
+				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+				people.MoveDownIndex();
+				
+		}
+		
+	//map.OnMove(people, nChar);
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -479,6 +458,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_UP    = 0x26; // keyboard上箭頭
     const char KEY_RIGHT = 0x27; // keyboard右箭頭
     const char KEY_DOWN  = 0x28; // keyboard下箭頭
+
 
     if (nChar == KEY_LEFT)
         people.SetMovingLeft(false);
@@ -491,6 +471,8 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
     if (nChar == KEY_DOWN)
         people.SetMovingDown(false);
+
+	
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作

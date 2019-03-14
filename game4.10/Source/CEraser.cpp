@@ -52,25 +52,30 @@ void CEraser::LoadBitmap()
 {
     animation.AddBitmap(IDB_PEOPLE, RGB(255, 255, 255));
 }
-
 void CEraser::OnMove()
 {
     const int STEP_SIZE = 4;
-    int count = 0;
     animation.OnMove();
 
-    if (isMovingLeft && x >= index_x * 20)
+    if (this->GetX1() >= index_x * 20)
+    {
         x -= STEP_SIZE;
+    }
 
-    if (isMovingRight && this->GetX2() <= (index_x + 1) * 20)
+    if (this->GetX2() <= (index_x+1) * 20)
+    {
         x += STEP_SIZE;
+    }
 
-    if (isMovingUp && y >= index_y * 20)
+    if (this->GetY1() >= index_y * 20)
+    {
         y -= STEP_SIZE;
+    }
 
-    if (isMovingDown && this->GetY2() <= (index_y + 1) * 20)
+    if (this->GetY2() <= (index_y + 1) * 20)
+    {
         y += STEP_SIZE;
-
+    }
     //x:({x}), y:({y}),index_x:({index_x}),index_y({index_y})
 }
 int CEraser::GetIndexX()
