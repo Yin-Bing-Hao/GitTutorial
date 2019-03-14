@@ -321,7 +321,7 @@ void CGameStateRun::OnBeginState()
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
     hits_left.SetInteger(HITS_LEFT);					// 指定剩下的撞擊數
     hits_left.SetTopLeft(HITS_LEFT_X, HITS_LEFT_Y);		// 指定剩下撞擊數的座標
-    CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
+    //CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
 }
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
@@ -358,11 +358,11 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
             //
             // 若剩餘碰撞次數為0，則跳到Game Over狀態
             //
-            if (hits_left.GetInteger() <= 0)
+            /*if (hits_left.GetInteger() <= 0)
             {
                 CAudio::Instance()->Stop(AUDIO_NTUT);	// 停止 MIDI
                 GotoGameState(GAME_STATE_OVER);
-            }
+            }*/
         }
 
     //
@@ -403,7 +403,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     corner.ShowBitmap(background);							// 將corner貼到background
     bball.LoadBitmap();										// 載入圖形
     hits_left.LoadBitmap();
-    CAudio::Instance()->Load(AUDIO_NTUT,  "sounds\\song.mid");	// 載入編號2的聲音ntut.mid
+    //CAudio::Instance()->Load(AUDIO_NTUT,  "sounds\\song.mid");	// 載入編號2的聲音ntut.mid
     //
     // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
     //
@@ -415,12 +415,23 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_UP    = 0x26; // keyboard上箭頭
     const char KEY_RIGHT = 0x27; // keyboard右箭頭
     const char KEY_DOWN  = 0x28; // keyboard下箭頭
+	/*if (isMovingLeft && x >= index_x * 20)
+		x -= STEP_SIZE;
 
+	if (isMovingRight && this->GetX2() <= (index_x + 1) * 20)
+		x += STEP_SIZE;
+
+	if (isMovingUp && y >= index_y * 20)
+		y -= STEP_SIZE;
+
+	if (isMovingDown && this->GetY2() <= (index_y + 1) * 20)
+		y += STEP_SIZE;
+		*/
     if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
     {
-        if (people.GetX1() >= people.GetIndexX() * 20)
-            people.SetMovingLeft(true);
-        else
+        
+        people.SetMovingLeft(true);
+        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1 && people.GetX1() < people.GetIndexX()*20)
         {
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
@@ -430,9 +441,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
     if (nChar == KEY_RIGHT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
     {
-        if (people.GetX2() <= (people.GetIndexX() + 1) * 20)
-            people.SetMovingRight(true);
-        else
+        people.SetMovingRight(true);
+        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1 && people.GetX2() > (people.GetIndexX() + 1) * 20)
         {
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
@@ -442,9 +452,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
     if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
     {
-        if (people.GetY1() >= people.GetIndexY() * 20)
-            people.SetMovingUp(true);
-        else
+        people.SetMovingUp(true);
+        if(map.GetIndexValue(people.GetIndexY() -1, people.GetIndexX()) != 1 && people.GetY1() < people.GetIndexY() * 20)
         {
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
@@ -454,9 +463,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
     if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
     {
-        if (people.GetY2() <= (people.GetIndexY() + 1) * 20)
-            people.SetMovingDown(true);
-        else
+        people.SetMovingDown(true);
+        if(map.GetIndexValue(people.GetIndexY()+1, people.GetIndexX()) != 1 && people.GetY2() > (people.GetIndexY() + 1) * 20)
         {
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
             map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
