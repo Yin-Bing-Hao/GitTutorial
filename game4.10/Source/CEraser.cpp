@@ -50,32 +50,29 @@ void CEraser::Initialize()
 
 void CEraser::LoadBitmap()
 {
+	animation2.AddBitmap(IDB_PEOPLE2, RGB(255, 255, 255));
     animation.AddBitmap(IDB_PEOPLE, RGB(255, 255, 255));
 }
+
 void CEraser::OnMove()
 {
     const int STEP_SIZE = 4;
+    int count = 0;
     animation.OnMove();
+	
 
-    if (this->GetX1() >= index_x * 20)
-    {
+    if (isMovingLeft && x >= index_x * 20)
         x -= STEP_SIZE;
-    }
 
-    if (this->GetX2() <= (index_x+1) * 20)
-    {
+    if (isMovingRight && this->GetX2() <= (index_x + 1) * 20)
         x += STEP_SIZE;
-    }
 
-    if (this->GetY1() >= index_y * 20)
-    {
+    if (isMovingUp && y >= index_y * 20)
         y -= STEP_SIZE;
-    }
 
-    if (this->GetY2() <= (index_y + 1) * 20)
-    {
+    if (isMovingDown && this->GetY2() <= (index_y + 1) * 20)
         y += STEP_SIZE;
-    }
+
     //x:({x}), y:({y}),index_x:({index_x}),index_y({index_y})
 }
 int CEraser::GetIndexX()
@@ -122,15 +119,34 @@ void CEraser::SetMovingUp(bool flag)
     isMovingUp = flag;
 }
 
+void CEraser::SetPeopleChioce(bool flag)
+{
+	isChoice = flag;
+}
+
 void CEraser::SetXY(int nx, int ny)
 {
     x = nx;
     y = ny;
 }
 
+bool CEraser::isPeopleChoice()
+{
+	if (isChoice)
+		return true;
+	else
+		return false;
+}
+
 void CEraser::OnShow()
 {
-    animation.SetTopLeft(x, y);
-    animation.OnShow();
+	if (isChoice) {
+		animation2.SetTopLeft(x, y);
+		animation2.OnShow();
+	}
+	else {
+		animation.SetTopLeft(x, y);
+		animation.OnShow();
+	}
 }
 }

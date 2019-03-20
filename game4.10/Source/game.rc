@@ -118,6 +118,10 @@ IDB_RIGHTUPCORNER       BITMAP                  "..\\res\\bmp00005.bmp"
 
 IDB_PEOPLE              BITMAP                  "..\\res\\bmp00006.bmp"
 
+IDB_MOUSE               BITMAP                  "..\\res\\bitmap4.bmp"
+
+IDB_PEOPLE2             BITMAP                  "..\\res\\bmp00007.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

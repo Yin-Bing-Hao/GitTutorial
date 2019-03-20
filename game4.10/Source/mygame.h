@@ -86,12 +86,18 @@ namespace game_framework {
 		void OnShow();
 		int GetIndexValue(int, int);
 		void SetIndexValue(int, int, int);
+		void OnMove();
+		void OnKeyDown(UINT);
+		void RandomBouncingBall();
+		void InitializeBouncingBall(int, int, int);
+		~CGameMap();
 	protected:
 		CMovingBitmap RightUpCorner,LeftUpCorner,RightDownCorner,LeftDownCorner,Horizonal,Vertical,wall;
 		int map[COL][ROW];
 		const int X, Y;
 		const int MW, MH;
-		
+		CBouncingBall* bballs;
+		int random_num;
 	};
 
 	class CGameStateRun : public CGameState {
@@ -107,6 +113,7 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
+		void GetMouse(UINT nFlags, CPoint point);
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面

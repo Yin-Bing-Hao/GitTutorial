@@ -51,9 +51,13 @@
  *      1. Demo MP3 support: use lake.mp3 to replace lake.wav.
 */
 
+
 #include "stdafx.h"
 #include "Resource.h"
+#include "MainFrm.h"
+#include "gameDoc.h"
 #include <mmsystem.h>
+#include <windows.h>
 #include <ddraw.h>
 #include "audio.h"
 #include "gamelib.h"
@@ -197,47 +201,36 @@ void CGameStateOver::OnShow()
 
 CGameMap::CGameMap() : X(0), Y(0), MW(20), MH(20)
 {
-    int map_init[COL][ROW];
+	random_num = 0;
+	int map_init[COL][ROW] = 
+	{
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+		
+	};
 
-    for (int i = 0; i < 24; i++)
-    {
-        for (int j = 0; j < 32; j++)
-        {
-            map_init[i][j] = 1;
-        }
-    }
-
-    for (int i = 1; i < 30; i++)
-    {
-        map_init[1][i] = 0;
-        map_init[2][i] = 0;
-        map_init[21][i] = 0;
-        map_init[22][i] = 0;
-    }
-
-    for (int i = 1; i < 23; i++)
-    {
-        map_init[i][1] = 0;
-        map_init[i][2] = 0;
-        map_init[i][3] = 0;
-        map_init[i][30] = 0;
-        map_init[i][29] = 0;
-        map_init[i][28] = 0;
-    }
-
-    for (int i = 4; i < 20; i++)
-    {
-        for (int j = 5; j < 27; j++)
-        {
-            if (j != 15)
-            {
-                map_init[i][j] = 0;
-            }
-        }
-    }
-
-    map_init[20][24] = 0;
-    map_init[18][15] = 0;
 
     for (int i = 0; i < 24; i++)
     {
@@ -249,6 +242,7 @@ CGameMap::CGameMap() : X(0), Y(0), MW(20), MH(20)
 
     map[1][1] = 2;  //出生點
 }
+
 void CGameMap::LoadBitmap()
 {
     Horizonal.LoadBitmap("Bitmaps/horizonal.bmp", RGB(255, 255, 255));
@@ -275,6 +269,10 @@ void CGameMap::OnShow()
             }
         }
     }
+	for (int i = 0; i < random_num; i++) {
+		bballs[i].OnShow();
+	}
+	
 }
 int CGameMap::GetIndexValue(int x, int y)
 {
@@ -284,6 +282,48 @@ void CGameMap::SetIndexValue(int x, int y, int value)
 {
     map[x][y] = value;
 }
+
+void CGameMap::InitializeBouncingBall(int ini_index, int row, int col) {
+	const int VELOCITY = 10;
+	const int BALL_PLC_HEIGHT = 15;
+	int floor = Y + (row + 1)*MH - BALL_PLC_HEIGHT;
+
+	bballs[ini_index].LoadBitmap();
+	bballs[ini_index].SetFloor(floor);
+	bballs[ini_index].SetVelocity(VELOCITY + col);
+	bballs[ini_index].SetXY(X + col * MW + MW / 2, floor);
+}
+
+void CGameMap::RandomBouncingBall() {
+	const int MAX_RAND_NUM = 10;
+	random_num = (rand() % MAX_RAND_NUM) + 1;
+
+	bballs = new CBouncingBall[random_num];
+	int ini_index = 0;
+	for (int row = 0; row < 4; row++) {
+		for(int col = 0; col < 5; col++) {
+			if (map[row][col] != 0 && ini_index < random_num) {
+				InitializeBouncingBall(ini_index, row, col);
+				ini_index++;
+			}
+		}
+	}
+}
+
+void CGameMap::OnKeyDown(UINT nChar) {
+	const int KEY_SPACE = 0x20;
+	if (nChar == KEY_SPACE)
+		RandomBouncingBall();
+}
+
+void CGameMap::OnMove() {
+	for (int i = 0; i < random_num; i++) {
+		bballs[i].OnMove();
+	}
+}
+
+CGameMap::~CGameMap() {}
+
 
 CGameStateRun::CGameStateRun(CGame* g)
     : CGameState(g), NUMBALLS(28)
@@ -345,6 +385,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
     // 移動擦子
     //
     people.OnMove();
+	map.OnMove();
 
     //
     // 判斷擦子是否碰到球
@@ -385,7 +426,6 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
     for (i = 0; i < NUMBALLS; i++)
         ball[i].LoadBitmap();								// 載入第i個球的圖形
-
     people.LoadBitmap();
     background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
     map.LoadBitmap();
@@ -408,48 +448,70 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
     //
 }
+
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     const char KEY_LEFT  = 0x25; // keyboard左箭頭
     const char KEY_UP    = 0x26; // keyboard上箭頭
     const char KEY_RIGHT = 0x27; // keyboard右箭頭
     const char KEY_DOWN  = 0x28; // keyboard下箭頭
-		if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
-		{
+	map.OnKeyDown(nChar);
+	/*if (isMovingLeft && x >= index_x * 20)
+		x -= STEP_SIZE;
 
-				map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
-				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-				people.MoveLeftIndex();
+	if (isMovingRight && this->GetX2() <= (index_x + 1) * 20)
+		x += STEP_SIZE;
 
+	if (isMovingUp && y >= index_y * 20)
+		y -= STEP_SIZE;
 
-		}
+	if (isMovingDown && this->GetY2() <= (index_y + 1) * 20)
+		y += STEP_SIZE;
+		*/
+    if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
+    {
+        
+        people.SetMovingLeft(true);
+        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1 && people.GetX1() < people.GetIndexX()*20)
+        {
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+            people.MoveLeftIndex();
+        }
+    }
 
-		if (nChar == KEY_RIGHT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
-		{
+    if (nChar == KEY_RIGHT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
+    {
+        people.SetMovingRight(true);
+        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1 && people.GetX2() > (people.GetIndexX() + 1) * 20)
+        {
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+            people.MoveRightIndex();
+        }
+    }
 
-				map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
-				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-				people.MoveRightIndex();
+    if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
+    {
+        people.SetMovingUp(true);
+        if(map.GetIndexValue(people.GetIndexY() -1, people.GetIndexX()) != 1 && people.GetY1() < people.GetIndexY() * 20)
+        {
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+            people.MoveUpIndex();
+        }
+    }
 
-		}
-
-		if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY()-1, people.GetIndexX()) != 1)
-		{
-				map.SetIndexValue(people.GetIndexY()-1, people.GetIndexX(), 2);
-				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-				people.MoveUpIndex();
-
-		}
-
-		if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY()+1, people.GetIndexX()) != 1)
-		{
-				map.SetIndexValue(people.GetIndexY()+1, people.GetIndexX(), 2);
-				map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-				people.MoveDownIndex();
-				
-		}
-		
-	//map.OnMove(people, nChar);
+    if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
+    {
+        people.SetMovingDown(true);
+        if(map.GetIndexValue(people.GetIndexY()+1, people.GetIndexX()) != 1 && people.GetY2() > (people.GetIndexY() + 1) * 20)
+        {
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
+            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+            people.MoveDownIndex();
+        }
+    }
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -458,7 +520,6 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_UP    = 0x26; // keyboard上箭頭
     const char KEY_RIGHT = 0x27; // keyboard右箭頭
     const char KEY_DOWN  = 0x28; // keyboard下箭頭
-
 
     if (nChar == KEY_LEFT)
         people.SetMovingLeft(false);
@@ -471,13 +532,21 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
     if (nChar == KEY_DOWN)
         people.SetMovingDown(false);
-
-	
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
-    people.SetMovingLeft(true);
+	int x = point.x;
+	int y = point.y;
+	if (x > people.GetX1() && x < people.GetX2() && y>people.GetY1() && y < people.GetY2()) {
+		people.SetPeopleChioce(true);
+	}
+	else if (people.isPeopleChoice() == true) {
+		people.SetXY(x, y);
+		people.SetPeopleChioce(false);
+	}
+	
+	
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
@@ -487,7 +556,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
-    // 沒事。如果需要處理滑鼠移動的話，寫code在這裡
+	TRACE("%d,%d\n", point.x, point.y);
 }
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
@@ -498,6 +567,11 @@ void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
     people.SetMovingRight(false);
+}
+
+void CGameStateRun::GetMouse(UINT nFlags, CPoint point)
+{
+
 }
 
 void CGameStateRun::OnShow()
@@ -514,6 +588,7 @@ void CGameStateRun::OnShow()
     back.ShowBitmap();
     map.OnShow();
     people.OnShow();
+	SetCursor(LoadCursor(NULL, IDC_CROSS));
     corner.SetTopLeft(0, 0);
     corner.ShowBitmap();
     corner.SetTopLeft(SIZE_X - corner.Width(), SIZE_Y - corner.Height());
