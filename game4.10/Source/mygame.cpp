@@ -61,10 +61,13 @@
 #include <ddraw.h>
 #include "audio.h"
 #include "gamelib.h"
+#include <vector>
 #include "mygame.h"
 
 #define ROW 32
 #define COL 24
+#define mygame_DEBUG  1
+
 
 namespace game_framework
 {
@@ -395,7 +398,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
         {
             ball[i].SetIsAlive(false);
             hits_left.Add(-1);
-
             //
             // 若剩餘碰撞次數為0，則跳到Game Over狀態
             //
@@ -455,6 +457,40 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_UP    = 0x26; // keyboard上箭頭
     const char KEY_RIGHT = 0x27; // keyboard右箭頭
     const char KEY_DOWN  = 0x28; // keyboard下箭頭
+<<<<<<< HEAD
+
+    if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
+    {
+		
+        map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
+        map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+        people.MoveLeftIndex();
+    }
+
+    if (nChar == KEY_RIGHT)
+    {
+		people.SetMovingRight(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1);
+        map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
+        map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+        people.MoveRightIndex();
+    }
+
+    if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY() - 1, people.GetIndexX()) != 1)
+    {
+        map.SetIndexValue(people.GetIndexY() - 1, people.GetIndexX(), 2);
+        map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+        people.MoveUpIndex();
+    }
+
+    if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY() + 1, people.GetIndexX()) != 1)
+    {
+        map.SetIndexValue(people.GetIndexY() + 1, people.GetIndexX(), 2);
+        map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
+        people.MoveDownIndex();
+    }
+
+    //map.OnMove(people, nChar);
+=======
 	map.OnKeyDown(nChar);
 	/*if (isMovingLeft && x >= index_x * 20)
 		x -= STEP_SIZE;
@@ -512,6 +548,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
             people.MoveDownIndex();
         }
     }
+>>>>>>> c8bd7f0bdaa1728f5c51dab00eaf9311ddd2ed98
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -536,6 +573,20 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
+<<<<<<< HEAD
+	static int mouse_x, mouse_y;
+	TRACE("Mouse Left button down\n");
+	mouse_x = point.x / 20;
+	mouse_y = point.y / 20;
+	if (people.GetIndexX() == mouse_x && people.GetIndexY() == mouse_y)
+	{
+		people.SetChoosen(true);
+			
+/*#ifdef DEBUG == 1
+		TRACE("people got choosen\n");
+#endif // DEBUG=1*/
+	}
+=======
 	int x = point.x;
 	int y = point.y;
 	if (x > people.GetX1() && x < people.GetX2() && y>people.GetY1() && y < people.GetY2()) {
@@ -547,26 +598,47 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 	}
 	
 	
+>>>>>>> c8bd7f0bdaa1728f5c51dab00eaf9311ddd2ed98
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
-    people.SetMovingLeft(false);
+	TRACE("Mouse Left button up\n");
+	people.SetChoosen(false);
+	people.ShowRoadLine();
+	//CDC *pDC = CDDraw::GetBackCDC();
+	//CBrush *pb, b(RGB(0, 255, 0));
+	//pb = pDC->SelectObject(&b);
+	//pDC->MoveTo(0, 0);
+	//pDC->LineTo(300, 300);
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
+<<<<<<< HEAD
+	static int mouse_x, mouse_y;
+	//TRACE("Mouse Left button down\n");
+	mouse_x = point.x / 20;
+	mouse_y = point.y / 20;
+    // 沒事。如果需要處理滑鼠移動的話，寫code在這裡
+	if (people.GetChoosen())
+	{
+		people.SetRoadLine(mouse_x, mouse_y);
+	}
+=======
 	TRACE("%d,%d\n", point.x, point.y);
+>>>>>>> c8bd7f0bdaa1728f5c51dab00eaf9311ddd2ed98
 }
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
-    people.SetMovingRight(true);
+	TRACE("Mouse Right button down\n");
 }
 
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
-    people.SetMovingRight(false);
+	TRACE("Mouse Right button up\n");
+    //people.SetMovingRight(false);
 }
 
 void CGameStateRun::GetMouse(UINT nFlags, CPoint point)
