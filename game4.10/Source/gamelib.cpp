@@ -454,9 +454,7 @@ void CGameState::ShowInitProgress(int percent)
 
 	CBrush *pb, b(RGB(0,255,0));				// 畫綠色 progress框
 	pb = pDC->SelectObject(&b);
-	//pDC->Rectangle(x1,y1,x2,y2);	
-	
-	
+	pDC->Rectangle(x1,y1,x2,y2);				
 
 	CBrush b1(DEFAULT_BG_COLOR);				// 畫黑色 progrss中心
 	pDC->SelectObject(&b1);
@@ -465,9 +463,6 @@ void CGameState::ShowInitProgress(int percent)
 	CBrush b2(RGB(255,255,0));					// 畫黃色 progrss進度
 	pDC->SelectObject(&b2);
 	pDC->Rectangle(progress_x1,progress_y1,progress_x2,progress_y2);
-	//pDC->MoveTo(0, 0);
-	//pDC->LineTo(x1, y1);
-
 
 	pDC->SelectObject(pp);						// 釋放 pen
 	pDC->SelectObject(pb);						// 釋放 brush

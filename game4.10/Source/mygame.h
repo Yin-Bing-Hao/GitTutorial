@@ -42,9 +42,6 @@
 #include "CBall.h"
 #include "CBouncingBall.h"
 
-#define ROW 32
-#define COL 24
-
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
@@ -79,27 +76,6 @@ namespace game_framework {
 	// 每個Member function的Implementation都要弄懂
 	/////////////////////////////////////////////////////////////////////////////
 
-	class CGameMap {
-	public:
-		CGameMap();
-		void LoadBitmap();
-		void OnShow();
-		int GetIndexValue(int, int);
-		void SetIndexValue(int, int, int);
-		void OnMove();
-		void OnKeyDown(UINT);
-		void RandomBouncingBall();
-		void InitializeBouncingBall(int, int, int);
-		~CGameMap();
-	protected:
-		CMovingBitmap RightUpCorner,LeftUpCorner,RightDownCorner,LeftDownCorner,Horizonal,Vertical,wall;
-		int map[COL][ROW];
-		const int X, Y;
-		const int MW, MH;
-		CBouncingBall* bballs;
-		int random_num;
-	};
-
 	class CGameStateRun : public CGameState {
 	public:
 		CGameStateRun(CGame *g);
@@ -113,19 +89,16 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
-		void GetMouse(UINT nFlags, CPoint point);
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
-		CGameMap		map;
-		CMovingBitmap   back;
 		const int		NUMBALLS;	// 球的總數
 		CMovingBitmap	background;	// 背景圖
 		CMovingBitmap	help;		// 說明圖
 		CBall			*ball;		// 球的陣列
 		CMovingBitmap	corner;		// 角落圖
-		CEraser			people;		// 拍子
+		CEraser			eraser;		// 拍子
 		CInteger		hits_left;	// 剩下的撞擊數
 		CBouncingBall   bball;		// 反覆彈跳的球
 	};
