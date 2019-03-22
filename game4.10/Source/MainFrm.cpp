@@ -29,7 +29,6 @@
 
 #include "stdafx.h"
 #include "game.h"
-
 #include "MainFrm.h"
 #include <mmsystem.h>
 #include <ddraw.h>
