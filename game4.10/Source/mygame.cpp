@@ -367,27 +367,68 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
-    //
-    // 如果希望修改cursor的樣式，則將下面程式的commment取消即可
-    //
-    // SetCursor(AfxGetApp()->LoadCursor(IDC_GAMECURSOR));
-    //
-    // 移動背景圖的座標
-    //
-    //
-    // 移動球
-    //
-    int i;
+	//
+	// 如果希望修改cursor的樣式，則將下面程式的commment取消即可
+	//
+	// SetCursor(AfxGetApp()->LoadCursor(IDC_GAMECURSOR));
+	//
+	// 移動背景圖的座標
+	//
+	//
+	// 移動球
+	//
+	int i;
+	vector<int> ptr = people.GetRoadLine();
+	for (i = 0; i < NUMBALLS; i++){
+		ball[i].OnMove();
+	}
+	if (!ptr.empty() && !people.IsChoosen()) {
+		TRACE("%d\n", people.GetIt());
+		switch (people.GetIt())
+		{
+		case 0:
+			people.SetMovingUp(true);
+			break;
+		case 1:
+			people.SetMovingUp(true);
+			people.SetMovingRight(true);
+			break;
+		case 2:
+			people.SetMovingRight(true);
+			break;
+		case 3:
+			people.SetMovingRight(true);
+			people.SetMovingDown(true);
+			break;
+		case 4:
+			people.SetMovingDown(true);
+			break;
+		case 5:
+			people.SetMovingDown(true);
+			people.SetMovingLeft(true);
+			break;
+		case 6:
+			people.SetMovingLeft(true);
+			break;
+		case 7:
+			people.SetMovingLeft(true);
+			people.SetMovingUp(true);
+			break;
+		default:
+			break;
+		}
+		people.OnMove();
 
-    for (i = 0; i < NUMBALLS; i++)
-        ball[i].OnMove();
-
+		people.SetMovingUp(false);
+		people.SetMovingRight(false);
+		people.SetMovingDown(false);
+		people.SetMovingLeft(false);
+	}
+	TRACE("%d,%d\n", people.GetIndexX(), people.GetIndexY());
     //
     // 移動擦子
     //
-    people.OnMove();
 	map.OnMove();
-
     //
     // 判斷擦子是否碰到球
     //
@@ -457,61 +498,25 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_RIGHT = 0x27; // keyboard右箭頭
     const char KEY_DOWN  = 0x28; // keyboard下箭頭
 	map.OnKeyDown(nChar);
-	/*if (isMovingLeft && x >= index_x * 20)
-		x -= STEP_SIZE;
-
-	if (isMovingRight && this->GetX2() <= (index_x + 1) * 20)
-		x += STEP_SIZE;
-
-	if (isMovingUp && y >= index_y * 20)
-		y -= STEP_SIZE;
-
-	if (isMovingDown && this->GetY2() <= (index_y + 1) * 20)
-		y += STEP_SIZE;
-		*/
     if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
     {
         
         people.SetMovingLeft(true);
-        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1 && people.GetX1() < people.GetIndexX()*20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveLeftIndex();
-        }
     }
 
     if (nChar == KEY_RIGHT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
     {
         people.SetMovingRight(true);
-        if(map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1 && people.GetX2() > (people.GetIndexX() + 1) * 20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveRightIndex();
-        }
     }
 
     if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
     {
         people.SetMovingUp(true);
-        if(map.GetIndexValue(people.GetIndexY() -1, people.GetIndexX()) != 1 && people.GetY1() < people.GetIndexY() * 20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() - 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveUpIndex();
-        }
     }
 
     if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
     {
         people.SetMovingDown(true);
-        if(map.GetIndexValue(people.GetIndexY()+1, people.GetIndexX()) != 1 && people.GetY2() > (people.GetIndexY() + 1) * 20)
-        {
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX() + 1, 2);
-            map.SetIndexValue(people.GetIndexY(), people.GetIndexX(), 0);
-            people.MoveDownIndex();
-        }
     }
 }
 
@@ -539,9 +544,7 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
 	TRACE("Mouse left button down\n");
 	static int mouse_x, mouse_y;
-	mouse_x = point.x / 20;
-	mouse_y = point.y / 20;
-	if (mouse_x == people.GetIndexX() && mouse_y == people.GetIndexY())
+	if (point.x>=people.GetX1()&&point.x<=people.GetX2()&&point.y>=people.GetY1()&&point.y<=people.GetY2())
 	{
 		TRACE("Get choosen\n");
 		people.SetChoosen(true);
@@ -552,19 +555,14 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
 	TRACE("Mouse left button up\n");
-    //people.SetMovingLeft(false);
-	vector<int> ptr = people.GetRoadLine();
 	people.SetChoosen(false);
-	for (vector<int>::iterator iter = ptr.begin();iter != ptr.end();iter++)
-	{
-		TRACE("%d\n", *iter);
-	}
 	//if()
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {	
 	static int mouse_x, mouse_y;
+	
 	mouse_x = point.x / 20;
 	mouse_y = point.y / 20;
 	//TRACE("%d,%d\n", point.x, point.y);
@@ -585,6 +583,7 @@ void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
     people.SetMovingRight(false);
+	
 }
 
 void CGameStateRun::GetMouse(UINT nFlags, CPoint point)
@@ -605,11 +604,12 @@ void CGameStateRun::OnShow()
     help.ShowBitmap();					// 貼上說明圖
     back.ShowBitmap();
     map.OnShow();
-    people.OnShow();
 	SetCursor(LoadCursor(NULL, IDC_CROSS));
+	people.OnShow();
     corner.SetTopLeft(0, 0);
     corner.ShowBitmap();
     corner.SetTopLeft(SIZE_X - corner.Width(), SIZE_Y - corner.Height());
     corner.ShowBitmap();
+	
 }
 }

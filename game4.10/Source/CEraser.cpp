@@ -47,6 +47,7 @@ void CEraser::Initialize()
     y = Y_POS;
     index_x = index_y = 1;
     isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
+	it = roadLine.end();
 }
 
 void CEraser::LoadBitmap()
@@ -59,19 +60,32 @@ void CEraser::OnMove()
 {
     const int STEP_SIZE = 4;
     animation.OnMove();
-	
+	int iter_x, iter_y;
 
-    if (isMovingLeft && x >= index_x * 20)
+    if (isMovingLeft)
         x -= STEP_SIZE;
 
-    if (isMovingRight && this->GetX2() <= (index_x + 1) * 20)
+    if (isMovingRight)
         x += STEP_SIZE;
 
-    if (isMovingUp && y >= index_y * 20)
+    if (isMovingUp)
         y -= STEP_SIZE;
 
-    if (isMovingDown && this->GetY2() <= (index_y + 1) * 20)
+    if (isMovingDown)
         y += STEP_SIZE;
+	iter_x = x / 20;
+	iter_y = y / 20;
+	if (iter_x != index_x || iter_y != index_y) {
+		index_x = iter_x;
+		index_y = iter_y;
+		it++;
+		if (it == roadLine.end())
+		{
+			roadLine.clear();
+			roadLine.resize(0);
+			it = roadLine.end();
+		}
+	}
 
     //x:({x}), y:({y}),index_x:({index_x}),index_y({index_y})
 }
@@ -189,11 +203,18 @@ void CEraser::SetRoadLine(int mouse_x, int mouse_y)
 		roadLine.push_back(0);
 		moving_index_y -= 1;
 	}
-	
+	it = roadLine.begin();
 }
 const vector<int>& CEraser::GetRoadLine()
 {
 	return roadLine;
 }
 
+const int  CEraser::GetIt()
+{
+	if (it != roadLine.end()) {
+		return *it;
+	}
+	return -1;
+}
 }

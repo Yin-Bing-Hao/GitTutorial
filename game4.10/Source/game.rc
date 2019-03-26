@@ -104,23 +104,15 @@ IDB_HELP                BITMAP                  "..\\res\\help.bmp"
 
 IDB_LOADING             BITMAP                  "..\\res\\loading.bmp"
 
-IDB_HORIZONTAL          BITMAP                  "..\\res\\bitmap3.bmp"
-
-IDB_VERTICAL            BITMAP                  "..\\res\\bmp00001.bmp"
-
-IDB_LEFTUPCORNER        BITMAP                  "..\\res\\bmp00002.bmp"
-
-IDB_RIGHTDOWNCORNER     BITMAP                  "..\\res\\bmp00003.bmp"
-
-IDB_LEFTDOWNCORNER      BITMAP                  "..\\res\\bmp00004.bmp"
-
-IDB_RIGHTUPCORNER       BITMAP                  "..\\res\\bmp00005.bmp"
-
 IDB_PEOPLE              BITMAP                  "..\\res\\bmp00006.bmp"
 
 IDB_MOUSE               BITMAP                  "..\\res\\bitmap4.bmp"
 
 IDB_PEOPLE2             BITMAP                  "..\\res\\bmp00007.bmp"
+
+IDB_LINE                BITMAP                  "..\\res\\bmp00001.bmp"
+
+IDB_BITMAP4             BITMAP                  "..\\res\\bmp00002.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -31,6 +31,7 @@ namespace game_framework {
 		bool IsChoosen();
 		void SetRoadLine(int mouse_x, int mouse_y);
 		const vector<int>& GetRoadLine();
+		const int GetIt();
 	protected:
 		CAnimation animation,animation2;		// 擦子的動畫
 		int x, y;					// 擦子左上角座標
@@ -42,5 +43,6 @@ namespace game_framework {
 		bool isMovingUp;			// 是否正在往上移動
 		bool isChoosen;
 		vector<int> roadLine;
+		vector<int>::iterator it;
 	};
 }

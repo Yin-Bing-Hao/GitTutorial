@@ -201,5 +201,8 @@
     <Image Include="res\bmp00007.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\bmp00008.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

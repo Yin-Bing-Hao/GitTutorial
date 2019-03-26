@@ -100,6 +100,7 @@ namespace game_framework {
 		int random_num;
 	};
 
+
 	class CGameStateRun : public CGameState {
 	public:
 		CGameStateRun(CGame *g);
@@ -114,6 +115,7 @@ namespace game_framework {
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
 		void GetMouse(UINT nFlags, CPoint point);
+		
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
@@ -128,6 +130,7 @@ namespace game_framework {
 		CEraser			people;		// 拍子
 		CInteger		hits_left;	// 剩下的撞擊數
 		CBouncingBall   bball;		// 反覆彈跳的球
+		
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
