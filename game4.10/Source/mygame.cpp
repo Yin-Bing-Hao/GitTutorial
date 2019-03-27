@@ -387,33 +387,29 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		switch (people.GetIt())
 		{
 		case 0:
-			if(map.GetIndexValue(people.GetIndexX(),people.GetIndexY()-1)!=1)
+		
 				people.SetMovingUp(true);
 			break;
 		case 1:
-			people.SetMovingUp(true);
-			people.SetMovingRight(true);
+			people.SetMovingRightUp(true);
 			break;
 		case 2:
 			people.SetMovingRight(true);
 			break;
 		case 3:
-			people.SetMovingRight(true);
-			people.SetMovingDown(true);
+			people.SetMovingRightDown(true);
 			break;
 		case 4:
 			people.SetMovingDown(true);
 			break;
 		case 5:
-			people.SetMovingDown(true);
-			people.SetMovingLeft(true);
+			people.SetMovingLeftDown(true);
 			break;
 		case 6:
 			people.SetMovingLeft(true);
 			break;
 		case 7:
-			people.SetMovingLeft(true);
-			people.SetMovingUp(true);
+			people.SetMovingLeftUp(true);
 			break;
 		default:
 			break;
@@ -424,6 +420,10 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		people.SetMovingRight(false);
 		people.SetMovingDown(false);
 		people.SetMovingLeft(false);
+		people.SetMovingRightUp(false);
+		people.SetMovingRightDown(false);
+		people.SetMovingLeftUp(false);
+		people.SetMovingLeftDown(false);
 	}
 	TRACE("%d,%d\n", people.GetIndexX(), people.GetIndexY());
     //
@@ -566,13 +566,11 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 	
 	mouse_x = point.x / 20;
 	mouse_y = point.y / 20;
+	TRACE("mouse position in array: %d %d\n", mouse_x, mouse_y);
 	//TRACE("%d,%d\n", point.x, point.y);
 	if (people.IsChoosen())
 	{
-		if (map.GetIndexValue(mouse_x, mouse_y) != 1)
-		{
-			people.SetRoadLine(mouse_x, mouse_y,map);
-		}
+		people.SetRoadLine(mouse_x, mouse_y,map);
 	}
 }
 

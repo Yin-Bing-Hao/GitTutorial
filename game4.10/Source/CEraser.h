@@ -30,6 +30,10 @@ namespace game_framework {
 		void SetMovingLeft(bool flag);	// 設定是否正在往左移動
 		void SetMovingRight(bool flag); // 設定是否正在往右移動
 		void SetMovingUp(bool flag);	// 設定是否正在往上移動
+		void SetMovingRightDown(bool flag);	// 設定是否正在往下移動
+		void SetMovingLeftDown(bool flag);	// 設定是否正在往左移動
+		void SetMovingRightUp(bool flag); // 設定是否正在往右移動
+		void SetMovingLeftUp(bool flag);	// 設定是否正在往上移動
 		void SetChoosen(bool flag);
 		void SetXY(int nx, int ny);		// 設定擦子左上角座標
 		bool IsChoosen();
@@ -45,6 +49,10 @@ namespace game_framework {
 		bool isMovingLeft;			// 是否正在往左移動
 		bool isMovingRight;			// 是否正在往右移動
 		bool isMovingUp;			// 是否正在往上移動
+		bool isMovingRightDown;			// 是否正在往右下移動
+		bool isMovingLeftDown;			// 是否正在往左下移動
+		bool isMovingRightUp;			// 是否正在往右上移動
+		bool isMovingLeftUp;			// 是否正在往左上移動
 		bool isChoosen;
 		vector<int> roadLine;
 		vector<int>::iterator it;
