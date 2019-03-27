@@ -42,6 +42,11 @@
 #include "CBall.h"
 #include "CBouncingBall.h"
 
+#ifndef MYGAME_H
+#define MYGAME_H
+
+
+
 #define ROW 32
 #define COL 24
 
@@ -151,3 +156,5 @@ namespace game_framework {
 	};
 
 }
+
+#endif // !MYGAME_H

@@ -1,9 +1,13 @@
+#ifndef SOLIDER
+#define SOLIDER
+
+
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// 這個class提供可以用鍵盤或滑鼠控制的擦子
 	// 看懂就可以改寫成自己的程式了
 	/////////////////////////////////////////////////////////////////////////////
-
+	class CGameMap;
 	class CEraser
 	{
 	public:
@@ -29,7 +33,7 @@ namespace game_framework {
 		void SetChoosen(bool flag);
 		void SetXY(int nx, int ny);		// 設定擦子左上角座標
 		bool IsChoosen();
-		void SetRoadLine(int mouse_x, int mouse_y);
+		void SetRoadLine(int mouse_x, int mouse_y, CGameMap& map);
 		const vector<int>& GetRoadLine();
 		const int GetIt();
 	protected:
@@ -46,3 +50,4 @@ namespace game_framework {
 		vector<int>::iterator it;
 	};
 }
+#endif // !Solider

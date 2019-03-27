@@ -5,6 +5,7 @@
 #include "audio.h"
 #include "gamelib.h"
 #include <vector>
+#include "mygame.h"
 #include "CEraser.h"
 #include<iostream>
 
@@ -47,12 +48,12 @@ void CEraser::Initialize()
     y = Y_POS;
     index_x = index_y = 1;
     isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
-	it = roadLine.end();
+    it = roadLine.end();
 }
 
 void CEraser::LoadBitmap()
 {
-	animation2.AddBitmap(IDB_PEOPLE2, RGB(255, 255, 255));
+    animation2.AddBitmap(IDB_PEOPLE2, RGB(255, 255, 255));
     animation.AddBitmap(IDB_PEOPLE, RGB(255, 255, 255));
 }
 
@@ -60,7 +61,7 @@ void CEraser::OnMove()
 {
     const int STEP_SIZE = 4;
     animation.OnMove();
-	int iter_x, iter_y;
+    int iter_x, iter_y;
 
     if (isMovingLeft)
         x -= STEP_SIZE;
@@ -73,19 +74,23 @@ void CEraser::OnMove()
 
     if (isMovingDown)
         y += STEP_SIZE;
-	iter_x = x / 20;
-	iter_y = y / 20;
-	if (iter_x != index_x || iter_y != index_y) {
-		index_x = iter_x;
-		index_y = iter_y;
-		it++;
-		if (it == roadLine.end())
-		{
-			roadLine.clear();
-			roadLine.resize(0);
-			it = roadLine.end();
-		}
-	}
+
+    iter_x = x / 20;
+    iter_y = y / 20;
+
+    if (iter_x != index_x || iter_y != index_y)
+    {
+        index_x = iter_x;
+        index_y = iter_y;
+        it++;
+
+        if (it == roadLine.end())
+        {
+            roadLine.clear();
+            roadLine.resize(0);
+            it = roadLine.end();
+        }
+    }
 
     //x:({x}), y:({y}),index_x:({index_x}),index_y({index_y})
 }
@@ -135,7 +140,7 @@ void CEraser::SetMovingUp(bool flag)
 
 void CEraser::SetChoosen(bool flag)
 {
-	isChoosen = flag;
+    isChoosen = flag;
 }
 
 void CEraser::SetXY(int nx, int ny)
@@ -145,76 +150,87 @@ void CEraser::SetXY(int nx, int ny)
 }
 void CEraser::OnShow()
 {
-	animation.SetTopLeft(x, y);
-	animation.OnShow();
+    animation.SetTopLeft(x, y);
+    animation.OnShow();
 }
 bool CEraser::IsChoosen()
 {
-	return isChoosen;
+    return isChoosen;
 }
-void CEraser::SetRoadLine(int mouse_x, int mouse_y)
+void CEraser::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
 {
-	if (roadLine.empty())
-	{
-		moving_index_x = index_x;
-		moving_index_y = index_y;
-	}
-	while (mouse_x  > moving_index_x && mouse_y <  moving_index_y)
-	{
-		roadLine.push_back(1);
-		moving_index_x += 1;
-		moving_index_y -= 1;
-	}
-	while (mouse_x >  moving_index_x && mouse_y >  moving_index_y)
-	{
-		roadLine.push_back(3);
-		moving_index_x += 1;
-		moving_index_y += 1;
-	}
-	while (mouse_x <  moving_index_x&& mouse_y >  moving_index_y)
-	{
-		roadLine.push_back(5);
-		moving_index_x -= 1;
-		moving_index_y += 1;
-	}
-	while (mouse_x < moving_index_x && mouse_y < moving_index_y)
-	{
-		roadLine.push_back(7);
-		moving_index_x -= 1;
-		moving_index_y -= 1;
-	}
-	while (mouse_x > moving_index_x)
-	{
-		roadLine.push_back(2);
-		moving_index_x += 1;
-	}
-	while (mouse_x  < moving_index_x)
-	{
-		roadLine.push_back(6);
-		moving_index_x -= 1;
-	}
-	while (mouse_y  > moving_index_y)
-	{
-		roadLine.push_back(4);
-		moving_index_y += 1;
-	}
-	while (mouse_y  < moving_index_y)
-	{
-		roadLine.push_back(0);
-		moving_index_y -= 1;
-	}
-	it = roadLine.begin();
+    if (roadLine.empty())
+    {
+        moving_index_x = index_x;
+        moving_index_y = index_y;
+    }
+
+    while (moving_index_y > 0 && moving_index_x + 1 < ROW && map.GetIndexValue(moving_index_y - 1, moving_index_x + 1) != 1 && mouse_x  > moving_index_x && mouse_y <  moving_index_y)
+    {
+        roadLine.push_back(1);
+        moving_index_x += 1;
+        moving_index_y -= 1;
+    }
+
+    while (moving_index_y + 1 < COL &&moving_index_x + 1 < ROW &&map.GetIndexValue(moving_index_y + 1, moving_index_x + 1) != 1 && mouse_x >  moving_index_x && mouse_y >  moving_index_y)
+    {
+        roadLine.push_back(3);
+        moving_index_x += 1;
+        moving_index_y += 1;
+    }
+
+    while (moving_index_y + 1 < COL &&moving_index_x > 0 &&map.GetIndexValue(moving_index_y + 1, moving_index_x - 1) != 1 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
+    {
+        roadLine.push_back(5);
+        moving_index_x -= 1;
+        moving_index_y += 1;
+    }
+
+    while (moving_index_y > 0 && moving_index_x > 0 && map.GetIndexValue(moving_index_y - 1, moving_index_x - 1) != 1 && mouse_x < moving_index_x && mouse_y < moving_index_y)
+    {
+        roadLine.push_back(7);
+        moving_index_x -= 1;
+        moving_index_y -= 1;
+    }
+
+    while (moving_index_x + 1 < ROW &&map.GetIndexValue(moving_index_y, moving_index_x+1) != 1 && mouse_x > moving_index_x)
+    {
+        roadLine.push_back(2);
+        moving_index_x += 1;
+    }
+
+    while (moving_index_x > 0 && map.GetIndexValue(moving_index_y, moving_index_x-1) != 1 && mouse_x  < moving_index_x)
+    {
+        roadLine.push_back(6);
+        moving_index_x -= 1;
+    }
+
+    while (moving_index_y+1 < COL && map.GetIndexValue(moving_index_y+1, moving_index_x) != 1 && mouse_y  > moving_index_y)
+    {
+        roadLine.push_back(4);
+        moving_index_y += 1;
+    }
+
+    while (moving_index_y > 0 && map.GetIndexValue(moving_index_y-1, moving_index_x) != 1 && mouse_y  < moving_index_y)
+    {
+        roadLine.push_back(0);
+        moving_index_y -= 1;
+    }
+
+    it = roadLine.begin();
 }
 const vector<int>& CEraser::GetRoadLine()
 {
-	return roadLine;
+    return roadLine;
 }
 
 const int  CEraser::GetIt()
 {
-	if (it != roadLine.end()) {
-		return *it;
-	}
-	return -1;
+    if (it != roadLine.end())
+    {
+        return *it;
+    }
+
+    return -1;
 }
 }

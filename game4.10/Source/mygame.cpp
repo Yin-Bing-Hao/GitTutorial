@@ -387,7 +387,8 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		switch (people.GetIt())
 		{
 		case 0:
-			people.SetMovingUp(true);
+			if(map.GetIndexValue(people.GetIndexX(),people.GetIndexY()-1)!=1)
+				people.SetMovingUp(true);
 			break;
 		case 1:
 			people.SetMovingUp(true);
@@ -570,7 +571,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 	{
 		if (map.GetIndexValue(mouse_x, mouse_y) != 1)
 		{
-			people.SetRoadLine(mouse_x, mouse_y);
+			people.SetRoadLine(mouse_x, mouse_y,map);
 		}
 	}
 }
