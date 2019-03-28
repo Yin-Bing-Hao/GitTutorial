@@ -126,8 +126,6 @@ WALL_RU                 BITMAP                  "..\\res\\bitmap7.bmp"
 
 WALL_RD                 BITMAP                  "..\\res\\bitmap8.bmp"
 
-IDB_BITMAP5             BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_RD.bmp"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

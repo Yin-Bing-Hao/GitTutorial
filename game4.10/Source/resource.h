@@ -58,7 +58,6 @@
 #define IDB_BITMAP9                     183
 #define Soldier2_RD                     183
 #define Soldier2_Right                  184
-#define IDB_BITMAP5                     186
 #define IDC_README                      1001
 #define ID_FILE_PAUSE                   32771
 #define ID_TOGGLE_FULLSCREEN            32772
