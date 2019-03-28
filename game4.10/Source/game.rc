@@ -118,12 +118,6 @@ Soldier                 BITMAP                  "..\\res\\bitmap5.bmp"
 
 WALL_STRAIGHT           BITMAP                  "..\\res\\bmp00003.bmp"
 
-Soldier1                BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier1.bmp"
-
-Soldier2_LU             BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_LU.bmp"
-
-Soldier2_U              BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_Up.bmp"
-
 WALL_LU                 BITMAP                  "..\\res\\bmp00004.bmp"
 
 WALL_LD                 BITMAP                  "..\\res\\bitmap6.bmp"
@@ -131,18 +125,6 @@ WALL_LD                 BITMAP                  "..\\res\\bitmap6.bmp"
 WALL_RU                 BITMAP                  "..\\res\\bitmap7.bmp"
 
 WALL_RD                 BITMAP                  "..\\res\\bitmap8.bmp"
-
-Soldier2_RU             BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_RU.bmp"
-
-Soldier2_Down           BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_Down.bmp"
-
-Soldier2_LD             BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_LD.bmp"
-
-Soldier2_Left           BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_Left.bmp"
-
-Soldier2_RD             BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_RD.bmp"
-
-Soldier2_Right          BITMAP                  "C:\\Users\\David\\Documents\\OOP_project\\game4.10\\Bitmaps\\soldier2_Right.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -32,12 +32,12 @@ int CEraser::GetY1()
 
 int CEraser::GetX2()
 {
-    return x + animation.Width();
+    return x + peopleU.Width();
 }
 
 int CEraser::GetY2()
 {
-    return y + animation.Height();
+    return y + peopleU.Height();
 }
 
 void CEraser::Initialize()
@@ -53,14 +53,19 @@ void CEraser::Initialize()
 
 void CEraser::LoadBitmap()
 {
-    animation2.AddBitmap(IDB_PEOPLE2, RGB(255, 255, 255));
-    animation.AddBitmap(Soldier2_U, RGB(255, 255, 255));
+    peopleL.AddBitmap("Bitmaps/soldier2_Left.bmp", RGB(255, 255, 255));
+	peopleU.AddBitmap("Bitmaps/soldier2_Up.bmp", RGB(255, 255, 255));
+	peopleR.AddBitmap("Bitmaps/soldier2_Right.bmp", RGB(255, 255, 255));
+	peopleD.AddBitmap("Bitmaps/soldier2_Down.bmp", RGB(255, 255, 255));
+	peopleRU.AddBitmap("Bitmaps/soldier2_RU.bmp", RGB(255, 255, 255));
+	peopleLU.AddBitmap("Bitmaps/soldier2_LU.bmp", RGB(255, 255, 255));
+	peopleRD.AddBitmap("Bitmaps/soldier2_RD.bmp", RGB(255, 255, 255));
+	peopleLD.AddBitmap("Bitmaps/soldier2_LD.bmp", RGB(255, 255, 255));
 }
 
 void CEraser::OnMove()
 {
     const int STEP_SIZE = 4;
-    animation.OnMove();
     //int iter_x, iter_y;
 
 
@@ -243,6 +248,42 @@ void CEraser::SetChoosen(bool flag)
 {
     isChoosen = flag;
 }
+void CEraser::SetWatchUp(bool flag)
+{
+	isWatchUp = flag;
+}
+
+void CEraser::SetWatchDown(bool flag)
+{
+	isWatchDown = flag;
+}
+
+void CEraser::SetWatchRight(bool flag)
+{
+	isWatchRight = flag;
+}
+
+void CEraser::SetWatchLeft(bool flag)
+{
+	isWatchLeft = flag;
+}
+
+void CEraser::SetWatchLeftUp(bool flag)
+{
+	isWatchLeftUp = flag;
+}
+void CEraser::SetWatchRightUp(bool flag)
+{
+	isWatchRightUp = flag;
+}
+void CEraser::SetWatchRightDown(bool flag)
+{
+	isWatchRightDown = flag;
+}
+void CEraser::SetWatchLeftDown(bool flag)
+{
+	isWatchLeftDown = flag;
+}
 
 void CEraser::SetXY(int nx, int ny)
 {
@@ -251,8 +292,110 @@ void CEraser::SetXY(int nx, int ny)
 }
 void CEraser::OnShow()
 {
-    animation.SetTopLeft(x, y);
-    animation.OnShow();
+	if (isWatchDown)
+	{
+		peopleD.SetTopLeft(x, y);
+		peopleD.OnShow();
+		last = 4;
+	}
+	else if (isWatchLeft)
+	{
+		peopleL.SetTopLeft(x, y);
+		peopleL.OnShow();
+		last = 6;
+	}
+	else if (isWatchRight)
+	{
+		peopleR.SetTopLeft(x, y);
+		peopleR.OnShow();
+		last = 2;
+	}
+	else if (isWatchUp)
+	{
+		peopleU.SetTopLeft(x, y);
+		peopleU.OnShow();
+		last = 0;
+	}
+	else if (it != roadLine.end()) {
+		last = *it;
+		switch (*it)
+		{
+		case 0:
+			peopleU.SetTopLeft(x, y);
+			peopleU.OnShow();
+			break;
+		case 1:
+			peopleRU.SetTopLeft(x, y);
+			peopleRU.OnShow();
+			break;
+		case 2:
+			peopleR.SetTopLeft(x, y);
+			peopleR.OnShow();
+			break;
+		case 3:
+			peopleRD.SetTopLeft(x, y);
+			peopleRD.OnShow();
+			break;
+		case 4:
+			peopleD.SetTopLeft(x, y);
+			peopleD.OnShow();
+			break;
+		case 5:
+			peopleLD.SetTopLeft(x, y);
+			peopleLD.OnShow();
+			break;
+		case 6:
+			peopleL.SetTopLeft(x, y);
+			peopleL.OnShow();
+			break;
+		case 7:
+			peopleLU.SetTopLeft(x, y);
+			peopleLU.OnShow();
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		switch (last)
+		{
+		case 0:
+			peopleU.SetTopLeft(x, y);
+			peopleU.OnShow();
+			break;
+		case 1:
+			peopleRU.SetTopLeft(x, y);
+			peopleRU.OnShow();
+			break;
+		case 2:
+			peopleR.SetTopLeft(x, y);
+			peopleR.OnShow();
+			break;
+		case 3:
+			peopleRD.SetTopLeft(x, y);
+			peopleRD.OnShow();
+			break;
+		case 4:
+			peopleD.SetTopLeft(x, y);
+			peopleD.OnShow();
+			break;
+		case 5:
+			peopleLD.SetTopLeft(x, y);
+			peopleLD.OnShow();
+			break;
+		case 6:
+			peopleL.SetTopLeft(x, y);
+			peopleL.OnShow();
+			break;
+		case 7:
+			peopleLU.SetTopLeft(x, y);
+			peopleLU.OnShow();
+			break;
+		default:
+			break;
+		}
+	}
 }
 bool CEraser::IsChoosen()
 {

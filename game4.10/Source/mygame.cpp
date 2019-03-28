@@ -515,51 +515,51 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-    const char KEY_LEFT  = 0x25; // keyboard左箭頭
-    const char KEY_UP    = 0x26; // keyboard上箭頭
-    const char KEY_RIGHT = 0x27; // keyboard右箭頭
-    const char KEY_DOWN  = 0x28; // keyboard下箭頭
+	const char KEY_LEFT = 0x41; // keyboard向左看
+	const char KEY_UP = 0x57; // keyboard向上看
+	const char KEY_RIGHT = 0x44; // keyboard向右看
+	const char KEY_DOWN = 0x53; // keyboard向下看
 	map.OnKeyDown(nChar);
-    if (nChar == KEY_LEFT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
-    {
-        
-        people.SetMovingLeft(true);
-    }
+	if (nChar == KEY_LEFT)
+	{
+		people.SetWatchLeft(true);
+	}
 
-    if (nChar == KEY_RIGHT && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
-    {
-        people.SetMovingRight(true);
-    }
+	if (nChar == KEY_RIGHT)
+	{
+		people.SetWatchRight(true);
+	}
 
-    if (nChar == KEY_UP && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() - 1) != 1)
-    {
-        people.SetMovingUp(true);
-    }
+	if (nChar == KEY_UP)
+	{
+		people.SetWatchUp(true);
+	}
 
-    if (nChar == KEY_DOWN && map.GetIndexValue(people.GetIndexY(), people.GetIndexX() + 1) != 1)
-    {
-        people.SetMovingDown(true);
-    }
+	if (nChar == KEY_DOWN)
+	{
+		people.SetWatchDown(true);
+	}
+
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-    const char KEY_LEFT  = 0x25; // keyboard左箭頭
-    const char KEY_UP    = 0x26; // keyboard上箭頭
-    const char KEY_RIGHT = 0x27; // keyboard右箭頭
-    const char KEY_DOWN  = 0x28; // keyboard下箭頭
+	const char KEY_LEFT = 0x41; // keyboard向左看
+	const char KEY_UP = 0x57; // keyboard向上看
+	const char KEY_RIGHT = 0x44; // keyboard向右看
+	const char KEY_DOWN = 0x53; // keyboard向下看	
 
-    if (nChar == KEY_LEFT)
-        people.SetMovingLeft(false);
+	if (nChar == KEY_LEFT)
+		people.SetWatchLeft(false);
 
-    if (nChar == KEY_RIGHT)
-        people.SetMovingRight(false);
+	if (nChar == KEY_RIGHT)
+		people.SetWatchRight(false);
 
-    if (nChar == KEY_UP)
-        people.SetMovingUp(false);
+	if (nChar == KEY_UP)
+		people.SetWatchUp(false);
 
-    if (nChar == KEY_DOWN)
-        people.SetMovingDown(false);
+	if (nChar == KEY_DOWN)
+		people.SetWatchDown(false);
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作

@@ -34,6 +34,14 @@ namespace game_framework {
 		void SetMovingLeftDown(bool flag);	// 設定是否正在往左移動
 		void SetMovingRightUp(bool flag); // 設定是否正在往右移動
 		void SetMovingLeftUp(bool flag);	// 設定是否正在往上移動
+		void SetWatchLeft(bool flag);		//設定是否往左看
+		void SetWatchUp(bool flag);			//設定是否往上看
+		void SetWatchRight(bool flag);		//設定是否往右看
+		void SetWatchDown(bool flag);		//設定是否往下看
+		void SetWatchLeftUp(bool flag);		//設定是否往左看
+		void SetWatchRightUp(bool flag);	//設定是否往上看
+		void SetWatchRightDown(bool flag);	//設定是否往右看
+		void SetWatchLeftDown(bool flag);	//設定是否往下看
 		void SetChoosen(bool flag);
 		void SetXY(int nx, int ny);		// 設定擦子左上角座標
 		bool IsChoosen();
@@ -41,10 +49,12 @@ namespace game_framework {
 		const vector<int>& GetRoadLine();
 		const int GetIt();
 	protected:
-		CAnimation animation,animation2;		// 擦子的動畫
+		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
+		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
 		int x, y;					// 擦子左上角座標
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;
+		int last;
 		bool isMovingDown;			// 是否正在往下移動
 		bool isMovingLeft;			// 是否正在往左移動
 		bool isMovingRight;			// 是否正在往右移動
@@ -53,6 +63,14 @@ namespace game_framework {
 		bool isMovingLeftDown;			// 是否正在往左下移動
 		bool isMovingRightUp;			// 是否正在往右上移動
 		bool isMovingLeftUp;			// 是否正在往左上移動
+		bool isWatchDown;				//是否往下看
+		bool isWatchUp;					//是否往上看
+		bool isWatchLeft;				//是否往左看
+		bool isWatchRight;				//是否往右看
+		bool isWatchRightDown;			//是否往右下看
+		bool isWatchLeftUp;				//是否往左上看
+		bool isWatchLeftDown;			//是否往左下看
+		bool isWatchRightUp;			//是否往右上看
 		bool isChoosen;
 		vector<int> roadLine;
 		vector<int>::iterator it;
