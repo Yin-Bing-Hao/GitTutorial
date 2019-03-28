@@ -42,8 +42,8 @@ int CEraser::GetY2()
 
 void CEraser::Initialize()
 {
-    const int X_POS = 20;
-    const int Y_POS = 20;
+    const int X_POS = SIZE;
+    const int Y_POS = SIZE;
     x = X_POS;
     y = Y_POS;
     index_x = index_y = 1;
@@ -54,7 +54,7 @@ void CEraser::Initialize()
 void CEraser::LoadBitmap()
 {
     animation2.AddBitmap(IDB_PEOPLE2, RGB(255, 255, 255));
-    animation.AddBitmap(IDB_PEOPLE, RGB(255, 255, 255));
+    animation.AddBitmap(Soldier2_U, RGB(255, 255, 255));
 }
 
 void CEraser::OnMove()
@@ -66,7 +66,7 @@ void CEraser::OnMove()
 
 	if (isMovingLeft)
 	{
-		if(x > (index_x-1) * 20)
+		if(x > (index_x-1) * SIZE)
 			x -= STEP_SIZE;
 		else
 		{
@@ -78,7 +78,7 @@ void CEraser::OnMove()
 
 	if (isMovingRight)
 	{
-		if (x < (index_x+1) * 20)
+		if (x < (index_x+1) * SIZE)
 			x += STEP_SIZE;
 		else
 		{
@@ -89,7 +89,7 @@ void CEraser::OnMove()
 
 	if (isMovingUp)
 	{
-		if (y > (index_y- 1) * 20)
+		if (y > (index_y- 1) * SIZE)
 			y -= STEP_SIZE;
 		else
 		{
@@ -100,7 +100,7 @@ void CEraser::OnMove()
 
     if (isMovingDown)
 	{
-		if (y < (index_y + 1) * 20)
+		if (y < (index_y + 1) * SIZE)
 			y += STEP_SIZE;
 		else
 		{
@@ -111,7 +111,7 @@ void CEraser::OnMove()
 
 	if (isMovingRightUp)
 	{
-		if (y > (index_y - 1) * 20 && x < (index_x + 1) * 20)
+		if (y > (index_y - 1) * SIZE && x < (index_x + 1) * SIZE)
 		{
 			y -= STEP_SIZE;
 			x += STEP_SIZE;
@@ -126,7 +126,7 @@ void CEraser::OnMove()
 	}
 	if (isMovingRightDown)
 	{
-		if (y < (index_y + 1) * 20 && x < (index_x + 1) * 20)
+		if (y < (index_y + 1) * SIZE && x < (index_x + 1) * SIZE)
 		{
 			y += STEP_SIZE;
 			x += STEP_SIZE;
@@ -141,7 +141,7 @@ void CEraser::OnMove()
 	}
 	if (isMovingLeftUp)
 	{
-		if (y > (index_y - 1) * 20 && x > (index_x - 1) * 20)
+		if (y > (index_y - 1) * SIZE && x > (index_x - 1) * SIZE)
 		{
 			y -= STEP_SIZE;
 			x -= STEP_SIZE;
@@ -156,7 +156,7 @@ void CEraser::OnMove()
 	}
 	if (isMovingLeftDown)
 	{
-		if (y < (index_y + 1) * 20 && x > (index_x - 1) * 20)
+		if (y < (index_y + 1) * SIZE && x > (index_x - 1) * SIZE)
 		{
 			y += STEP_SIZE;
 			x -= STEP_SIZE;
@@ -267,53 +267,53 @@ void CEraser::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
     }
 	TRACE("Mouse %d %d\n", mouse_x, mouse_y);
 	TRACE("moving_index position in array: %d %d\n", moving_index_x, moving_index_y);
-    while (mouse_y > 0 && mouse_x < ROW && map.GetIndexValue(moving_index_y - 1, moving_index_x + 1) != 1 && mouse_x  > moving_index_x && mouse_y <  moving_index_y)
+    while (mouse_y > 0 && mouse_x < ROW && map.GetIndexValue(moving_index_y - 1, moving_index_x + 1) == 0 && mouse_x  > moving_index_x && mouse_y <  moving_index_y)
     {
         roadLine.push_back(1);
         moving_index_x += 1;
         moving_index_y -= 1;
     }
 
-    while (mouse_y < COL &&mouse_x < ROW &&map.GetIndexValue(moving_index_y + 1, moving_index_x + 1) != 1 && mouse_x >  moving_index_x && mouse_y >  moving_index_y)
+    while (mouse_y < COL &&mouse_x < ROW &&map.GetIndexValue(moving_index_y + 1, moving_index_x + 1) == 0 && mouse_x >  moving_index_x && mouse_y >  moving_index_y)
     {
         roadLine.push_back(3);
         moving_index_x += 1;
         moving_index_y += 1;
     }
 
-    while (mouse_y  < COL &&mouse_x > 0 &&map.GetIndexValue(moving_index_y + 1, moving_index_x - 1) != 1 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
+    while (mouse_y  < COL &&mouse_x > 0 &&map.GetIndexValue(moving_index_y + 1, moving_index_x - 1) == 0 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
     {
         roadLine.push_back(5);
         moving_index_x -= 1;
         moving_index_y += 1;
     }
 
-    while (mouse_y > 0 && mouse_x > 0 && map.GetIndexValue(moving_index_y - 1, moving_index_x - 1) != 1 && mouse_x < moving_index_x && mouse_y < moving_index_y)
+    while (mouse_y > 0 && mouse_x > 0 && map.GetIndexValue(moving_index_y - 1, moving_index_x - 1) == 0 && mouse_x < moving_index_x && mouse_y < moving_index_y)
     {
         roadLine.push_back(7);
         moving_index_x -= 1;
         moving_index_y -= 1;
     }
 
-    while (mouse_x < ROW &&map.GetIndexValue(moving_index_y, moving_index_x+1) != 1 && mouse_x > moving_index_x)
+    while (mouse_x < ROW &&map.GetIndexValue(moving_index_y, moving_index_x+1) == 0 && mouse_x > moving_index_x)
     {
         roadLine.push_back(2);
         moving_index_x += 1;
     }
 
-    while (mouse_x > 0 && map.GetIndexValue(moving_index_y, moving_index_x-1) != 1 && mouse_x  < moving_index_x)
+    while (mouse_x > 0 && map.GetIndexValue(moving_index_y, moving_index_x-1) == 0 && mouse_x  < moving_index_x)
     {
         roadLine.push_back(6);
         moving_index_x -= 1;
     }
 
-    while (mouse_y < COL && map.GetIndexValue(moving_index_y+1, moving_index_x) != 1 && mouse_y  > moving_index_y)
+    while (mouse_y < COL && map.GetIndexValue(moving_index_y+1, moving_index_x) == 0 && mouse_y  > moving_index_y)
     {
         roadLine.push_back(4);
         moving_index_y += 1;
     }
 
-    while (mouse_y > 0 && map.GetIndexValue(moving_index_y-1, moving_index_x) != 1 && mouse_y  < moving_index_y)
+    while (mouse_y > 0 && map.GetIndexValue(moving_index_y-1, moving_index_x) == 0 && mouse_y  < moving_index_y)
     {
         roadLine.push_back(0);
         moving_index_y -= 1;

@@ -49,7 +49,7 @@
 
 #define ROW 32
 #define COL 24
-
+#define SIZE 60
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
@@ -97,7 +97,8 @@ namespace game_framework {
 		void InitializeBouncingBall(int, int, int);
 		~CGameMap();
 	protected:
-		CMovingBitmap RightUpCorner,LeftUpCorner,RightDownCorner,LeftDownCorner,Horizonal,Vertical,wall;
+		CMovingBitmap RightUpCorner,LeftUpCorner,RightDownCorner,LeftDownCorner,Horizonal,Vertical;
+		CMovingBitmap wall_Horizontal, wall_Straight,wall_LU, wall_LD, wall_RU, wall_RD;
 		int map[COL][ROW];
 		const int X, Y;
 		const int MW, MH;

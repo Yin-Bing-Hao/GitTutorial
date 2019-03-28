@@ -41,6 +41,23 @@
 #define IDB_PEOPLE2                     166
 #define IDB_LINE                        168
 #define IDB_BITMAP4                     169
+#define WALL_HORIZONTAL                 169
+#define Soldier                         170
+#define WALL_STRAIGHT                   171
+#define Soldier1                        172
+#define Soldier2_LU                     173
+#define Soldier2_U                      174
+#define WALL_LU                         175
+#define WALL_LD                         176
+#define WALL_RU                         177
+#define WALL_RD                         178
+#define Soldier2_RU                     179
+#define Soldier2_Down                   180
+#define Soldier2_LD                     181
+#define Soldier2_Left                   182
+#define IDB_BITMAP9                     183
+#define Soldier2_RD                     183
+#define Soldier2_Right                  184
 #define IDC_README                      1001
 #define ID_FILE_PAUSE                   32771
 #define ID_TOGGLE_FULLSCREEN            32772
@@ -53,7 +70,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        170
+#define _APS_NEXT_RESOURCE_VALUE        185
 #define _APS_NEXT_COMMAND_VALUE         32776
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           101
