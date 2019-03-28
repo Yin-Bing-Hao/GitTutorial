@@ -47,8 +47,9 @@ void CEraser::Initialize()
     x = X_POS;
     y = Y_POS;
     index_x = index_y = 1;
-    isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
+    isWatchDown=isWatchLeft=isWatchLeftDown=isWatchLeftUp=isWatchRight=isWatchRightDown=isWatchRightUp=isWatchUp=isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
     it = roadLine.end();
+	last = 2;
 }
 
 void CEraser::LoadBitmap()

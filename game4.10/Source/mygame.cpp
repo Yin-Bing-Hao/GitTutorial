@@ -334,8 +334,8 @@ void CGameMap::RandomBouncingBall() {
 
 void CGameMap::OnKeyDown(UINT nChar) {
 	const int KEY_SPACE = 0x20;
-	if (nChar == KEY_SPACE)
-		RandomBouncingBall();
+	/*if (nChar == KEY_SPACE)
+		RandomBouncingBall();*/
 }
 
 void CGameMap::OnMove() {
