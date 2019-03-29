@@ -49,7 +49,7 @@
 
 #define ROW 32
 #define COL 24
-#define SIZE 60
+#define SIZE 40
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
