@@ -47,7 +47,7 @@ void CEraser::Initialize()
     x = X_POS;
     y = Y_POS;
     index_x = index_y = 1;
-    isWatchDown=isWatchLeft=isWatchLeftDown=isWatchLeftUp=isWatchRight=isWatchRightDown=isWatchRightUp=isWatchUp=isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
+    isChoosen=isWatchDown=isWatchLeft=isWatchLeftDown=isWatchLeftUp=isWatchRight=isWatchRightDown=isWatchRightUp=isWatchUp=isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
     it = roadLine.end();
 	last = 2;
 }
