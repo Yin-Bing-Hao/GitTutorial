@@ -47,21 +47,30 @@ void CEraser::Initialize()
     x = X_POS;
     y = Y_POS;
     index_x = index_y = 1;
-    isChoosen=isWatchDown=isWatchLeft=isWatchLeftDown=isWatchLeftUp=isWatchRight=isWatchRightDown=isWatchRightUp=isWatchUp=isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
+    isChoosen = isWatchDown = isWatchLeft = isWatchLeftDown = isWatchLeftUp = isWatchRight = isWatchRightDown = isWatchRightUp = isWatchUp = isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
     it = roadLine.end();
-	last = 2;
+    last = 2;
 }
 
 void CEraser::LoadBitmap()
 {
     peopleL.AddBitmap("Bitmaps/soldier2_Left.bmp", RGB(255, 255, 255));
-	peopleU.AddBitmap("Bitmaps/soldier2_Up.bmp", RGB(255, 255, 255));
-	peopleR.AddBitmap("Bitmaps/soldier2_Right.bmp", RGB(255, 255, 255));
-	peopleD.AddBitmap("Bitmaps/soldier2_Down.bmp", RGB(255, 255, 255));
-	peopleRU.AddBitmap("Bitmaps/soldier2_RU.bmp", RGB(255, 255, 255));
-	peopleLU.AddBitmap("Bitmaps/soldier2_LU.bmp", RGB(255, 255, 255));
-	peopleRD.AddBitmap("Bitmaps/soldier2_RD.bmp", RGB(255, 255, 255));
-	peopleLD.AddBitmap("Bitmaps/soldier2_LD.bmp", RGB(255, 255, 255));
+    peopleU.AddBitmap("Bitmaps/soldier2_Up.bmp", RGB(255, 255, 255));
+    peopleR.AddBitmap("Bitmaps/soldier2_Right.bmp", RGB(255, 255, 255));
+    peopleD.AddBitmap("Bitmaps/soldier2_Down.bmp", RGB(255, 255, 255));
+    peopleRU.AddBitmap("Bitmaps/soldier2_RU.bmp", RGB(255, 255, 255));
+    peopleLU.AddBitmap("Bitmaps/soldier2_LU.bmp", RGB(255, 255, 255));
+    peopleRD.AddBitmap("Bitmaps/soldier2_RD.bmp", RGB(255, 255, 255));
+    peopleLD.AddBitmap("Bitmaps/soldier2_LD.bmp", RGB(255, 255, 255));
+    lineUP.AddBitmap(IDB_LINEUP, RGB(255, 255, 255));
+    lineRight.AddBitmap(IDB_LINERIGHT, RGB(255, 255, 255));
+    lineDown.AddBitmap(IDB_LINEDOWN, RGB(255, 255, 255));
+    lineLeft.AddBitmap(IDB_LINELEFT, RGB(255, 255, 255));
+    lineRD.AddBitmap(IDB_LINERD, RGB(255, 255, 255));
+    lineRU.AddBitmap(IDB_LINERU, RGB(255, 255, 255));
+    lineLD.AddBitmap(IDB_LINELD, RGB(255, 255, 255));
+    lineLU.AddBitmap(IDB_LINELU, RGB(255, 255, 255));
+	breakpoint.AddBitmap(IDB_POINT, RGB(255, 255, 255));
 }
 
 void CEraser::OnMove()
@@ -69,119 +78,117 @@ void CEraser::OnMove()
     const int STEP_SIZE = 4;
     //int iter_x, iter_y;
 
+    if (isMovingLeft)
+    {
+        if (x > (index_x - 1) * SIZE)
+            x -= STEP_SIZE;
+        else
+        {
+            index_x--;
+            it++;
+        }
+    }
 
-	if (isMovingLeft)
-	{
-		if(x > (index_x-1) * SIZE)
-			x -= STEP_SIZE;
-		else
-		{
-			index_x--;
-			it++;
-		}
-	}
-       
+    if (isMovingRight)
+    {
+        if (x < (index_x + 1) * SIZE)
+            x += STEP_SIZE;
+        else
+        {
+            index_x++;
+            it++;
+        }
+    }
 
-	if (isMovingRight)
-	{
-		if (x < (index_x+1) * SIZE)
-			x += STEP_SIZE;
-		else
-		{
-			index_x++;
-			it++;
-		}
-	}
-
-	if (isMovingUp)
-	{
-		if (y > (index_y- 1) * SIZE)
-			y -= STEP_SIZE;
-		else
-		{
-			index_y--;
-			it++;
-		}
-	}
+    if (isMovingUp)
+    {
+        if (y > (index_y - 1) * SIZE)
+            y -= STEP_SIZE;
+        else
+        {
+            index_y--;
+            it++;
+        }
+    }
 
     if (isMovingDown)
-	{
-		if (y < (index_y + 1) * SIZE)
-			y += STEP_SIZE;
-		else
-		{
-			index_y++;
-			it++;
-		}
-	}
+    {
+        if (y < (index_y + 1) * SIZE)
+            y += STEP_SIZE;
+        else
+        {
+            index_y++;
+            it++;
+        }
+    }
 
-	if (isMovingRightUp)
-	{
-		if (y > (index_y - 1) * SIZE && x < (index_x + 1) * SIZE)
-		{
-			y -= STEP_SIZE;
-			x += STEP_SIZE;
-		}
-			
-		else
-		{
-			index_y--;
-			index_x++;
-			it++;
-		}
-	}
-	if (isMovingRightDown)
-	{
-		if (y < (index_y + 1) * SIZE && x < (index_x + 1) * SIZE)
-		{
-			y += STEP_SIZE;
-			x += STEP_SIZE;
-		}
+    if (isMovingRightUp)
+    {
+        if (y > (index_y - 1) * SIZE && x < (index_x + 1) * SIZE)
+        {
+            y -= STEP_SIZE;
+            x += STEP_SIZE;
+        }
+        else
+        {
+            index_y--;
+            index_x++;
+            it++;
+        }
+    }
 
-		else
-		{
-			index_y++;
-			index_x++;
-			it++;
-		}
-	}
-	if (isMovingLeftUp)
-	{
-		if (y > (index_y - 1) * SIZE && x > (index_x - 1) * SIZE)
-		{
-			y -= STEP_SIZE;
-			x -= STEP_SIZE;
-		}
+    if (isMovingRightDown)
+    {
+        if (y < (index_y + 1) * SIZE && x < (index_x + 1) * SIZE)
+        {
+            y += STEP_SIZE;
+            x += STEP_SIZE;
+        }
+        else
+        {
+            index_y++;
+            index_x++;
+            it++;
+        }
+    }
 
-		else
-		{
-			index_y--;
-			index_x--;
-			it++;
-		}
-	}
-	if (isMovingLeftDown)
-	{
-		if (y < (index_y + 1) * SIZE && x > (index_x - 1) * SIZE)
-		{
-			y += STEP_SIZE;
-			x -= STEP_SIZE;
-		}
+    if (isMovingLeftUp)
+    {
+        if (y > (index_y - 1) * SIZE && x > (index_x - 1) * SIZE)
+        {
+            y -= STEP_SIZE;
+            x -= STEP_SIZE;
+        }
+        else
+        {
+            index_y--;
+            index_x--;
+            it++;
+        }
+    }
 
-		else
-		{
-			index_y++;
-			index_x--;
-			it++;
-		}
-	}
+    if (isMovingLeftDown)
+    {
+        if (y < (index_y + 1) * SIZE && x > (index_x - 1) * SIZE)
+        {
+            y += STEP_SIZE;
+            x -= STEP_SIZE;
+        }
+        else
+        {
+            index_y++;
+            index_x--;
+            it++;
+        }
+    }
 
-	if (it == roadLine.end())
-	{
-		roadLine.clear();
-		roadLine.resize(0);
-		it = roadLine.end();
-	}
+    if (it == roadLine.end())
+    {
+        roadLine.clear();
+        roadLine.resize(0);
+        it = roadLine.end();
+        line.clear();
+    }
 
     //x:({x}), y:({y}),index_x:({index_x}),index_y({index_y})
 }
@@ -211,19 +218,19 @@ void CEraser::MoveDownIndex()
 }
 void CEraser::SetMovingRightDown(bool flag)
 {
-	isMovingRightDown = flag;
+    isMovingRightDown = flag;
 }
 void CEraser::SetMovingLeftDown(bool flag)
 {
-	isMovingLeftDown = flag;
+    isMovingLeftDown = flag;
 }
 void CEraser::SetMovingRightUp(bool flag)
 {
-	isMovingRightUp = flag;
+    isMovingRightUp = flag;
 }
 void CEraser::SetMovingLeftUp(bool flag)
 {
-	isMovingLeftUp = flag;
+    isMovingLeftUp = flag;
 }
 void CEraser::SetMovingDown(bool flag)
 {
@@ -251,39 +258,39 @@ void CEraser::SetChoosen(bool flag)
 }
 void CEraser::SetWatchUp(bool flag)
 {
-	isWatchUp = flag;
+    isWatchUp = flag;
 }
 
 void CEraser::SetWatchDown(bool flag)
 {
-	isWatchDown = flag;
+    isWatchDown = flag;
 }
 
 void CEraser::SetWatchRight(bool flag)
 {
-	isWatchRight = flag;
+    isWatchRight = flag;
 }
 
 void CEraser::SetWatchLeft(bool flag)
 {
-	isWatchLeft = flag;
+    isWatchLeft = flag;
 }
 
 void CEraser::SetWatchLeftUp(bool flag)
 {
-	isWatchLeftUp = flag;
+    isWatchLeftUp = flag;
 }
 void CEraser::SetWatchRightUp(bool flag)
 {
-	isWatchRightUp = flag;
+    isWatchRightUp = flag;
 }
 void CEraser::SetWatchRightDown(bool flag)
 {
-	isWatchRightDown = flag;
+    isWatchRightDown = flag;
 }
 void CEraser::SetWatchLeftDown(bool flag)
 {
-	isWatchLeftDown = flag;
+    isWatchLeftDown = flag;
 }
 
 void CEraser::SetXY(int nx, int ny)
@@ -291,112 +298,246 @@ void CEraser::SetXY(int nx, int ny)
     x = nx;
     y = ny;
 }
+void CEraser::DrawLineFirst(vector<int>::iterator iter, int *line_x, int *line_y) {
+	switch (*iter)
+	{
+	case 0:
+		*line_y -= 1;
+		lineDown.SetTopLeft(*line_x * 40, *line_y * 40);
+		lineDown.OnShow();
+		break;
+
+	case 1:
+		*line_x += 1;
+		*line_y -= 1;
+		lineLD.SetTopLeft(*line_x*40, *line_y*40);
+		lineLD.OnShow();
+		break;
+
+	case 2:
+		*line_x += 1;
+		lineLeft.SetTopLeft(*line_x*40, *line_y*40);
+		lineLeft.OnShow();
+		break;
+
+	case 3:
+		*line_x += 1;
+		*line_y += 1;
+		lineLU.SetTopLeft(*line_x*40, *line_y*40);
+		lineLU.OnShow();
+		break;
+
+	case 4:
+		*line_y += 1;
+		lineUP.SetTopLeft(*line_x*40, *line_y*40);
+		lineUP.OnShow();
+		break;
+
+	case 5:
+		*line_x -= 1;
+		*line_y -= 1;
+		lineRU.SetTopLeft(*line_x*40, *line_y*40);
+		lineRU.OnShow();
+		break;
+
+	case 6:
+		*line_x -= 1;
+		lineRight.SetTopLeft(*line_x*40, *line_y*40);
+		lineRight.OnShow();
+		break;
+
+	case 7:
+		*line_x -= 1;
+		*line_y -= 1;
+		lineRD.SetTopLeft(*line_x*40, *line_y*40);
+		lineRD.OnShow();
+		break;
+
+	default:
+		break;
+	}
+}
+void CEraser::DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y) {
+	switch (*iter)
+	{
+	case 0:
+		lineUP.SetTopLeft(*line_x*40, *line_y*40);
+		lineUP.OnShow();
+		break;
+
+	case 1:
+		lineRU.SetTopLeft(*line_x*40, *line_y*40);
+		lineRU.OnShow();
+		break;
+
+	case 2:
+		lineRight.SetTopLeft(*line_x*40, *line_y*40);
+		lineRight.OnShow();
+		break;
+
+	case 3:
+		lineRD.SetTopLeft(*line_x*40, *line_y*40);
+		lineRD.OnShow();
+		break;
+
+	case 4:
+		lineDown.SetTopLeft(*line_x*40, *line_y*40);
+		lineDown.OnShow();
+		break;
+
+	case 5:
+		lineLD.SetTopLeft(*line_x*40, *line_y*40);
+		lineLD.OnShow();
+		break;
+
+	case 6:
+		lineLeft.SetTopLeft(*line_x*40, *line_y*40);
+		lineLeft.OnShow();
+		break;
+
+	case 7:
+		lineLU.SetTopLeft(*line_x*40, *line_y*40);
+		lineLU.OnShow();
+		break;
+
+	default:
+		break;
+	}
+}
 void CEraser::OnShow()
 {
-	if (isWatchDown)
-	{
-		peopleD.SetTopLeft(x, y);
-		peopleD.OnShow();
-		last = 4;
-	}
-	else if (isWatchLeft)
-	{
-		peopleL.SetTopLeft(x, y);
-		peopleL.OnShow();
-		last = 6;
-	}
-	else if (isWatchRight)
-	{
-		peopleR.SetTopLeft(x, y);
-		peopleR.OnShow();
-		last = 2;
-	}
-	else if (isWatchUp)
-	{
-		peopleU.SetTopLeft(x, y);
-		peopleU.OnShow();
-		last = 0;
-	}
-	else if (it != roadLine.end()) {
-		last = *it;
-		switch (*it)
-		{
-		case 0:
-			peopleU.SetTopLeft(x, y);
-			peopleU.OnShow();
-			break;
-		case 1:
-			peopleRU.SetTopLeft(x, y);
-			peopleRU.OnShow();
-			break;
-		case 2:
-			peopleR.SetTopLeft(x, y);
-			peopleR.OnShow();
-			break;
-		case 3:
-			peopleRD.SetTopLeft(x, y);
-			peopleRD.OnShow();
-			break;
-		case 4:
-			peopleD.SetTopLeft(x, y);
-			peopleD.OnShow();
-			break;
-		case 5:
-			peopleLD.SetTopLeft(x, y);
-			peopleLD.OnShow();
-			break;
-		case 6:
-			peopleL.SetTopLeft(x, y);
-			peopleL.OnShow();
-			break;
-		case 7:
-			peopleLU.SetTopLeft(x, y);
-			peopleLU.OnShow();
-			break;
-		default:
-			break;
-		}
-	}
-	else
-	{
-		switch (last)
-		{
-		case 0:
-			peopleU.SetTopLeft(x, y);
-			peopleU.OnShow();
-			break;
-		case 1:
-			peopleRU.SetTopLeft(x, y);
-			peopleRU.OnShow();
-			break;
-		case 2:
-			peopleR.SetTopLeft(x, y);
-			peopleR.OnShow();
-			break;
-		case 3:
-			peopleRD.SetTopLeft(x, y);
-			peopleRD.OnShow();
-			break;
-		case 4:
-			peopleD.SetTopLeft(x, y);
-			peopleD.OnShow();
-			break;
-		case 5:
-			peopleLD.SetTopLeft(x, y);
-			peopleLD.OnShow();
-			break;
-		case 6:
-			peopleL.SetTopLeft(x, y);
-			peopleL.OnShow();
-			break;
-		case 7:
-			peopleLU.SetTopLeft(x, y);
-			peopleLU.OnShow();
-			break;
-		default:
-			break;
-		}
-	}
+    if (!roadLine.empty())
+    {
+		int line_x=index_x, line_y=index_y;
+        for (vector<int>::iterator iter = it; iter != roadLine.end(); iter++)
+        {
+				DrawLineSecond(iter,&line_x, &line_y);
+				DrawLineFirst(iter, &line_x, &line_y);
+        }
+    }
+
+    if (isWatchDown)
+    {
+        peopleD.SetTopLeft(x, y);
+        peopleD.OnShow();
+        last = 4;
+    }
+    else if (isWatchLeft)
+    {
+        peopleL.SetTopLeft(x, y);
+        peopleL.OnShow();
+        last = 6;
+    }
+    else if (isWatchRight)
+    {
+        peopleR.SetTopLeft(x, y);
+        peopleR.OnShow();
+        last = 2;
+    }
+    else if (isWatchUp)
+    {
+        peopleU.SetTopLeft(x, y);
+        peopleU.OnShow();
+        last = 0;
+    }
+    else if (it != roadLine.end())
+    {
+        last = *it;
+
+        switch (*it)
+        {
+            case 0:
+                peopleU.SetTopLeft(x, y);
+                peopleU.OnShow();
+                break;
+
+            case 1:
+                peopleRU.SetTopLeft(x, y);
+                peopleRU.OnShow();
+                break;
+
+            case 2:
+                peopleR.SetTopLeft(x, y);
+                peopleR.OnShow();
+                break;
+
+            case 3:
+                peopleRD.SetTopLeft(x, y);
+                peopleRD.OnShow();
+                break;
+
+            case 4:
+                peopleD.SetTopLeft(x, y);
+                peopleD.OnShow();
+                break;
+
+            case 5:
+                peopleLD.SetTopLeft(x, y);
+                peopleLD.OnShow();
+                break;
+
+            case 6:
+                peopleL.SetTopLeft(x, y);
+                peopleL.OnShow();
+                break;
+
+            case 7:
+                peopleLU.SetTopLeft(x, y);
+                peopleLU.OnShow();
+                break;
+
+            default:
+                break;
+        }
+    }
+    else
+    {
+        switch (last)
+        {
+            case 0:
+                peopleU.SetTopLeft(x, y);
+                peopleU.OnShow();
+                break;
+
+            case 1:
+                peopleRU.SetTopLeft(x, y);
+                peopleRU.OnShow();
+                break;
+
+            case 2:
+                peopleR.SetTopLeft(x, y);
+                peopleR.OnShow();
+                break;
+
+            case 3:
+                peopleRD.SetTopLeft(x, y);
+                peopleRD.OnShow();
+                break;
+
+            case 4:
+                peopleD.SetTopLeft(x, y);
+                peopleD.OnShow();
+                break;
+
+            case 5:
+                peopleLD.SetTopLeft(x, y);
+                peopleLD.OnShow();
+                break;
+
+            case 6:
+                peopleL.SetTopLeft(x, y);
+                peopleL.OnShow();
+                break;
+
+            case 7:
+                peopleLU.SetTopLeft(x, y);
+                peopleLU.OnShow();
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 bool CEraser::IsChoosen()
 {
@@ -409,8 +550,10 @@ void CEraser::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_x = index_x;
         moving_index_y = index_y;
     }
-	TRACE("Mouse %d %d\n", mouse_x, mouse_y);
-	TRACE("moving_index position in array: %d %d\n", moving_index_x, moving_index_y);
+
+    TRACE("Mouse %d %d\n", mouse_x, mouse_y);
+    TRACE("moving_index position in array: %d %d\n", moving_index_x, moving_index_y);
+
     while (mouse_y > 0 && mouse_x < ROW && map.GetIndexValue(moving_index_y - 1, moving_index_x + 1) == 0 && mouse_x  > moving_index_x && mouse_y <  moving_index_y)
     {
         roadLine.push_back(1);
@@ -418,14 +561,14 @@ void CEraser::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_y -= 1;
     }
 
-    while (mouse_y < COL &&mouse_x < ROW &&map.GetIndexValue(moving_index_y + 1, moving_index_x + 1) == 0 && mouse_x >  moving_index_x && mouse_y >  moving_index_y)
+    while (mouse_y < COL && mouse_x < ROW && map.GetIndexValue(moving_index_y + 1, moving_index_x + 1) == 0 && mouse_x >  moving_index_x && mouse_y >  moving_index_y)
     {
         roadLine.push_back(3);
         moving_index_x += 1;
         moving_index_y += 1;
     }
 
-    while (mouse_y  < COL &&mouse_x > 0 &&map.GetIndexValue(moving_index_y + 1, moving_index_x - 1) == 0 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
+    while (mouse_y  < COL && mouse_x > 0 && map.GetIndexValue(moving_index_y + 1, moving_index_x - 1) == 0 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
     {
         roadLine.push_back(5);
         moving_index_x -= 1;
@@ -439,25 +582,26 @@ void CEraser::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_y -= 1;
     }
 
-    while (mouse_x < ROW &&map.GetIndexValue(moving_index_y, moving_index_x+1) == 0 && mouse_x > moving_index_x)
+    while (mouse_x < ROW && map.GetIndexValue(moving_index_y, moving_index_x + 1) == 0 && mouse_x > moving_index_x)
     {
         roadLine.push_back(2);
         moving_index_x += 1;
+
     }
 
-    while (mouse_x > 0 && map.GetIndexValue(moving_index_y, moving_index_x-1) == 0 && mouse_x  < moving_index_x)
+    while (mouse_x > 0 && map.GetIndexValue(moving_index_y, moving_index_x - 1) == 0 && mouse_x  < moving_index_x)
     {
         roadLine.push_back(6);
         moving_index_x -= 1;
     }
 
-    while (mouse_y < COL && map.GetIndexValue(moving_index_y+1, moving_index_x) == 0 && mouse_y  > moving_index_y)
+    while (mouse_y < COL && map.GetIndexValue(moving_index_y + 1, moving_index_x) == 0 && mouse_y  > moving_index_y)
     {
         roadLine.push_back(4);
         moving_index_y += 1;
     }
 
-    while (mouse_y > 0 && map.GetIndexValue(moving_index_y-1, moving_index_x) == 0 && mouse_y  < moving_index_y)
+    while (mouse_y > 0 && map.GetIndexValue(moving_index_y - 1, moving_index_x) == 0 && mouse_y  < moving_index_y)
     {
         roadLine.push_back(0);
         moving_index_y -= 1;

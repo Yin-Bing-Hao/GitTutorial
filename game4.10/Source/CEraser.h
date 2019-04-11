@@ -43,6 +43,8 @@ namespace game_framework {
 		void SetWatchRightDown(bool flag);	//設定是否往右看
 		void SetWatchLeftDown(bool flag);	//設定是否往下看
 		void SetChoosen(bool flag);
+		void DrawLineFirst(vector<int>::iterator iter,int *line_x,int *line_y);
+		void DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y);
 		void SetXY(int nx, int ny);		// 設定擦子左上角座標
 		bool IsChoosen();
 		void SetRoadLine(int mouse_x, int mouse_y, CGameMap& map);
@@ -51,6 +53,7 @@ namespace game_framework {
 	protected:
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
+		CAnimation breakpoint, lineUP, lineRU, lineRight, lineRD, lineDown, lineLD,lineLeft,lineLU;
 		int x, y;					// 擦子左上角座標
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;
@@ -74,6 +77,8 @@ namespace game_framework {
 		bool isChoosen;
 		vector<int> roadLine;
 		vector<int>::iterator it;
+		vector<vector<int> > line;
+		vector<int> lineXY;
 	};
 }
 #endif // !Solider

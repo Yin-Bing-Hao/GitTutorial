@@ -565,7 +565,6 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
 	TRACE("Mouse left button down\n");
-	static int mouse_x, mouse_y;
 	if (point.x>=people.GetX1()&&point.x<=people.GetX2()&&point.y>=people.GetY1()&&point.y<=people.GetY2())
 	{
 		TRACE("Get choosen\n");
