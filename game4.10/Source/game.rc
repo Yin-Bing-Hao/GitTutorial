@@ -140,6 +140,26 @@ IDB_LINEDOWN            BITMAP                  "..\\res\\bmp00001.bmp"
 
 IDB_LINELU              BITMAP                  "..\\res\\bmp00013.bmp"
 
+WALL_INVERTE_T          BITMAP                  "..\\res\\wall_hor.bmp"
+
+WALL_T                  BITMAP                  "..\\res\\wall_inv.bmp"
+
+GLASS_STR               BITMAP                  "..\\res\\wall_str.bmp"
+
+GLASS_HOR               BITMAP                  "..\\res\\bmp00014.bmp"
+
+GLASS_BROKENHOR         BITMAP                  "..\\res\\glass_ho.bmp"
+
+GLASS_BROKENSTR         BITMAP                  "..\\res\\glass_st.bmp"
+
+DOOR_HOR_LEFT           BITMAP                  "..\\res\\bmp00015.bmp"
+
+DOOR_HOR_RIGHT          BITMAP                  "..\\res\\bmp00016.bmp"
+
+DOOR_STR_UP             BITMAP                  "..\\res\\bmp00017.bmp"
+
+DOOR_STR_DOWN           BITMAP                  "..\\res\\door_str.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

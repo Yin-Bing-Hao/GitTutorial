@@ -207,24 +207,24 @@ CGameMap::CGameMap() : X(0), Y(0), MW(SIZE), MH(SIZE)
 		{5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,6},
 		{3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3},
 		{3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3},
-		{3,0,0,0,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,6,0,0,0,3},
+		{3,0,0,0,5,4,4,4,4,4,13,4,4,4,4,4,10,4,4,4,4,4,11,4,4,4,4,6,0,0,0,3},
+		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
+		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
+		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
+		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,12,0,0,0,3},
+		{3,0,0,0,14,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
+		{3,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,14,0,0,0,3},
+		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
 		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3},
-		{3,0,0,0,7,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,4,4,4,8,0,0,0,3},
+		{3,0,0,0,7,4,4,4,4,4,4,11,4,4,4,4,9,4,4,4,13,4,4,15,4,4,4,8,0,0,0,3},
 		{3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3},
 		{3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3},
 		{7,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,8}
@@ -245,13 +245,22 @@ CGameMap::CGameMap() : X(0), Y(0), MW(SIZE), MH(SIZE)
 
 void CGameMap::LoadBitmap()
 {
-    Horizonal.LoadBitmap("Bitmaps/horizonal.bmp", RGB(255, 255, 255));
     wall_Horizontal.LoadBitmap(WALL_HORIZONTAL, RGB(255, 255, 255));
 	wall_Straight.LoadBitmap(WALL_STRAIGHT, RGB(255, 255, 255));
 	wall_LD.LoadBitmap(WALL_LD, RGB(255, 255, 255));
 	wall_LU.LoadBitmap(WALL_LU, RGB(255, 255, 255));
 	wall_RD.LoadBitmap(WALL_RD, RGB(255, 255, 255));
 	wall_RU.LoadBitmap(WALL_RU, RGB(255, 255, 255));
+	wall_Invertr_T.LoadBitmap(WALL_INVERTE_T, RGB(255, 255, 255));
+	wall_T.LoadBitmap(WALL_T, RGB(255, 255, 255));
+	glass_Straight.LoadBitmap(GLASS_STR, RGB(255, 255, 255));
+	glass_Horizontal.LoadBitmap(GLASS_HOR, RGB(255, 255, 255));
+	glass_BrokenHorizontal.LoadBitmap(GLASS_BROKENHOR, RGB(255, 255, 255));
+	glass_BrokenStraight.LoadBitmap(GLASS_BROKENSTR, RGB(255, 255, 255));
+	door_HorLeft.LoadBitmap(DOOR_HOR_LEFT, RGB(255, 255, 255));
+	door_HorRight.LoadBitmap(DOOR_HOR_RIGHT, RGB(255, 255, 255));
+	door_StrDown.LoadBitmap(DOOR_STR_DOWN, RGB(255, 255, 255));
+	door_StrUp.LoadBitmap(DOOR_STR_UP, RGB(255, 255, 255));
 }
 void CGameMap::OnShow()
 {
@@ -286,14 +295,51 @@ void CGameMap::OnShow()
 					wall_RD.SetTopLeft(X + (MW * i), Y + (MH * j));
 					wall_RD.ShowBitmap();
 					break;
+				case 9:
+					wall_Invertr_T.SetTopLeft(X + (MW * i), Y + (MH * j));
+					wall_Invertr_T.ShowBitmap();
+					break;
+				case 10:
+					wall_T.SetTopLeft(X + (MW * i), Y + (MH * j));
+					wall_T.ShowBitmap();
+					break;
+				case 11:
+					glass_Horizontal.SetTopLeft(X + (MW*i), Y + (MH*j));
+					glass_Horizontal.ShowBitmap();
+					break;
+				case 12:
+					glass_Straight.SetTopLeft(X + (MW*i), Y + (MH*j));
+					glass_Straight.ShowBitmap();
+					break;
+				case 13:
+					glass_BrokenHorizontal.SetTopLeft(X + (MW*i), Y + (MH*j));
+					glass_BrokenHorizontal.ShowBitmap();
+					break;
+				case 14:
+					glass_BrokenStraight.SetTopLeft(X + (MW*i), Y + (MH*j));
+					glass_BrokenStraight.ShowBitmap();
+					break;
+				case 15:
+					door_HorLeft.SetTopLeft(X + (MW*i), Y + (MH*j));
+					door_HorLeft.ShowBitmap();
+					break;
+				case 16:
+					door_HorRight.SetTopLeft(X + (MW*i), Y + (MH*j));
+					door_HorRight.ShowBitmap();
+					break;
+				case 17:
+					door_StrUp.SetTopLeft(X + (MW*i), Y + (MH*j));
+					door_StrUp.ShowBitmap();
+					break;
+				case 18:
+					door_StrDown.SetTopLeft(X + (MW*i), Y + (MH*j));
+					door_StrDown.ShowBitmap();
+					break;
                 default:
                     break;
             }
         }
     }
-	for (int i = 0; i < random_num; i++) {
-		bballs[i].OnShow();
-	}
 	
 }
 int CGameMap::GetIndexValue(int x, int y)
@@ -398,18 +444,13 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	//
 	// 移動球
 	//
-	int i;
 	vector<int> ptr = people.GetRoadLine();
-	for (i = 0; i < NUMBALLS; i++){
-		ball[i].OnMove();
-	}
 	if (!ptr.empty() && !people.IsChoosen()) {
 		TRACE("%d\n", people.GetIt());
 		switch (people.GetIt())
 		{
 		case 0:
-		
-				people.SetMovingUp(true);
+			people.SetMovingUp(true);
 			break;
 		case 1:
 			people.SetMovingRightUp(true);
@@ -451,29 +492,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
     // 移動擦子
     //
 	map.OnMove();
-    //
-    // 判斷擦子是否碰到球
-    //
-    for (i = 0; i < NUMBALLS; i++)
-        if (ball[i].IsAlive() && ball[i].HitEraser(&people))
-        {
-            ball[i].SetIsAlive(false);
-            hits_left.Add(-1);
-
-            //
-            // 若剩餘碰撞次數為0，則跳到Game Over狀態
-            //
-            /*if (hits_left.GetInteger() <= 0)
-            {
-                CAudio::Instance()->Stop(AUDIO_NTUT);	// 停止 MIDI
-                GotoGameState(GAME_STATE_OVER);
-            }*/
-        }
-
-    //
-    // 移動彈跳的球
-    //
-    bball.OnMove();
 }
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
@@ -486,10 +504,6 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     //
     // 開始載入資料
     //
-    int i;
-
-    for (i = 0; i < NUMBALLS; i++)
-        ball[i].LoadBitmap();								// 載入第i個球的圖形
     people.LoadBitmap();
     background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
     map.LoadBitmap();

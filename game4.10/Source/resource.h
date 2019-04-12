@@ -67,6 +67,17 @@
 #define IDB_LINERU                      194
 #define IDB_LINEDOWN                    195
 #define IDB_LINELU                      196
+#define WALL_INVERTE_T                  200
+#define WALL_T                          201
+#define GLASS_STR                       202
+#define GLASS_HOR                       203
+#define GLASS_BROKENHOR                 204
+#define GLASS_BROKENSTR                 205
+#define DOOR_HOR_LEFT                   206
+#define DOOR_HOR_RIGHT                  207
+#define DOOR_STR_UP                     208
+#define DOOR_STR_UP1                    209
+#define DOOR_STR_DOWN                   209
 #define IDC_README                      1001
 #define ID_FILE_PAUSE                   32771
 #define ID_TOGGLE_FULLSCREEN            32772
@@ -79,7 +90,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        198
+#define _APS_NEXT_RESOURCE_VALUE        201
 #define _APS_NEXT_COMMAND_VALUE         32776
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           101

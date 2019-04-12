@@ -354,6 +354,15 @@
     <Image Include="res\bmp00012.bmp" />
     <Image Include="res\bmp00013.bmp" />
     <Image Include="res\bmp00014.bmp" />
+    <Image Include="res\bmp00015.bmp" />
+    <Image Include="res\bmp00016.bmp" />
+    <Image Include="res\bmp00017.bmp" />
+    <Image Include="res\door_str.bmp" />
+    <Image Include="res\glass_ho.bmp" />
+    <Image Include="res\glass_st.bmp" />
+    <Image Include="res\wall_hor.bmp" />
+    <Image Include="res\wall_inv.bmp" />
+    <Image Include="res\wall_str.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

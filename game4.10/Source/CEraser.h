@@ -53,7 +53,7 @@ namespace game_framework {
 	protected:
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
-		CAnimation breakpoint, lineUP, lineRU, lineRight, lineRD, lineDown, lineLD,lineLeft,lineLU;
+		CAnimation breakPoint, lineUP, lineRU, lineRight, lineRD, lineDown, lineLD,lineLeft,lineLU;
 		int x, y;					// 擦子左上角座標
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;

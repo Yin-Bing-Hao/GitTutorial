@@ -70,7 +70,7 @@ void CEraser::LoadBitmap()
     lineRU.AddBitmap(IDB_LINERU, RGB(255, 255, 255));
     lineLD.AddBitmap(IDB_LINELD, RGB(255, 255, 255));
     lineLU.AddBitmap(IDB_LINELU, RGB(255, 255, 255));
-	breakpoint.AddBitmap(IDB_POINT, RGB(255, 255, 255));
+	breakPoint.AddBitmap(IDB_POINT, RGB(255, 255, 255));
 }
 
 void CEraser::OnMove()
@@ -187,7 +187,6 @@ void CEraser::OnMove()
         roadLine.clear();
         roadLine.resize(0);
         it = roadLine.end();
-        line.clear();
     }
 
     //x:({x}), y:({y}),index_x:({index_x}),index_y({index_y})

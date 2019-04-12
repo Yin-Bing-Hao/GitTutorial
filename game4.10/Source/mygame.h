@@ -98,7 +98,9 @@ namespace game_framework {
 		~CGameMap();
 	protected:
 		CMovingBitmap RightUpCorner,LeftUpCorner,RightDownCorner,LeftDownCorner,Horizonal,Vertical;
-		CMovingBitmap wall_Horizontal, wall_Straight,wall_LU, wall_LD, wall_RU, wall_RD;
+		CMovingBitmap wall_Horizontal, wall_Straight,wall_LU, wall_LD, wall_RU, wall_RD,wall_Invertr_T,wall_T;
+		CMovingBitmap glass_Straight, glass_Horizontal,glass_BrokenStraight,glass_BrokenHorizontal;
+		CMovingBitmap door_StrUp, door_StrDown, door_HorRight, door_HorLeft;
 		int map[COL][ROW];
 		const int X, Y;
 		const int MW, MH;
