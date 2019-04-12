@@ -6,62 +6,64 @@
 #include "gamelib.h"
 #include <vector>
 #include "mygame.h"
-#include "CEraser.h"
+#include "Soldier.h"
 #include<iostream>
 
 namespace game_framework
 {
 /////////////////////////////////////////////////////////////////////////////
-// CEraser: Eraser class
+// Soldier: Eraser class
 /////////////////////////////////////////////////////////////////////////////
 
-CEraser::CEraser()
+Soldier::Soldier()
 {
     Initialize();
 }
 
-int CEraser::GetX1()
+int Soldier::GetX1()
 {
     return x;
 }
 
-int CEraser::GetY1()
+int Soldier::GetY1()
 {
     return y;
 }
 
-int CEraser::GetX2()
+int Soldier::GetX2()
 {
     return x + peopleU.Width();
 }
 
-int CEraser::GetY2()
+int Soldier::GetY2()
 {
     return y + peopleU.Height();
 }
 
-void CEraser::Initialize()
+void Soldier::Initialize()
 {
     const int X_POS = SIZE;
     const int Y_POS = SIZE;
     x = X_POS;
     y = Y_POS;
     index_x = index_y = 1;
-    isChoosen = isWatchDown = isWatchLeft = isWatchLeftDown = isWatchLeftUp = isWatchRight = isWatchRightDown = isWatchRightUp = isWatchUp = isMovingLeft = isMovingRight = isMovingUp = isMovingDown = false;
-    it = roadLine.end();
-    last = 2;
+	isChoosen = isWatchDown = isWatchLeft = isWatchLeftDown = isWatchLeftUp = isWatchRight = isWatchRightDown = isWatchRightUp = isWatchUp = false;
+	isMovingLeft = isMovingRight = isMovingUp = isMovingDown = isMovingLeftDown = isMovingLeftUp = isMovingRightDown = isMovingRightUp = false;
+	isMoveNextIndex = false;
+	way = roadLine.end();
+	direction = 2;
 }
 
-void CEraser::LoadBitmap()
+void Soldier::LoadBitmap()
 {
-    peopleL.AddBitmap("Bitmaps/soldier2_Left.bmp", RGB(255, 255, 255));
-    peopleU.AddBitmap("Bitmaps/soldier2_Up.bmp", RGB(255, 255, 255));
-    peopleR.AddBitmap("Bitmaps/soldier2_Right.bmp", RGB(255, 255, 255));
-    peopleD.AddBitmap("Bitmaps/soldier2_Down.bmp", RGB(255, 255, 255));
-    peopleRU.AddBitmap("Bitmaps/soldier2_RU.bmp", RGB(255, 255, 255));
-    peopleLU.AddBitmap("Bitmaps/soldier2_LU.bmp", RGB(255, 255, 255));
-    peopleRD.AddBitmap("Bitmaps/soldier2_RD.bmp", RGB(255, 255, 255));
-    peopleLD.AddBitmap("Bitmaps/soldier2_LD.bmp", RGB(255, 255, 255));
+    peopleL.AddBitmap("Bitmaps/Soldier2_Left.bmp", RGB(255, 255, 255));
+    peopleU.AddBitmap("Bitmaps/Soldier2_Up.bmp", RGB(255, 255, 255));
+    peopleR.AddBitmap("Bitmaps/Soldier2_Right.bmp", RGB(255, 255, 255));
+    peopleD.AddBitmap("Bitmaps/Soldier2_Down.bmp", RGB(255, 255, 255));
+    peopleRU.AddBitmap("Bitmaps/Soldier2_RU.bmp", RGB(255, 255, 255));
+    peopleLU.AddBitmap("Bitmaps/Soldier2_LU.bmp", RGB(255, 255, 255));
+    peopleRD.AddBitmap("Bitmaps/Soldier2_RD.bmp", RGB(255, 255, 255));
+    peopleLD.AddBitmap("Bitmaps/Soldier2_LD.bmp", RGB(255, 255, 255));
     lineUP.AddBitmap(IDB_LINEUP, RGB(255, 255, 255));
     lineRight.AddBitmap(IDB_LINERIGHT, RGB(255, 255, 255));
     lineDown.AddBitmap(IDB_LINEDOWN, RGB(255, 255, 255));
@@ -73,10 +75,11 @@ void CEraser::LoadBitmap()
 	breakPoint.AddBitmap(IDB_POINT, RGB(255, 255, 255));
 }
 
-void CEraser::OnMove()
+void Soldier::OnMove()
 {
     const int STEP_SIZE = 4;
-    //int iter_x, iter_y;
+    //int wayer_x, iter_y;
+	isMoveNextIndex = false;
 
     if (isMovingLeft)
     {
@@ -85,7 +88,8 @@ void CEraser::OnMove()
         else
         {
             index_x--;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
@@ -96,7 +100,8 @@ void CEraser::OnMove()
         else
         {
             index_x++;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
@@ -107,7 +112,8 @@ void CEraser::OnMove()
         else
         {
             index_y--;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
@@ -118,7 +124,8 @@ void CEraser::OnMove()
         else
         {
             index_y++;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
@@ -133,7 +140,8 @@ void CEraser::OnMove()
         {
             index_y--;
             index_x++;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
@@ -148,7 +156,8 @@ void CEraser::OnMove()
         {
             index_y++;
             index_x++;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
@@ -163,7 +172,8 @@ void CEraser::OnMove()
         {
             index_y--;
             index_x--;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
@@ -178,126 +188,195 @@ void CEraser::OnMove()
         {
             index_y++;
             index_x--;
-            it++;
+			isMoveNextIndex = true;
+            way++;
         }
     }
 
-    if (it == roadLine.end())
+    if (way == roadLine.end())
     {
         roadLine.clear();
         roadLine.resize(0);
-        it = roadLine.end();
+        way = roadLine.end();
     }
 
     //x:({x}), y:({y}),index_x:({index_x}),index_y({index_y})
 }
-int CEraser::GetIndexX()
+int Soldier::GetIndexX()
 {
     return index_x;
 }
-int CEraser::GetIndexY()
+int Soldier::GetIndexY()
 {
     return index_y;
 }
-void CEraser::MoveLeftIndex()
+void Soldier::MoveL(bool flag, CGameMap& map)
+{
+	if (flag && isMovingLeft)
+	{
+		map.SetIndexValue(index_x + 1, index_y, 0);
+		isMoveNextIndex = false;
+	}
+}
+void Soldier::MoveR(bool flag, CGameMap& map)
+{
+	if (flag && isMovingRight)
+	{
+		map.SetIndexValue(index_x - 1, index_y, 0);
+		isMoveNextIndex = false;
+	}
+}
+void Soldier::MoveU(bool flag, CGameMap& map)
+{
+	if (flag && isMovingUp)
+	{
+		map.SetIndexValue(index_x, index_y + 1, 0);
+		isMoveNextIndex = false;
+	}
+}
+void Soldier::MoveD(bool flag, CGameMap& map)
+{
+	if (flag && isMovingDown)
+	{
+		map.SetIndexValue(index_x, index_y - 1, 0);
+		isMoveNextIndex = false;
+	}
+}
+void Soldier::MoveLU(bool flag, CGameMap& map)
+{
+	if (flag && isMovingLeftUp)
+	{
+		map.SetIndexValue(index_x + 1, index_y + 1, 0);
+		isMoveNextIndex = false;
+	}
+}
+void Soldier::MoveLD(bool flag, CGameMap& map)
+{
+	if (flag && isMovingLeftDown)
+	{
+		map.SetIndexValue(index_x + 1, index_y - 1, 0);
+		isMoveNextIndex = false;
+	}
+}
+void Soldier::MoveRU(bool flag, CGameMap& map)
+{
+	if (flag && isMovingRightUp)
+	{
+		map.SetIndexValue(index_x - 1, index_y + 1, 0);
+		isMoveNextIndex = false;
+	}
+}
+void Soldier::MoveRD(bool flag, CGameMap& map)
+{
+	if (flag && isMovingRightDown)
+	{
+		map.SetIndexValue(index_x - 1, index_y - 1, 0);
+		isMoveNextIndex = false;
+	}
+}
+bool Soldier::GetIsMoveNext()
+{
+	return isMoveNextIndex;
+}
+void Soldier::MoveLeftIndex()
 {
     index_x -= 1;
 }
-void CEraser::MoveRightIndex()
+void Soldier::MoveRightIndex()
 {
     index_x += 1;
 }
-void CEraser::MoveUpIndex()
+void Soldier::MoveUpIndex()
 {
     index_y -= 1;
 }
-void CEraser::MoveDownIndex()
+void Soldier::MoveDownIndex()
 {
     index_y += 1;
 }
-void CEraser::SetMovingRightDown(bool flag)
+void Soldier::SetMovingRightDown(bool flag)
 {
     isMovingRightDown = flag;
 }
-void CEraser::SetMovingLeftDown(bool flag)
+void Soldier::SetMovingLeftDown(bool flag)
 {
     isMovingLeftDown = flag;
 }
-void CEraser::SetMovingRightUp(bool flag)
+void Soldier::SetMovingRightUp(bool flag)
 {
     isMovingRightUp = flag;
 }
-void CEraser::SetMovingLeftUp(bool flag)
+void Soldier::SetMovingLeftUp(bool flag)
 {
     isMovingLeftUp = flag;
 }
-void CEraser::SetMovingDown(bool flag)
+void Soldier::SetMovingDown(bool flag)
 {
     isMovingDown = flag;
 }
 
-void CEraser::SetMovingLeft(bool flag)
+void Soldier::SetMovingLeft(bool flag)
 {
     isMovingLeft = flag;
 }
 
-void CEraser::SetMovingRight(bool flag)
+void Soldier::SetMovingRight(bool flag)
 {
     isMovingRight = flag;
 }
 
-void CEraser::SetMovingUp(bool flag)
+void Soldier::SetMovingUp(bool flag)
 {
     isMovingUp = flag;
 }
 
-void CEraser::SetChoosen(bool flag)
+void Soldier::SetChoosen(bool flag)
 {
     isChoosen = flag;
 }
-void CEraser::SetWatchUp(bool flag)
+void Soldier::SetWatchUp(bool flag)
 {
     isWatchUp = flag;
 }
 
-void CEraser::SetWatchDown(bool flag)
+void Soldier::SetWatchDown(bool flag)
 {
     isWatchDown = flag;
 }
 
-void CEraser::SetWatchRight(bool flag)
+void Soldier::SetWatchRight(bool flag)
 {
     isWatchRight = flag;
 }
 
-void CEraser::SetWatchLeft(bool flag)
+void Soldier::SetWatchLeft(bool flag)
 {
     isWatchLeft = flag;
 }
 
-void CEraser::SetWatchLeftUp(bool flag)
+void Soldier::SetWatchLeftUp(bool flag)
 {
     isWatchLeftUp = flag;
 }
-void CEraser::SetWatchRightUp(bool flag)
+void Soldier::SetWatchRightUp(bool flag)
 {
     isWatchRightUp = flag;
 }
-void CEraser::SetWatchRightDown(bool flag)
+void Soldier::SetWatchRightDown(bool flag)
 {
     isWatchRightDown = flag;
 }
-void CEraser::SetWatchLeftDown(bool flag)
+void Soldier::SetWatchLeftDown(bool flag)
 {
     isWatchLeftDown = flag;
 }
 
-void CEraser::SetXY(int nx, int ny)
+void Soldier::SetXY(int nx, int ny)
 {
     x = nx;
     y = ny;
 }
-void CEraser::DrawLineFirst(vector<int>::iterator iter, int *line_x, int *line_y) {
+void Soldier::DrawLineFirst(vector<int>::iterator iter, int *line_x, int *line_y) {
 	switch (*iter)
 	{
 	case 0:
@@ -334,7 +413,7 @@ void CEraser::DrawLineFirst(vector<int>::iterator iter, int *line_x, int *line_y
 
 	case 5:
 		*line_x -= 1;
-		*line_y -= 1;
+		*line_y += 1;
 		lineRU.SetTopLeft(*line_x*40, *line_y*40);
 		lineRU.OnShow();
 		break;
@@ -356,7 +435,7 @@ void CEraser::DrawLineFirst(vector<int>::iterator iter, int *line_x, int *line_y
 		break;
 	}
 }
-void CEraser::DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y) {
+void Soldier::DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y) {
 	switch (*iter)
 	{
 	case 0:
@@ -403,12 +482,12 @@ void CEraser::DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y)
 		break;
 	}
 }
-void CEraser::OnShow()
+void Soldier::OnShow()
 {
     if (!roadLine.empty())
     {
 		int line_x=index_x, line_y=index_y;
-        for (vector<int>::iterator iter = it; iter != roadLine.end(); iter++)
+        for (vector<int>::iterator iter = way; iter != roadLine.end(); iter++)
         {
 				DrawLineSecond(iter,&line_x, &line_y);
 				DrawLineFirst(iter, &line_x, &line_y);
@@ -419,31 +498,31 @@ void CEraser::OnShow()
     {
         peopleD.SetTopLeft(x, y);
         peopleD.OnShow();
-        last = 4;
+        direction = 4;
     }
     else if (isWatchLeft)
     {
         peopleL.SetTopLeft(x, y);
         peopleL.OnShow();
-        last = 6;
+        direction = 6;
     }
     else if (isWatchRight)
     {
         peopleR.SetTopLeft(x, y);
         peopleR.OnShow();
-        last = 2;
+        direction = 2;
     }
     else if (isWatchUp)
     {
         peopleU.SetTopLeft(x, y);
         peopleU.OnShow();
-        last = 0;
+        direction = 0;
     }
-    else if (it != roadLine.end())
+    else if (way != roadLine.end())
     {
-        last = *it;
+        direction = *way;
 
-        switch (*it)
+        switch (*way)
         {
             case 0:
                 peopleU.SetTopLeft(x, y);
@@ -491,7 +570,7 @@ void CEraser::OnShow()
     }
     else
     {
-        switch (last)
+        switch (direction)
         {
             case 0:
                 peopleU.SetTopLeft(x, y);
@@ -538,11 +617,11 @@ void CEraser::OnShow()
         }
     }
 }
-bool CEraser::IsChoosen()
+bool Soldier::IsChoosen()
 {
     return isChoosen;
 }
-void CEraser::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
+void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
 {
     if (roadLine.empty())
     {
@@ -553,71 +632,70 @@ void CEraser::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
     TRACE("Mouse %d %d\n", mouse_x, mouse_y);
     TRACE("moving_index position in array: %d %d\n", moving_index_x, moving_index_y);
 
-    while (mouse_y > 0 && mouse_x < ROW && map.GetIndexValue(moving_index_y - 1, moving_index_x + 1) == 0 && mouse_x  > moving_index_x && mouse_y <  moving_index_y)
-    {
-        roadLine.push_back(1);
-        moving_index_x += 1;
-        moving_index_y -= 1;
-    }
+	while (mouse_y > 0 && mouse_x < ROW && map.GetIndexValue(moving_index_x + 1, moving_index_y - 1) < 3 && mouse_x > moving_index_x && mouse_y < moving_index_y)
+	{
+		roadLine.push_back(1);
+		moving_index_x += 1;
+		moving_index_y -= 1;
+	}
 
-    while (mouse_y < COL && mouse_x < ROW && map.GetIndexValue(moving_index_y + 1, moving_index_x + 1) == 0 && mouse_x >  moving_index_x && mouse_y >  moving_index_y)
-    {
-        roadLine.push_back(3);
-        moving_index_x += 1;
-        moving_index_y += 1;
-    }
+	while (mouse_y < COL && mouse_x < ROW && map.GetIndexValue(moving_index_x + 1, moving_index_y + 1) < 3 && mouse_x > moving_index_x && mouse_y >  moving_index_y)
+	{
+		roadLine.push_back(3);
+		moving_index_x += 1;
+		moving_index_y += 1;
+	}
 
-    while (mouse_y  < COL && mouse_x > 0 && map.GetIndexValue(moving_index_y + 1, moving_index_x - 1) == 0 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
-    {
-        roadLine.push_back(5);
-        moving_index_x -= 1;
-        moving_index_y += 1;
-    }
+	while (mouse_y < COL && mouse_x > 0 && map.GetIndexValue(moving_index_x - 1, moving_index_y + 1) < 3 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
+	{
+		roadLine.push_back(5);
+		moving_index_x -= 1;
+		moving_index_y += 1;
+	}
 
-    while (mouse_y > 0 && mouse_x > 0 && map.GetIndexValue(moving_index_y - 1, moving_index_x - 1) == 0 && mouse_x < moving_index_x && mouse_y < moving_index_y)
-    {
-        roadLine.push_back(7);
-        moving_index_x -= 1;
-        moving_index_y -= 1;
-    }
+	while (mouse_y > 0 && mouse_x > 0 && map.GetIndexValue(moving_index_x - 1, moving_index_y - 1) < 3 && mouse_x < moving_index_x && mouse_y < moving_index_y)
+	{
+		roadLine.push_back(7);
+		moving_index_x -= 1;
+		moving_index_y -= 1;
+	}
 
-    while (mouse_x < ROW && map.GetIndexValue(moving_index_y, moving_index_x + 1) == 0 && mouse_x > moving_index_x)
-    {
-        roadLine.push_back(2);
-        moving_index_x += 1;
+	while (mouse_x < ROW && map.GetIndexValue(moving_index_x + 1, moving_index_y) < 3 && mouse_x > moving_index_x)
+	{
+		roadLine.push_back(2);
+		moving_index_x += 1;
+	}
 
-    }
+	while (mouse_x > 0 && map.GetIndexValue(moving_index_x - 1, moving_index_y) < 3 && mouse_x < moving_index_x)
+	{
+		roadLine.push_back(6);
+		moving_index_x -= 1;
+	}
 
-    while (mouse_x > 0 && map.GetIndexValue(moving_index_y, moving_index_x - 1) == 0 && mouse_x  < moving_index_x)
-    {
-        roadLine.push_back(6);
-        moving_index_x -= 1;
-    }
+	while (mouse_y < COL && map.GetIndexValue(moving_index_x, moving_index_y + 1) < 3 && mouse_y > moving_index_y)
+	{
+		roadLine.push_back(4);
+		moving_index_y += 1;
+	}
 
-    while (mouse_y < COL && map.GetIndexValue(moving_index_y + 1, moving_index_x) == 0 && mouse_y  > moving_index_y)
-    {
-        roadLine.push_back(4);
-        moving_index_y += 1;
-    }
+	while (mouse_y > 0 && map.GetIndexValue(moving_index_x, moving_index_y - 1) < 3 && mouse_y < moving_index_y)
+	{
+		roadLine.push_back(0);
+		moving_index_y -= 1;
+	}
 
-    while (mouse_y > 0 && map.GetIndexValue(moving_index_y - 1, moving_index_x) == 0 && mouse_y  < moving_index_y)
-    {
-        roadLine.push_back(0);
-        moving_index_y -= 1;
-    }
-
-    it = roadLine.begin();
+    way = roadLine.begin();
 }
-const vector<int>& CEraser::GetRoadLine()
+const vector<int>& Soldier::GetRoadLine()
 {
     return roadLine;
 }
 
-const int  CEraser::GetIt()
+const int  Soldier::GetWay()
 {
-    if (it != roadLine.end())
+    if (way != roadLine.end())
     {
-        return *it;
+        return *way;
     }
 
     return -1;

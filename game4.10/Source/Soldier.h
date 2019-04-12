@@ -1,5 +1,5 @@
-#ifndef SOLIDER
-#define SOLIDER
+#ifndef SOLIDER_H
+#define SOLIDER_H
 
 
 namespace game_framework {
@@ -8,10 +8,10 @@ namespace game_framework {
 	// 看懂就可以改寫成自己的程式了
 	/////////////////////////////////////////////////////////////////////////////
 	class CGameMap;
-	class CEraser
+	class Soldier
 	{
 	public:
-		CEraser();
+		Soldier();
 		int  GetX1();					// 擦子左上角 x 座標
 		int  GetY1();					// 擦子左上角 y 座標
 		int  GetX2();					// 擦子右下角 x 座標
@@ -26,6 +26,14 @@ namespace game_framework {
 		void MoveRightIndex();
 		void MoveUpIndex();
 		void MoveDownIndex();
+		void MoveL(bool flag, CGameMap& map);
+		void MoveR(bool flag, CGameMap& map);
+		void MoveU(bool flag, CGameMap& map);
+		void MoveD(bool flag, CGameMap& map);
+		void MoveLU(bool flag, CGameMap& map);
+		void MoveLD(bool flag, CGameMap& map);
+		void MoveRU(bool flag, CGameMap& map);
+		void MoveRD(bool flag, CGameMap& map);
 		void SetMovingDown(bool flag);	// 設定是否正在往下移動
 		void SetMovingLeft(bool flag);	// 設定是否正在往左移動
 		void SetMovingRight(bool flag); // 設定是否正在往右移動
@@ -47,9 +55,10 @@ namespace game_framework {
 		void DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y);
 		void SetXY(int nx, int ny);		// 設定擦子左上角座標
 		bool IsChoosen();
+		bool GetIsMoveNext();
 		void SetRoadLine(int mouse_x, int mouse_y, CGameMap& map);
 		const vector<int>& GetRoadLine();
-		const int GetIt();
+		const int GetWay();
 	protected:
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
@@ -57,7 +66,8 @@ namespace game_framework {
 		int x, y;					// 擦子左上角座標
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;
-		int last;
+		int direction;
+		bool isMoveNextIndex;		//是否移動到下一格位置
 		bool isMovingDown;			// 是否正在往下移動
 		bool isMovingLeft;			// 是否正在往左移動
 		bool isMovingRight;			// 是否正在往右移動
@@ -76,9 +86,9 @@ namespace game_framework {
 		bool isWatchRightUp;			//是否往右上看
 		bool isChoosen;
 		vector<int> roadLine;
-		vector<int>::iterator it;
+		vector<int>::iterator way;
 		vector<vector<int> > line;
 		vector<int> lineXY;
 	};
 }
-#endif // !Solider
+#endif // !Solider_H

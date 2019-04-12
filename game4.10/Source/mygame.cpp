@@ -26,7 +26,7 @@
  *         demonstrate the use of states.
  *      2. Demo the use of CInteger in CGameStateRun.
  *   2005-09-13
- *      Rewrite the codes for CBall and CEraser.
+ *      Rewrite the codes for CBall and Soldier.
  *   2005-09-20 V4.2Beta1.
  *   2005-09-29 V4.2Beta2.
  *      1. Add codes to display IDC_GAMECURSOR in GameStateRun.
@@ -344,11 +344,11 @@ void CGameMap::OnShow()
 }
 int CGameMap::GetIndexValue(int x, int y)
 {
-    return map[x][y];
+    return map[y][x];
 }
 void CGameMap::SetIndexValue(int x, int y, int value)
 {
-    map[x][y] = value;
+    map[y][x] = value;
 }
 
 void CGameMap::InitializeBouncingBall(int ini_index, int row, int col) {
@@ -396,12 +396,12 @@ CGameMap::~CGameMap() {}
 CGameStateRun::CGameStateRun(CGame* g)
     : CGameState(g), NUMBALLS(28)
 {
-    ball = new CBall [NUMBALLS];
+   // ball = new CBall [NUMBALLS];
 }
 
 CGameStateRun::~CGameStateRun()
 {
-    delete [] ball;
+    //delete [] ball;
 }
 
 void CGameStateRun::OnBeginState()
@@ -415,14 +415,14 @@ void CGameStateRun::OnBeginState()
     const int BACKGROUND_X = 60;
     const int ANIMATION_SPEED = 15;
 
-    for (int i = 0; i < NUMBALLS; i++)  				// 設定球的起始座標
-    {
-        int x_pos = i % BALL_PER_ROW;
-        int y_pos = i / BALL_PER_ROW;
-        ball[i].SetXY(x_pos * BALL_GAP + BALL_XY_OFFSET, y_pos * BALL_GAP + BALL_XY_OFFSET);
-        ball[i].SetDelay(x_pos);
-        ball[i].SetIsAlive(true);
-    }
+    //for (int i = 0; i < NUMBALLS; i++)  				// 設定球的起始座標
+    //{
+    //    int x_pos = i % BALL_PER_ROW;
+    //    int y_pos = i / BALL_PER_ROW;
+    //    ball[i].SetXY(x_pos * BALL_GAP + BALL_XY_OFFSET, y_pos * BALL_GAP + BALL_XY_OFFSET);
+    //    ball[i].SetDelay(x_pos);
+    //    ball[i].SetIsAlive(true);
+    //}
 
     people.Initialize();
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
@@ -446,8 +446,8 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	//
 	vector<int> ptr = people.GetRoadLine();
 	if (!ptr.empty() && !people.IsChoosen()) {
-		TRACE("%d\n", people.GetIt());
-		switch (people.GetIt())
+		TRACE("%d\n", people.GetWay());
+		switch (people.GetWay())
 		{
 		case 0:
 			people.SetMovingUp(true);
@@ -477,7 +477,15 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			break;
 		}
 		people.OnMove();
-
+		map.SetIndexValue(people.GetIndexX(), people.GetIndexY(), 1);
+		people.MoveU(people.GetIsMoveNext(), map);
+		people.MoveRU(people.GetIsMoveNext(), map);
+		people.MoveR(people.GetIsMoveNext(), map);
+		people.MoveRD(people.GetIsMoveNext(), map);
+		people.MoveD(people.GetIsMoveNext(), map);
+		people.MoveLD(people.GetIsMoveNext(), map);
+		people.MoveL(people.GetIsMoveNext(), map);
+		people.MoveLU(people.GetIsMoveNext(), map);
 		people.SetMovingUp(false);
 		people.SetMovingRight(false);
 		people.SetMovingDown(false);
@@ -487,6 +495,15 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		people.SetMovingLeftUp(false);
 		people.SetMovingLeftDown(false);
 	}
+	
+	/*for (int i = 0;i < COL;i++)
+	{
+		for (int j = 0;j < ROW;j++)
+		{
+			if(map.GetIndexValue(j,i)==1)
+				TRACE("Soldier in map %d %d\n", j, i);
+		}
+	}*/
 	TRACE("%d,%d\n", people.GetIndexX(), people.GetIndexY());
     //
     // 移動擦子

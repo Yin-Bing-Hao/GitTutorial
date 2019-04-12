@@ -112,8 +112,6 @@ IDB_POINT               BITMAP                  "..\\res\\bmp00007.bmp"
 
 WALL_HORIZONTAL         BITMAP                  "..\\res\\bmp00002.bmp"
 
-Soldier                 BITMAP                  "..\\res\\bitmap5.bmp"
-
 WALL_STRAIGHT           BITMAP                  "..\\res\\bmp00003.bmp"
 
 WALL_LU                 BITMAP                  "..\\res\\bmp00004.bmp"

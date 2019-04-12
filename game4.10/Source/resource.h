@@ -42,7 +42,6 @@
 #define IDB_POINT                       166
 #define IDB_BITMAP4                     169
 #define WALL_HORIZONTAL                 169
-#define Soldier                         170
 #define WALL_STRAIGHT                   171
 #define Soldier1                        172
 #define Soldier2_LU                     173

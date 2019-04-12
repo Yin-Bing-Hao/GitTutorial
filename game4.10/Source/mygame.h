@@ -22,7 +22,7 @@
  *      1. Add CGameStateInit, CGameStateRun, and CGameStateOver to
  *         demonstrate the use of states.
  *   2005-09-13
- *      Rewrite the codes for CBall and CEraser.
+ *      Rewrite the codes for CBall and Soldier.
  *   2005-09-20 V4.2Beta1.
  *   2005-09-29 V4.2Beta2.
  *   2006-02-08 V4.2
@@ -38,8 +38,8 @@
  *      3. Use ShowInitProgress(percent) to display loading progress.
 */
 
-#include "CEraser.h"
-#include "CBall.h"
+#include "Soldier.h"
+//#include "CBall.h"
 #include "CBouncingBall.h"
 
 #ifndef MYGAME_H
@@ -133,9 +133,9 @@ namespace game_framework {
 		const int		NUMBALLS;	// 球的總數
 		CMovingBitmap	background;	// 背景圖
 		CMovingBitmap	help;		// 說明圖
-		CBall			*ball;		// 球的陣列
+		//CBall			*ball;		// 球的陣列
 		CMovingBitmap	corner;		// 角落圖
-		CEraser			people;		// 拍子
+		Soldier			people;		// 拍子
 		CInteger		hits_left;	// 剩下的撞擊數
 		CBouncingBall   bball;		// 反覆彈跳的球
 		
