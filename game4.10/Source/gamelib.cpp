@@ -531,6 +531,7 @@ void CGame::OnDraw()
 		bmp.LoadBitmap(IDB_CONTINUE);
 		bmp.SetTopLeft(0,0);
 		bmp.ShowBitmap();
+
 	}
 	CDDraw::BltBackToPrimary();				// 將 Back Plain 貼到螢幕
 }
@@ -548,6 +549,7 @@ void  CGame::OnFilePause()
 		running = true;
 	}
 }
+
 
 bool CGame::OnIdle()  // 修改功能不要修改OnIdle()，而應修改OnMove()及OnShow()
 {

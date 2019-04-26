@@ -158,6 +158,12 @@ DOOR_STR_UP             BITMAP                  "..\\res\\bmp00017.bmp"
 
 DOOR_STR_DOWN           BITMAP                  "..\\res\\door_str.bmp"
 
+BACK_SIDEWALK           BITMAP                  "..\\res\\bmp00018.bmp"
+
+GAME_STOP               BITMAP                  "..\\res\\bmp00019.bmp"
+
+GAME_START              BITMAP                  "..\\res\\bmp00020.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

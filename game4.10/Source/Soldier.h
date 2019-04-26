@@ -34,6 +34,7 @@ namespace game_framework {
 		void MoveLD(bool flag, CGameMap& map);
 		void MoveRU(bool flag, CGameMap& map);
 		void MoveRD(bool flag, CGameMap& map);
+		void TestNext(CGameMap& map);
 		void SetMovingDown(bool flag);	// 設定是否正在往下移動
 		void SetMovingLeft(bool flag);	// 設定是否正在往左移動
 		void SetMovingRight(bool flag); // 設定是否正在往右移動
@@ -50,6 +51,7 @@ namespace game_framework {
 		void SetWatchRightUp(bool flag);	//設定是否往上看
 		void SetWatchRightDown(bool flag);	//設定是否往右看
 		void SetWatchLeftDown(bool flag);	//設定是否往下看
+		void SetNextDoor(bool flag);
 		void SetChoosen(bool flag);
 		void DrawLineFirst(vector<int>::iterator iter,int *line_x,int *line_y);
 		void DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y);
@@ -84,6 +86,7 @@ namespace game_framework {
 		bool isWatchLeftUp;				//是否往左上看
 		bool isWatchLeftDown;			//是否往左下看
 		bool isWatchRightUp;			//是否往右上看
+		bool isNextDoor;
 		bool isChoosen;
 		vector<int> roadLine;
 		vector<int>::iterator way;
