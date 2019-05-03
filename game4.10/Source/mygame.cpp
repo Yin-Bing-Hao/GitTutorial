@@ -618,7 +618,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 		if (!ptr.empty())
 		{
-			TRACE("%d\n", people.GetWay());
 
 			switch (people.GetWay())
 			{
@@ -686,7 +685,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 					TRACE("Soldier in map %d %d\n", j, i);
 			}
 		}*/
-		TRACE("%d,%d\n", people.GetIndexX(), people.GetIndexY());
 		//
 		// 移動擦子
 		//
@@ -780,13 +778,17 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
     TRACE("Mouse left button down\n");
-
-    if (point.x >= people.GetX1() && point.x <= people.GetX2() && point.y >= people.GetY1() && point.y <= people.GetY2())
-    {
-        TRACE("Get choosen\n");
-        people.SetChoosen(true);
-    }
-
+	
+	people.TestInRedLine(point);
+		if (people.IsSetRoadLine(point))
+		{
+			TRACE("Get choosen\n");
+			people.SetChoosen(true);
+		}
+		else if (people.IsSetAction(point))
+		{
+			TRACE("Action\n");
+		}
     if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960)
     {
         pause.SetChoosen(true);
@@ -813,13 +815,13 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
     static int mouse_x, mouse_y;
     mouse_x = point.x / SIZE;
     mouse_y = point.y / SIZE;
-    TRACE("mouse position in array: %d %d\n", mouse_x, mouse_y);
 
     //TRACE("%d,%d\n", point.x, point.y);
     if (people.IsChoosen())
     {
         people.SetRoadLine(mouse_x, mouse_y, map);
     }
+	
 }
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作

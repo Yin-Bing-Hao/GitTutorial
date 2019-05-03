@@ -34,7 +34,8 @@ namespace game_framework {
 		void MoveLD(bool flag, CGameMap& map);
 		void MoveRU(bool flag, CGameMap& map);
 		void MoveRD(bool flag, CGameMap& map);
-		void TestNext(CGameMap& map);
+		void TestNext(CGameMap& map);	//測試門484在旁邊
+		void TestInRedLine(CPoint point);
 		void SetMovingDown(bool flag);	// 設定是否正在往下移動
 		void SetMovingLeft(bool flag);	// 設定是否正在往左移動
 		void SetMovingRight(bool flag); // 設定是否正在往右移動
@@ -51,13 +52,17 @@ namespace game_framework {
 		void SetWatchRightUp(bool flag);	//設定是否往上看
 		void SetWatchRightDown(bool flag);	//設定是否往右看
 		void SetWatchLeftDown(bool flag);	//設定是否往下看
-		void SetNextDoor(bool flag);
-		void SetChoosen(bool flag);
+		void SetNextDoor(bool flag);		//設定人在門旁邊
+		void SetChoosen(bool flag);			//設定人被選取
+		void SetRoadLine(bool flag);		//設定可畫線
+		void SetAction(bool flag);			//設定做動作
 		void DrawLineFirst(vector<int>::iterator iter,int *line_x,int *line_y);
 		void DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y);
-		void SetXY(int nx, int ny);		// 設定擦子左上角座標
-		bool IsChoosen();
-		bool GetIsMoveNext();
+		void SetXY(int nx, int ny);			// 設定擦子左上角座標
+		bool IsChoosen();					//484被選取
+		bool IsSetRoadLine(CPoint &point);				//484畫線
+		bool IsSetAction(CPoint &point);					//484做動作
+		bool GetIsMoveNext();				
 		void SetRoadLine(int mouse_x, int mouse_y, CGameMap& map);
 		const vector<int>& GetRoadLine();
 		const int GetWay();
@@ -88,6 +93,8 @@ namespace game_framework {
 		bool isWatchRightUp;			//是否往右上看
 		bool isNextDoor;
 		bool isChoosen;
+		bool isSetRoadLine;
+		bool isSetAction;
 		vector<int> roadLine;
 		vector<int>::iterator way;
 		vector<vector<int> > line;
