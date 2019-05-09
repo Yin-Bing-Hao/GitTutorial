@@ -39,6 +39,7 @@
 */
 
 #include "Soldier.h"
+#include "Enemy.h"
 //#include "CBall.h"
 #include "CBouncingBall.h"
 
@@ -178,6 +179,7 @@ class CGameStateRun : public CGameState
         //CBall			*ball;		// 球的陣列
         CMovingBitmap	corner;		// 角落圖
         Soldier			people;		// 拍子
+		vector<Enemy*>	enemy;		// 敵人們
         CInteger		hits_left;	// 剩下的撞擊數
         CBouncingBall   bball;		// 反覆彈跳的球
 

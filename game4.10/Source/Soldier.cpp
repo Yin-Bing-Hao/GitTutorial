@@ -5,9 +5,12 @@
 #include "audio.h"
 #include "gamelib.h"
 #include <vector>
+#include <cmath>
 #include "mygame.h"
+#include "Enemy.h"
 #include "Soldier.h"
 #include<iostream>
+
 
 namespace game_framework
 {
@@ -529,11 +532,11 @@ void Soldier::SetChoosen(bool flag)
 }
 void Soldier::SetRoadLine(bool flag)
 {
-	isSetRoadLine = flag;
+    isSetRoadLine = flag;
 }
 void Soldier::SetAction(bool flag)
 {
-	isSetAction = flag;
+    isSetAction = flag;
 }
 void Soldier::SetWatchUp(bool flag)
 {
@@ -585,6 +588,104 @@ void Soldier::SetXY(int nx, int ny)
 
 #pragma endregion
 
+#pragma region shoot
+void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
+{
+    int dx, dy;
+    int Lx, Ly, Lix, Liy;
+    int rotate_start, rotate_end;
+    double pi;
+
+	this->target = NULL;
+    switch (direction)
+    {
+        case 0:
+            rotate_start = 45;
+            break;
+
+        case 1:
+            rotate_start = 0;
+            break;
+
+        case 2:
+            rotate_start = 315;
+            break;
+
+        case 3:
+            rotate_start = 270;
+            break;
+
+        case 4:
+            rotate_start = 225;
+            break;
+
+        case 5:
+            rotate_start = 180;
+            break;
+
+        case 6:
+            rotate_start = 135;
+            break;
+
+        case 7:
+            rotate_start = 90;
+            break;
+    }
+
+    rotate_end = rotate_start + 90;
+
+    for (int rotate = rotate_start; rotate <= rotate_end; rotate += 3)
+    {
+        Lx = x + 20;
+        Ly = y + 20;
+        Lix = Lx / 40;
+        Liy = Ly / 40;
+        pi = 3.14159265 / 180.0;
+        dx = static_cast<int>(40 * cos(rotate * pi));
+        dy = static_cast<int>(-40 * sin(rotate * pi));
+        TRACE("Search:%d %d %d\n", dx, dy, rotate);
+
+        while (map.GetIndexValue(Lix, Liy) < 3)
+        {
+            TRACE("Search:%d %d %d\n", Lix, Liy, rotate);
+            Lix = Lx / 40;
+            Liy = Ly / 40;
+
+            if (map.GetIndexValue(Lix, Liy) == 2)
+            {
+                for (vector<Enemy*>::iterator iter = enemys.begin(); iter != enemys.end(); iter++)
+                {
+                    if ((*iter)->GetIndexX() == Lix && (*iter)->GetIndexY() == Liy)
+                    {
+                        TRACE("GOT YOU\n");
+                        (*iter)->SetIsSaw(true);
+						if(target==NULL)
+							target = (*iter);
+                    }
+                }
+            }
+
+            Lx += dx;
+            Ly += dy;
+        }
+    }
+}
+void Soldier::attackEnemy()
+{
+	static int aim_time=0;
+	if (target != NULL)
+	{
+		if (aim_time < 2)
+		{
+
+		}
+	}
+	else
+	{
+		aim_time = 0;
+	}
+}
+#pragma endregion
 #pragma region Action
 void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
 {
@@ -724,95 +825,117 @@ bool Soldier::IsChoosen()
 {
     return isChoosen;
 }
-bool Soldier::IsSetRoadLine(CPoint &point)
+bool Soldier::IsSetRoadLine(CPoint& point)
 {
-	int Mx = point.x / 40, My = point.y / 40;
-	if (roadLine.empty())
-		return (Mx == index_x && My == index_y);
-	else
-	{
-		int Rx = index_x, Ry = index_y;
-		for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
-		{
-			switch (*iter)
-			{
-			case 0:
-				Ry--;
-				break;
-			case 1:
-				Ry--;
-				Rx++;
-				break;
-			case 2:
-				Rx++;
-				break;
-			case 3:
-				Rx++;
-				Ry++;
-				break;
-			case 4:
-				Ry++;
-				break;
-			case 5:
-				Rx--;
-				Ry++;
-				break;
-			case 6:
-				Rx--;
-				break;
-			case 7:
-				Rx--;
-				Ry--;
-				break;
-			default:
-				break;
-			}
-		}
-		return Mx == Rx && My == Ry;
-	}
+    int Mx = point.x / 40, My = point.y / 40;
+
+    if (roadLine.empty())
+        return (Mx == index_x && My == index_y);
+    else
+    {
+        int Rx = index_x, Ry = index_y;
+
+        for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
+        {
+            switch (*iter)
+            {
+                case 0:
+                    Ry--;
+                    break;
+
+                case 1:
+                    Ry--;
+                    Rx++;
+                    break;
+
+                case 2:
+                    Rx++;
+                    break;
+
+                case 3:
+                    Rx++;
+                    Ry++;
+                    break;
+
+                case 4:
+                    Ry++;
+                    break;
+
+                case 5:
+                    Rx--;
+                    Ry++;
+                    break;
+
+                case 6:
+                    Rx--;
+                    break;
+
+                case 7:
+                    Rx--;
+                    Ry--;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return Mx == Rx && My == Ry;
+    }
 }
-bool Soldier::IsSetAction(CPoint &point)
+bool Soldier::IsSetAction(CPoint& point)
 {
-	int Mx = point.x / 40, My = point.y / 40;
-	int Rx = index_x, Ry = index_y;
-	for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
-	{
-		switch (*iter)
-		{
-		case 0:
-			Ry--;
-			break;
-		case 1:
-			Ry--;
-			Rx++;
-			break;
-		case 2:
-			Rx++;
-			break;
-		case 3:
-			Rx++;
-			Ry++;
-			break;
-		case 4:
-			Ry++;
-			break;
-		case 5:
-			Rx--;
-			Ry++;
-			break;
-		case 6:
-			Rx--;
-			break;
-		case 7:
-			Rx--;
-			Ry--;
-			break;
-		default:
-			break;
-		}
-		if (Mx == Rx && My == Ry) return true;
-	}
-	return false;
+    int Mx = point.x / 40, My = point.y / 40;
+    int Rx = index_x, Ry = index_y;
+
+    for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
+    {
+        switch (*iter)
+        {
+            case 0:
+                Ry--;
+                break;
+
+            case 1:
+                Ry--;
+                Rx++;
+                break;
+
+            case 2:
+                Rx++;
+                break;
+
+            case 3:
+                Rx++;
+                Ry++;
+                break;
+
+            case 4:
+                Ry++;
+                break;
+
+            case 5:
+                Rx--;
+                Ry++;
+                break;
+
+            case 6:
+                Rx--;
+                break;
+
+            case 7:
+                Rx--;
+                Ry--;
+                break;
+
+            default:
+                break;
+        }
+
+        if (Mx == Rx && My == Ry) return true;
+    }
+
+    return false;
 }
 #pragma endregion
 

@@ -62,8 +62,8 @@
 #include <ddraw.h>
 #include "audio.h"
 #include "gamelib.h"
+#include <cmath>
 #include "mygame.h"
-
 
 
 namespace game_framework
@@ -206,24 +206,24 @@ CGameMap::CGameMap() : X(0), Y(0), MW(SIZE), MH(SIZE)
     {
         {5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6},
         {3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
-        {3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
-        {3, 0, 0, 0, 5, 4, 4, 4, 4, 4, 13, 4, 4, 4, 4, 4, 10, 4, 4, 4, 4, 4, 11, 4, 4, 4, 4, 6, 0, 0, 0, 3},
+        {3, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
+        {3, 0, 3, 0, 5, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 10, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 6, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
+        {3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 7, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
         {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 3},
-        {3, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
-        {3, 0, 0, 0, 7, 4, 4, 4, 4, 4, 4, 11, 4, 4, 4, 4, 9, 4, 4, 4, 13, 4, 4, 15, 4, 4, 4, 8, 0, 0, 0, 3},
-        {3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3},
+        {3, 0, 3, 0, 7, 4, 4, 4, 4, 4, 4, 11, 4, 4, 4, 4, 9, 4, 4, 4, 13, 4, 4, 0, 4, 4, 4, 8, 0, 0, 0, 3},
+        {3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
         {3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
         {7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2},
@@ -584,15 +584,15 @@ void CGameStateRun::OnBeginState()
     const int HITS_LEFT_Y = 0;
     const int BACKGROUND_X = 60;
     const int ANIMATION_SPEED = 15;
-    //for (int i = 0; i < NUMBALLS; i++)  				// 設定球的起始座標
-    //{
-    //    int x_pos = i % BALL_PER_ROW;
-    //    int y_pos = i / BALL_PER_ROW;
-    //    ball[i].SetXY(x_pos * BALL_GAP + BALL_XY_OFFSET, y_pos * BALL_GAP + BALL_XY_OFFSET);
-    //    ball[i].SetDelay(x_pos);
-    //    ball[i].SetIsAlive(true);
-    //}
-    people.Initialize();
+	//for (int i = 0; i < NUMBALLS; i++)  				// 設定球的起始座標
+	//{
+	//	int x_pos = i % BALL_PER_ROW;
+	//	int y_pos = i / BALL_PER_ROW;
+	//	ball[i].SetXY(x_pos * BALL_GAP + BALL_XY_OFFSET, y_pos * BALL_GAP + BALL_XY_OFFSET);
+	//	ball[i].SetDelay(x_pos);
+	//	ball[i].SetIsAlive(true);
+	//}
+	people.Initialize();	
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
     hits_left.SetInteger(HITS_LEFT);					// 指定剩下的撞擊數
@@ -602,6 +602,7 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	static int search_count = 0;
     //
     // 如果希望修改cursor的樣式，則將下面程式的commment取消即可
     //
@@ -612,6 +613,8 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
     //
     // 移動球
     //
+	search_count++;
+	TRACE("enemy:%d\n", map.GetIndexValue(1, 5));
 	if (!pause.GetPause())
 	{
 		vector<int> ptr = people.GetRoadLine();
@@ -656,7 +659,12 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			default:
 				break;
 			}
-
+			for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
+			{
+				(*iter)->OnMove();
+				map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 2);
+				TRACE("Enemy_index:%d %d\n", (*iter)->GetIndexX(), (*iter)->GetIndexY());
+			}
 			people.OnMove();
 			map.SetIndexValue(people.GetIndexX(), people.GetIndexY(), 1);
 			people.MoveU(people.GetIsMoveNext(), map);
@@ -676,7 +684,16 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			people.SetMovingLeftUp(false);
 			people.SetMovingLeftDown(false);
 		}
-
+		if (search_count > 5)
+		{
+			for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
+			{
+				(*iter)->SetIsSaw(false);
+			}
+			people.searchEnemy(map, enemy);
+			search_count = 0;
+		}
+		
 		/*for (int i = 0;i < COL;i++)
 		{
 			for (int j = 0;j < ROW;j++)
@@ -688,6 +705,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		//
 		// 移動擦子
 		//
+		
 		map.OnMove();
 	}
 }
@@ -702,6 +720,12 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     //
     // 開始載入資料
     //
+	enemy.push_back(new Enemy(1, 5, 0));
+	enemy.push_back(new Enemy(5, 1, 0));
+	for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
+	{
+		(*iter)->LoadBitmap();
+	}
     people.LoadBitmap();
     pause.LoadBitmap();
     background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
@@ -849,7 +873,8 @@ void CGameStateRun::OnShow()
     //  貼上背景圖、撞擊數、球、擦子、彈跳的球
     //
     help.ShowBitmap();					// 貼上說明圖
-    back.OnShow();
+	back.OnShow();
+	
     map.OnShow();
     SetCursor(LoadCursor(NULL, IDC_CROSS));
     people.OnShow();
@@ -858,5 +883,9 @@ void CGameStateRun::OnShow()
     corner.SetTopLeft(SIZE_X - corner.Width(), SIZE_Y - corner.Height());
     corner.ShowBitmap();
     pause.OnShow();
+	for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
+	{
+		(*iter)->OnShow();
+	}
 }
 }

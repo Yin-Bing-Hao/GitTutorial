@@ -5,12 +5,18 @@ namespace game_framework {
 	class Enemy
 	{
 	public:
+		Enemy(int x, int y,int dir);
+		//Enemy(int x, int y, Weapon); //待更新weapon class
 		void OnMove();
 		void OnShow();
 		void LoadBitmap();
 		void Initialize();
-
+		int GetIndexX();
+		int GetIndexY();
+		void SetIsSaw(bool flag);
 	private:
+		CAnimation CEU, CELU, CEL, CEDL, CED, CEDR, CER, CEUR;
+		CAnimation test;
 		int lifePoint;
 		int x, y;					// 人物左上角座標
 		int index_x, index_y;
@@ -32,6 +38,7 @@ namespace game_framework {
 		bool isWatchLeftUp;				//是否往左上看
 		bool isWatchLeftDown;			//是否往左下看
 		bool isWatchRightUp;			//是否往右上看
+		bool isSaw;						//是否被看到
 	};
 }
 

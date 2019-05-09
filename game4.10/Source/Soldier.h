@@ -8,6 +8,7 @@ namespace game_framework {
 	// 看懂就可以改寫成自己的程式了
 	/////////////////////////////////////////////////////////////////////////////
 	class CGameMap;
+	class Enemy;
 	class Soldier
 	{
 	public:
@@ -66,6 +67,9 @@ namespace game_framework {
 		void SetRoadLine(int mouse_x, int mouse_y, CGameMap& map);
 		const vector<int>& GetRoadLine();
 		const int GetWay();
+		void searchEnemy(CGameMap& map,vector<Enemy*>& enemys); //搜尋敵人
+		void attackEnemy();
+		void shoot();
 	protected:
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
@@ -99,6 +103,7 @@ namespace game_framework {
 		vector<int>::iterator way;
 		vector<vector<int> > line;
 		vector<int> lineXY;
+		Enemy *target;
 	};
 }
 #endif // !Solider_H
