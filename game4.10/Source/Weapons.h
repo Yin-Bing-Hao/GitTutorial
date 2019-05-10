@@ -4,12 +4,14 @@
 #define WEAPON_H
 namespace game_framework
 {
+
 	class Weapon
 	{
 	public:
 		Weapon(int,int);
 		virtual ~Weapon();
-
+		virtual void Fire() {}
+		int GetDamage();
 	protected:
 		int _damage;
 		int _ammon;
@@ -19,8 +21,8 @@ namespace game_framework
 	public:
 		HK416();
 		virtual ~HK416();
-	protected:
-		int _damage, _ammon;
+		virtual void Fire();
+		
 	private:
 	};
 	

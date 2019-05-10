@@ -7,8 +7,10 @@
 #include <vector>
 #include <cmath>
 #include "mygame.h"
+#include "Weapons.h"
 #include "Enemy.h"
 #include "Soldier.h"
+#include <thread>
 #include<iostream>
 
 
@@ -36,6 +38,7 @@ void Soldier::Initialize()
     isMoveNextIndex = false;
     way = roadLine.end();
     direction = 2;
+	weapon = new HK416();
 }
 
 void Soldier::LoadBitmap()
@@ -595,8 +598,8 @@ void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
     int Lx, Ly, Lix, Liy;
     int rotate_start, rotate_end;
     double pi;
+	Enemy *_target = NULL;
 
-	this->target = NULL;
     switch (direction)
     {
         case 0:
@@ -659,8 +662,8 @@ void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
                     {
                         TRACE("GOT YOU\n");
                         (*iter)->SetIsSaw(true);
-						if(target==NULL)
-							target = (*iter);
+						if(_target==NULL)
+							_target = (*iter);
                     }
                 }
             }
@@ -669,21 +672,35 @@ void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
             Ly += dy;
         }
     }
+	target = _target;
 }
 void Soldier::attackEnemy()
 {
 	static int aim_time=0;
 	if (target != NULL)
 	{
-		if (aim_time < 2)
+		TRACE("WTF:%d\n", aim_time);
+		if (aim_time > 10)
 		{
-
+			TRACE("SHOOT!!!\n");
+			
+			this->shoot();
+			aim_time = 0;
 		}
+		aim_time++;
 	}
 	else
 	{
 		aim_time = 0;
 	}
+}
+void Soldier::shoot()
+{
+	int damage=weapon->GetDamage();
+	thread *fire(new thread(&Weapon::Fire, weapon));
+	target->Hurt(damage);
+	if (fire->joinable())fire->join();
+	
 }
 #pragma endregion
 #pragma region Action

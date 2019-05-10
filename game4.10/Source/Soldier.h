@@ -9,6 +9,7 @@ namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	class CGameMap;
 	class Enemy;
+	class Weapon;
 	class Soldier
 	{
 	public:
@@ -104,6 +105,7 @@ namespace game_framework {
 		vector<vector<int> > line;
 		vector<int> lineXY;
 		Enemy *target;
+		Weapon *weapon;
 	};
 }
 #endif // !Solider_H

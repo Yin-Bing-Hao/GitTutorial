@@ -53,4 +53,12 @@ namespace game_framework {
 			test.OnShow();
 		}
 	}
+	void Enemy::Hurt(int damage)
+	{
+		lifePoint -= damage;
+	}
+	int Enemy::GetLifePoint()
+	{
+		return lifePoint;
+	}
 }

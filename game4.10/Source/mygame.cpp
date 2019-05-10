@@ -63,9 +63,11 @@
 #include "audio.h"
 #include "gamelib.h"
 #include <cmath>
+#include "Weapons.h"
 #include "mygame.h"
+#include <thread>
 
-
+using namespace std;
 namespace game_framework
 {
 /////////////////////////////////////////////////////////////////////////////
@@ -617,8 +619,9 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	TRACE("enemy:%d\n", map.GetIndexValue(1, 5));
 	if (!pause.GetPause())
 	{
+		thread *search(new thread(&Soldier::searchEnemy, &people, map, enemy));
 		vector<int> ptr = people.GetRoadLine();
-
+		people.attackEnemy();
 		if (!ptr.empty())
 		{
 
@@ -659,12 +662,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			default:
 				break;
 			}
-			for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
-			{
-				(*iter)->OnMove();
-				map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 2);
-				TRACE("Enemy_index:%d %d\n", (*iter)->GetIndexX(), (*iter)->GetIndexY());
-			}
 			people.OnMove();
 			map.SetIndexValue(people.GetIndexX(), people.GetIndexY(), 1);
 			people.MoveU(people.GetIsMoveNext(), map);
@@ -690,10 +687,29 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			{
 				(*iter)->SetIsSaw(false);
 			}
-			people.searchEnemy(map, enemy);
+			if(search->joinable()) search->join();
 			search_count = 0;
 		}
-		
+		for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
+		{
+			(*iter)->OnMove();
+			map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 2);
+			TRACE("Enemy_index:%d %d\n", (*iter)->GetIndexX(), (*iter)->GetIndexY());
+			TRACE("ENEMYLIFE %d\n", (*iter)->GetLifePoint());
+			if ((*iter)->GetLifePoint() <= 0)
+			{
+				delete (*iter);
+				enemy.erase(iter);
+				if (enemy.empty())
+				{
+					break;
+				}
+				else
+				{
+					iter = enemy.begin();
+				}
+			}
+		}
 		/*for (int i = 0;i < COL;i++)
 		{
 			for (int j = 0;j < ROW;j++)

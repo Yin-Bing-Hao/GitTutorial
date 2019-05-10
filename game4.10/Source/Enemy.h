@@ -14,6 +14,8 @@ namespace game_framework {
 		int GetIndexX();
 		int GetIndexY();
 		void SetIsSaw(bool flag);
+		void Hurt(int);
+		int GetLifePoint();
 	private:
 		CAnimation CEU, CELU, CEL, CEDL, CED, CEDR, CER, CEUR;
 		CAnimation test;
