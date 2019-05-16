@@ -69,6 +69,9 @@ namespace game_framework {
 		const vector<int>& GetRoadLine();
 		const int GetWay();
 		void searchEnemy(CGameMap& map,vector<Enemy*>& enemys); //搜尋敵人
+		void Perspective(CGameMap& map);
+		void draw_line(int x1, int y1, int x2, int y2, CGameMap& map);
+		void Bresenham(int x1, int y1, int x2, int y2, CGameMap& map, int &end_x, int &end_y);
 		void attackEnemy();
 		void shoot();
 	protected:
@@ -78,6 +81,9 @@ namespace game_framework {
 		int x, y;					// 擦子左上角座標
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;
+		int x1, x2, y1, y2;
+		int x11, x12, x21, x22, y11, y12, y21, y22;
+		int end_x, end_y ;
 		int direction;
 		bool isMoveNextIndex;		//是否移動到下一格位置
 		bool isMovingDown;			// 是否正在往下移動

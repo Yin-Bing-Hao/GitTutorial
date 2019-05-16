@@ -42,6 +42,8 @@
 #include "Enemy.h"
 //#include "CBall.h"
 #include "CBouncingBall.h"
+#include "Back.h"
+
 
 #ifndef MYGAME_H
 #define MYGAME_H
@@ -72,7 +74,7 @@ enum AUDIO_ID  				// 定義各種音效的編號
 // 這個class為遊戲的遊戲開頭畫面物件
 // 每個Member function的Implementation都要弄懂
 /////////////////////////////////////////////////////////////////////////////
-
+class Back;
 class CGameStateInit : public CGameState
 {
     public:
@@ -102,6 +104,8 @@ class CGameMap
         void SetIndexValue(int, int, int);
         void OnMove();
         void OnKeyDown(UINT);
+		Back GetBackGround();
+		void SetBackLight(int,int, bool flag);
         void RandomBouncingBall();
         void InitializeBouncingBall(int, int, int);
         ~CGameMap();
@@ -110,10 +114,12 @@ class CGameMap
         CMovingBitmap wall_Horizontal, wall_Straight, wall_LU, wall_LD, wall_RU, wall_RD, wall_Invertr_T, wall_T;
         CMovingBitmap glass_Straight, glass_Horizontal, glass_BrokenStraight, glass_BrokenHorizontal;
         CMovingBitmap door_StrUp, door_StrDown, door_HorRight, door_HorLeft;
-        int map[COL][ROW];
+		CMovingBitmap sand, wood, sidewalk, sand_light, wood_light;
+		int map[COL][ROW];
         const int X, Y;
         const int MW, MH;
         CBouncingBall* bballs;
+		Back** Background;
         int random_num;
 };
 
@@ -135,22 +141,6 @@ class CGamePauseButton
         bool isChoose;
 };
 
-class CGameBack
-{
-    public:
-        CGameBack();
-        void LoadBitmap();
-        void OnShow();
-        int GetIndexValue(int, int);
-        void SetIndexValue(int, int, int);
-        ~CGameBack();
-    protected:
-        const int X, Y;
-        const int MW, MH;
-        int back[48][64];
-        CMovingBitmap sand, wood, sidewalk;
-
-};
 
 
 class CGameStateRun : public CGameState
@@ -176,7 +166,6 @@ class CGameStateRun : public CGameState
     private:
         CGameMap		map;
         CGamePauseButton pause;
-        CGameBack		back;
         const int		NUMBALLS;	// 球的總數
         CMovingBitmap	background;	// 背景圖
         CMovingBitmap	help;		// 說明圖
@@ -185,6 +174,7 @@ class CGameStateRun : public CGameState
         Soldier			people;		// 拍子
 		vector<Enemy*>	enemy;		// 敵人們
         CInteger		hits_left;	// 剩下的撞擊數
+		Back			back;
         CBouncingBall   bball;		// 反覆彈跳的球
 
 };
