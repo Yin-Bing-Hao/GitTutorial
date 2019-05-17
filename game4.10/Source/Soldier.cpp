@@ -595,10 +595,10 @@ void Soldier::SetXY(int nx, int ny)
 #pragma region shoot
 void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
 {
-    int dx, dy;
-    int Lx, Ly, Lix, Liy;
-    int rotate_start, rotate_end;
-	int Light_ix, Light_iy;
+    double dx, dy;
+    double Lx, Ly;
+    double rotate_start, rotate_end;
+	int Light_ix, Light_iy, Lix, Liy;
     double pi;
 	Enemy *_target = NULL;
 
@@ -639,28 +639,28 @@ void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
 	pi = 3.14159265 / 180.0;
     rotate_end = rotate_start + 90;
 	//TRACE("HEHEHEHEHEHE\n");
-    for (int rotate = rotate_start; rotate <= rotate_end; rotate += 3)
+    for (double rotate = rotate_start; rotate <= rotate_end; rotate += 0.02)
     {
         Lx = x+20 ;
         Ly = y+20 ;
-		Lix = Lx / 40;
-        Liy = Ly / 40;
+		Lix = static_cast<int>(Lx) / 40;
+        Liy = static_cast<int>( Ly) / 40;
         
-        dx = static_cast<int>(20 * cos(rotate%360 * pi));
-        dy = static_cast<int>(-20 * sin(rotate%360 * pi));
+        dx = 20 * cos(rotate * pi);
+        dy = -20 * sin(rotate * pi);
 		//------µø³¥
-		Light_ix = Lx / 20;
-		Light_iy = Ly / 20;
+		Light_ix = static_cast<int>(Lx) / 20;
+		Light_iy = static_cast<int>(Ly )/ 20;
 		
         //TRACE("Search:%d %d %d\n", dx, dy, rotate);
 
-        while (map.GetIndexValue(Lix, Liy) < 3)
+        do
         {
             //TRACE("Search:%d %d %d\n", Lix, Liy, rotate);
-            Lix = Lx / 40;
-            Liy = Ly / 40;
-			Light_ix = Lx / 20;
-			Light_iy = Ly / 20;
+            Lix = static_cast<int>( Lx )/ 40;
+            Liy = static_cast<int>( Ly )/ 40;
+			Light_ix = static_cast<int>(Lx) / 20;
+			Light_iy = static_cast<int>( Ly) / 20;
             if (map.GetIndexValue(Lix, Liy) == 2)
             {
                 for (vector<Enemy*>::iterator iter = enemys.begin(); iter != enemys.end(); iter++)
@@ -677,171 +677,11 @@ void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
 			map.SetBackLight(Light_iy, Light_ix, true);
             Lx += dx;
             Ly += dy;
-        }
-    }
+        } while (map.GetIndexValue(Lix, Liy) < 3);
+	}
 	target = _target;
 }
-void Soldier::Perspective(CGameMap & map)
-{
-	switch (direction)
-	{
-	case 0:
-		x11 = x12 = x / 20; x21 = x22 = x / 20 + 1; y11 = y21 = y12 = y22 = y / 20;
-		for (int i = 0; i < 64; i++) {
-			x12--; y12--;
-			if (x12 == 0 || y12 == 0) {break;}
-		}
-		for (int i = 0; i < 64; i++) {
-			x22++; y22--;
-			if (x22 == 63 || y22 == 0) { break;}
-		}
-	case 1:
-		x1 = x2 = x / 20 + 1; y1 = y / 20; y2 = 0;
-	case 2:
-		x11 = x12 = x / 20 + 1; x21 = x22 = x / 20 + 1; y11 = y21 =y/20; y12 = y22 = y / 20 +1;
-		for (int i = 0; i < 64; i++) {
-			x12++; y12--;
-			if (x12 == 63 || y12 == 0) { break; }
-		}
-		for (int i = 0; i < 64; i++) {
-			x22++; y22++;
-			if (x22 == 63 || y22 == 47) { break; }
-		}
-	case 3:
-		x1 = x / 20 + 1; x2 = 63; y1 = y2 = y / 20 + 1;
-	case 4:
-		x11 = x12 = x / 20; x21 = x22 = x / 20 + 1; y11 = y21 = y / 20 + 1; y12 = y22 = y / 20 +1;
-		for (int i = 0; i < 64; i++) {
-			x12++; y12++;
-			if (x12 == 63 || y12 == 47) { break; }
-		}
-		for (int i = 0; i < 64; i++) {
-			x22--; y22++;
-			if (x22 == 0 || y22 == 47) { break; }
-		}
-	case 5:
-		x1 = x2 = x / 20; y1 = y / 20 + 1; y2 = 47;
-	case 6:
-		x11 = x12 = x / 20; x21 = x22 = x / 20; y11 = y21 = y / 20 + 1; y12 = y22 = y / 20;
-		for (int i = 0; i < 64; i++) {
-			x12--; y12++;
-			if (x12 == 0 || y12 == 47) { break; }
-		}
-		for (int i = 0; i < 64; i++) {
-			x22--; y22--;
-			if (x22 == 0 || y22 == 0) { break; }
-		}
-	case 7:
-		x1 = x / 20; x2 = 0; y1 = y2 = y / 20;
-	default:
-		break;
-	}
-	switch (direction)
-	{
-	case 0:
-		for(int i=y12;i>0;i--){
-			Bresenham(x11, y11, x12, y12,map, end_x, end_y);
-			TRACE("X=%d,Y=%d\n", end_x, end_y);
-			draw_line(x11, y11, end_x, end_y,map);
-		}
-		for (int i = x12; i <= x11; i++) {
-			Bresenham(x11, y11, x12, y12, map, end_x, end_y);
-			TRACE("X=%d,Y=%d\n", end_x, end_y);
-			draw_line(x11, y11, end_x, end_y, map);
-		}
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-	case 6:
-	case 7:
-	default:
-		break;
-	}
-}
-void Soldier::draw_line(int x1, int y1, int x2, int y2, CGameMap& map)
-{
-	int dx = x2 - x1;
-	int dy = y2 - y1;
-	int ux = ((dx > 0) << 1) - 1;
-	int uy = ((dy > 0) << 1) - 1;
-	int x = x1, y = y1, eps;
 
-	eps = 0; dx = abs(dx); dy = abs(dy);
-	if (dx > dy)
-	{
-		for (x = x1; x != x2; x += ux)
-		{
-			map.SetBackLight(y, x, true);
-			eps += dy;
-			if ((eps << 1) >= dx)
-			{
-				y += uy; eps -= dx;
-			}
-		}
-		map.SetBackLight(y, x, true);
-	}
-	else
-	{
-		for (y = y1; y != y2; y += uy)
-		{
-			map.SetBackLight(y, x, true);
-			eps += dx;
-			if ((eps << 1) >= dy)
-			{
-				x += ux; eps -= dy;
-			}
-		}
-		map.SetBackLight(y, x, true);
-	}
-}
-void Soldier::Bresenham(int x1, int y1, int x2, int y2 , CGameMap& map,int &end_x,int &end_y)
-{
-	int dx = x2 - x1;
-	int dy = y2 - y1;
-	int ux = ((dx > 0) << 1) - 1;
-	int uy = ((dy > 0) << 1) - 1;
-	int x = x1, y = y1, eps;
-	int map_x=0, map_y=0,map_value=0;
-
-	eps = 0; dx = abs(dx); dy = abs(dy);
-	if (dx > dy)
-	{
-		for (x = x1; x != x2; x += ux)
-		{
-			map_x = x / 2; map_y = y / 2;
-			map_value = map.GetIndexValue(map_x, map_y);
-			if (map_value > 2) { 
-				break; 
-			}
-			eps += dy;
-			if ((eps << 1) >= dx)
-			{
-				y += uy; eps -= dx;
-			}
-			
-		}
-	}
-	else
-	{
-		for (y = y1; y != y2; y += uy)
-		{
-			map_x = x / 2; map_y = y / 2;
-			map_value = map.GetIndexValue(map_x, map_y);
-			if (map_value > 2) { 
-				break; 
-			}
-			eps += dx;
-			if ((eps << 1) >= dy)
-			{
-				x += ux; eps -= dy;
-			}
-		}
-	}
-	end_x = x;
-	end_y = y;
-}
 void Soldier::attackEnemy()
 {
 	static int aim_time=0;

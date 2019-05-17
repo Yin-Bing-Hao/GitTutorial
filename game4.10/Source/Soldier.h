@@ -69,9 +69,6 @@ namespace game_framework {
 		const vector<int>& GetRoadLine();
 		const int GetWay();
 		void searchEnemy(CGameMap& map,vector<Enemy*>& enemys); //·j´M¼Ä¤H
-		void Perspective(CGameMap& map);
-		void draw_line(int x1, int y1, int x2, int y2, CGameMap& map);
-		void Bresenham(int x1, int y1, int x2, int y2, CGameMap& map, int &end_x, int &end_y);
 		void attackEnemy();
 		void shoot();
 	protected:
