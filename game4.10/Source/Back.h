@@ -5,6 +5,7 @@ namespace game_framework {
 	class Back {
 	public:
 		Back();
+		~Back();
 		Back(int NUM, int Lux, int Luy);
 		void Initialize();
 		void LoadBitmap();

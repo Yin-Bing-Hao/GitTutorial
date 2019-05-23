@@ -25,6 +25,7 @@ namespace game_framework {
 		X = Lux;
 		Y = Luy;
 	}
+	Back::~Back(){}
 	void Back::Initialize()
 	{
 		isLight = false;

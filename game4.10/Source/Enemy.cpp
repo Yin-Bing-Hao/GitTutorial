@@ -14,6 +14,7 @@ namespace game_framework {
 	{
 		Initialize();
 	}
+	Enemy::~Enemy() { TRACE("~Enemy()\n"); }
 	void Enemy::Initialize()
 	{
 		const int X_POS = SIZE;

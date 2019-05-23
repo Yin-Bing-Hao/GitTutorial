@@ -11,6 +11,7 @@
 #include "Enemy.h"
 #include "Soldier.h"
 #include <thread>
+#include <memory>
 #include<iostream>
 
 
@@ -24,6 +25,14 @@ namespace game_framework
 Soldier::Soldier()
 {
     Initialize();
+}
+Soldier::~Soldier()
+{
+	TRACE("~Soldier()\n");
+	TRACE("weapon size:%d\n",sizeof(Weapon));
+	delete weapon;
+	weapon = NULL;
+	target = NULL;
 }
 void Soldier::Initialize()
 {
@@ -40,6 +49,7 @@ void Soldier::Initialize()
     way = roadLine.end();
     direction = 2;
 	weapon = new HK416();
+	target = NULL;
 }
 
 void Soldier::LoadBitmap()
@@ -363,7 +373,7 @@ int Soldier::GetIndexY()
 #pragma endregion
 
 #pragma region Move
-void Soldier::MoveL(bool flag, CGameMap& map)
+void Soldier::MoveL(bool flag, CGameMap* map)
 {
     if (flag && isMovingLeft)
     {
@@ -373,11 +383,11 @@ void Soldier::MoveL(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x + 1, index_y, 0);
+        map->SetIndexValue(index_x + 1, index_y, 0);
         isMoveNextIndex = false;
     }
 }
-void Soldier::MoveR(bool flag, CGameMap& map)
+void Soldier::MoveR(bool flag, CGameMap* map)
 {
     if (flag && isMovingRight)
     {
@@ -387,11 +397,11 @@ void Soldier::MoveR(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x - 1, index_y, 0);
+        map->SetIndexValue(index_x - 1, index_y, 0);
         isMoveNextIndex = false;
     }
 }
-void Soldier::MoveU(bool flag, CGameMap& map)
+void Soldier::MoveU(bool flag, CGameMap* map)
 {
     if (flag && isMovingUp)
     {
@@ -401,11 +411,11 @@ void Soldier::MoveU(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x, index_y + 1, 0);
+        map->SetIndexValue(index_x, index_y + 1, 0);
         isMoveNextIndex = false;
     }
 }
-void Soldier::MoveD(bool flag, CGameMap& map)
+void Soldier::MoveD(bool flag, CGameMap* map)
 {
     if (flag && isMovingDown)
     {
@@ -415,11 +425,11 @@ void Soldier::MoveD(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x, index_y - 1, 0);
+        map->SetIndexValue(index_x, index_y - 1, 0);
         isMoveNextIndex = false;
     }
 }
-void Soldier::MoveLU(bool flag, CGameMap& map)
+void Soldier::MoveLU(bool flag, CGameMap* map)
 {
     if (flag && isMovingLeftUp)
     {
@@ -429,11 +439,11 @@ void Soldier::MoveLU(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x + 1, index_y + 1, 0);
+        map->SetIndexValue(index_x + 1, index_y + 1, 0);
         isMoveNextIndex = false;
     }
 }
-void Soldier::MoveLD(bool flag, CGameMap& map)
+void Soldier::MoveLD(bool flag, CGameMap* map)
 {
     if (flag && isMovingLeftDown)
     {
@@ -443,11 +453,11 @@ void Soldier::MoveLD(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x + 1, index_y - 1, 0);
+        map->SetIndexValue(index_x + 1, index_y - 1, 0);
         isMoveNextIndex = false;
     }
 }
-void Soldier::MoveRU(bool flag, CGameMap& map)
+void Soldier::MoveRU(bool flag, CGameMap* map)
 {
     if (flag && isMovingRightUp)
     {
@@ -457,11 +467,11 @@ void Soldier::MoveRU(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x - 1, index_y + 1, 0);
+        map->SetIndexValue(index_x - 1, index_y + 1, 0);
         isMoveNextIndex = false;
     }
 }
-void Soldier::MoveRD(bool flag, CGameMap& map)
+void Soldier::MoveRD(bool flag, CGameMap* map)
 {
     if (flag && isMovingRightDown)
     {
@@ -471,7 +481,7 @@ void Soldier::MoveRD(bool flag, CGameMap& map)
             way = roadLine.begin();
         }
 
-        map.SetIndexValue(index_x - 1, index_y - 1, 0);
+        map->SetIndexValue(index_x - 1, index_y - 1, 0);
         isMoveNextIndex = false;
     }
 }
@@ -593,7 +603,7 @@ void Soldier::SetXY(int nx, int ny)
 #pragma endregion
 
 #pragma region shoot
-void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
+void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys)
 {
     double dx, dy;
     double Lx, Ly;
@@ -661,7 +671,7 @@ void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
             Liy = static_cast<int>( Ly )/ 40;
 			Light_ix = static_cast<int>(Lx) / 20;
 			Light_iy = static_cast<int>( Ly) / 20;
-            if (map.GetIndexValue(Lix, Liy) == 2)
+            if (map->GetIndexValue(Lix, Liy) == 2)
             {
                 for (vector<Enemy*>::iterator iter = enemys.begin(); iter != enemys.end(); iter++)
                 {
@@ -674,12 +684,13 @@ void Soldier::searchEnemy(CGameMap& map, vector<Enemy*>& enemys)
                     }
                 }
             }
-			map.SetBackLight(Light_iy, Light_ix, true);
+			map->SetBackLight(Light_iy, Light_ix, true);
             Lx += dx;
             Ly += dy;
-        } while (map.GetIndexValue(Lix, Liy) < 3);
+        } while (map->GetIndexValue(Lix, Liy) < 3);
 	}
-	target = _target;
+	if(_target!=NULL)
+		target = _target;
 }
 
 void Soldier::attackEnemy()
@@ -705,7 +716,7 @@ void Soldier::attackEnemy()
 void Soldier::shoot()
 {
 	int damage=weapon->GetDamage();
-	thread *fire(new thread(&Weapon::Fire, weapon));
+	unique_ptr<thread> fire(new thread(&Weapon::Fire, weapon));
 	target->Hurt(damage);
 	if (fire->joinable())fire->join();
 	
@@ -713,7 +724,7 @@ void Soldier::shoot()
 #pragma endregion
 
 #pragma region Action
-void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
+void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap* map)
 {
     if (roadLine.empty())
     {
@@ -724,7 +735,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
    // TRACE("Mouse %d %d\n", mouse_x, mouse_y);
    // TRACE("moving_index position in array: %d %d\n", moving_index_x, moving_index_y);
 
-    while (mouse_y > 0 && mouse_x < ROW && map.GetIndexValue(moving_index_x + 1, moving_index_y - 1) < 3 && mouse_x > moving_index_x && mouse_y < moving_index_y)
+    while (mouse_y > 0 && mouse_x < ROW && map->GetIndexValue(moving_index_x + 1, moving_index_y - 1) < 3 && mouse_x > moving_index_x && mouse_y < moving_index_y)
     {
         if (!roadLine.empty() && roadLine.back() == 5)
         {
@@ -737,7 +748,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_y -= 1;
     }
 
-    while (mouse_y < COL && mouse_x < ROW && map.GetIndexValue(moving_index_x + 1, moving_index_y + 1) < 3 && mouse_x > moving_index_x && mouse_y >  moving_index_y)
+    while (mouse_y < COL && mouse_x < ROW && map->GetIndexValue(moving_index_x + 1, moving_index_y + 1) < 3 && mouse_x > moving_index_x && mouse_y >  moving_index_y)
     {
         if (!roadLine.empty() && roadLine.back() == 7)
         {
@@ -750,7 +761,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_y += 1;
     }
 
-    while (mouse_y < COL && mouse_x > 0 && map.GetIndexValue(moving_index_x - 1, moving_index_y + 1) < 3 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
+    while (mouse_y < COL && mouse_x > 0 && map->GetIndexValue(moving_index_x - 1, moving_index_y + 1) < 3 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
     {
         if (!roadLine.empty() && roadLine.back() == 1)
         {
@@ -763,7 +774,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_y += 1;
     }
 
-    while (mouse_y > 0 && mouse_x > 0 && map.GetIndexValue(moving_index_x - 1, moving_index_y - 1) < 3 && mouse_x < moving_index_x && mouse_y < moving_index_y)
+    while (mouse_y > 0 && mouse_x > 0 && map->GetIndexValue(moving_index_x - 1, moving_index_y - 1) < 3 && mouse_x < moving_index_x && mouse_y < moving_index_y)
     {
         if (!roadLine.empty() && roadLine.back() == 3)
         {
@@ -776,7 +787,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_y -= 1;
     }
 
-    while (mouse_x < ROW && map.GetIndexValue(moving_index_x + 1, moving_index_y) < 3 && mouse_x > moving_index_x)
+    while (mouse_x < ROW && map->GetIndexValue(moving_index_x + 1, moving_index_y) < 3 && mouse_x > moving_index_x)
     {
         if (!roadLine.empty() && roadLine.back() == 6)
         {
@@ -788,7 +799,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_x += 1;
     }
 
-    while (mouse_x > 0 && map.GetIndexValue(moving_index_x - 1, moving_index_y) < 3 && mouse_x < moving_index_x)
+    while (mouse_x > 0 && map->GetIndexValue(moving_index_x - 1, moving_index_y) < 3 && mouse_x < moving_index_x)
     {
         if (!roadLine.empty() && roadLine.back() == 2)
         {
@@ -800,7 +811,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_x -= 1;
     }
 
-    while (mouse_y < COL && map.GetIndexValue(moving_index_x, moving_index_y + 1) < 3 && mouse_y > moving_index_y)
+    while (mouse_y < COL && map->GetIndexValue(moving_index_x, moving_index_y + 1) < 3 && mouse_y > moving_index_y)
     {
         if (!roadLine.empty() && roadLine.back() == 0)
         {
@@ -812,7 +823,7 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap& map)
         moving_index_y += 1;
     }
 
-    while (mouse_y > 0 && map.GetIndexValue(moving_index_x, moving_index_y - 1) < 3 && mouse_y < moving_index_y)
+    while (mouse_y > 0 && map->GetIndexValue(moving_index_x, moving_index_y - 1) < 3 && mouse_y < moving_index_y)
     {
         if (!roadLine.empty() && roadLine.back() == 4)
         {
@@ -1077,60 +1088,60 @@ void Soldier::DrawLineSecond(vector<int>::iterator iter, int* line_x, int* line_
 #pragma endregion
 
 #pragma region Other
-void Soldier::TestNext(CGameMap& map)
+void Soldier::TestNext(CGameMap* map)
 {
     int door_x, door_y;
 
-    if (map.GetIndexValue(index_x - 1, index_y - 1) == 15 || map.GetIndexValue(index_x - 1, index_y - 1) == 16 || map.GetIndexValue(index_x - 1, index_y - 1) == 17 || map.GetIndexValue(index_x - 1, index_y - 1) == 18)
+    if (map->GetIndexValue(index_x - 1, index_y - 1) == 15 || map->GetIndexValue(index_x - 1, index_y - 1) == 16 || map->GetIndexValue(index_x - 1, index_y - 1) == 17 || map->GetIndexValue(index_x - 1, index_y - 1) == 18)
     {
         isNextDoor = true;
         door_x = index_x - 1;
         door_y = index_y - 1;
     }
 
-    if (map.GetIndexValue(index_x, index_y - 1) == 15 || map.GetIndexValue(index_x, index_y - 1) == 16 || map.GetIndexValue(index_x, index_y - 1) == 17 || map.GetIndexValue(index_x, index_y - 1) == 18)
+    if (map->GetIndexValue(index_x, index_y - 1) == 15 || map->GetIndexValue(index_x, index_y - 1) == 16 || map->GetIndexValue(index_x, index_y - 1) == 17 || map->GetIndexValue(index_x, index_y - 1) == 18)
     {
         isNextDoor = true;
         door_x = index_x;
         door_y = index_y - 1;
     }
 
-    if (map.GetIndexValue(index_x + 1, index_y - 1) == 15 || map.GetIndexValue(index_x + 1, index_y - 1) == 16 || map.GetIndexValue(index_x + 1, index_y - 1) == 17 || map.GetIndexValue(index_x + 1, index_y - 1) == 18)
+    if (map->GetIndexValue(index_x + 1, index_y - 1) == 15 || map->GetIndexValue(index_x + 1, index_y - 1) == 16 || map->GetIndexValue(index_x + 1, index_y - 1) == 17 || map->GetIndexValue(index_x + 1, index_y - 1) == 18)
     {
         isNextDoor = true;
         door_x = index_x + 1;
         door_y = index_y - 1;
     }
 
-    if (map.GetIndexValue(index_x - 1, index_y) == 15 || map.GetIndexValue(index_x - 1, index_y) == 16 || map.GetIndexValue(index_x - 1, index_y) == 17 || map.GetIndexValue(index_x - 1, index_y) == 18)
+    if (map->GetIndexValue(index_x - 1, index_y) == 15 || map->GetIndexValue(index_x - 1, index_y) == 16 || map->GetIndexValue(index_x - 1, index_y) == 17 || map->GetIndexValue(index_x - 1, index_y) == 18)
     {
         isNextDoor = true;
         door_x = index_x - 1;
         door_y = index_y;
     }
 
-    if (map.GetIndexValue(index_x + 1, index_y) == 15 || map.GetIndexValue(index_x + 1, index_y) == 16 || map.GetIndexValue(index_x + 1, index_y) == 17 || map.GetIndexValue(index_x + 1, index_y) == 18)
+    if (map->GetIndexValue(index_x + 1, index_y) == 15 || map->GetIndexValue(index_x + 1, index_y) == 16 || map->GetIndexValue(index_x + 1, index_y) == 17 || map->GetIndexValue(index_x + 1, index_y) == 18)
     {
         isNextDoor = true;
         door_x = index_x + 1;
         door_y = index_y;
     }
 
-    if (map.GetIndexValue(index_x - 1, index_y + 1) == 15 || map.GetIndexValue(index_x - 1, index_y + 1) == 16 || map.GetIndexValue(index_x - 1, index_y + 1) == 17 || map.GetIndexValue(index_x - 1, index_y + 1) == 18)
+    if (map->GetIndexValue(index_x - 1, index_y + 1) == 15 || map->GetIndexValue(index_x - 1, index_y + 1) == 16 || map->GetIndexValue(index_x - 1, index_y + 1) == 17 || map->GetIndexValue(index_x - 1, index_y + 1) == 18)
     {
         isNextDoor = true;
         door_x = index_x - 1;
         door_y = index_y + 1;
     }
 
-    if (map.GetIndexValue(index_x, index_y + 1) == 15 || map.GetIndexValue(index_x, index_y + 1) == 16 || map.GetIndexValue(index_x, index_y + 1) == 17 || map.GetIndexValue(index_x, index_y + 1) == 18)
+    if (map->GetIndexValue(index_x, index_y + 1) == 15 || map->GetIndexValue(index_x, index_y + 1) == 16 || map->GetIndexValue(index_x, index_y + 1) == 17 || map->GetIndexValue(index_x, index_y + 1) == 18)
     {
         isNextDoor = true;
         door_x = index_x;
         door_y = index_y + 1;
     }
 
-    if (map.GetIndexValue(index_x + 1, index_y + 1) == 15 || map.GetIndexValue(index_x + 1, index_y + 1) == 16 || map.GetIndexValue(index_x + 1, index_y + 1) == 17 || map.GetIndexValue(index_x + 1, index_y + 1) == 18)
+    if (map->GetIndexValue(index_x + 1, index_y + 1) == 15 || map->GetIndexValue(index_x + 1, index_y + 1) == 16 || map->GetIndexValue(index_x + 1, index_y + 1) == 17 || map->GetIndexValue(index_x + 1, index_y + 1) == 18)
     {
         isNextDoor = true;
         door_x = index_x + 1;

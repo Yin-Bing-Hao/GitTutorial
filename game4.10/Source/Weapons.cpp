@@ -17,6 +17,7 @@ namespace game_framework
 
 	Weapon::~Weapon()
 	{
+		TRACE("~Weapon()\n");
 	}
 	int Weapon::GetDamage()
 	{
@@ -41,5 +42,5 @@ namespace game_framework
 		}
 	}
 	
-	HK416::~HK416() { delete this; }
+	HK416::~HK416() { TRACE("~HK416()\n"); }
 }

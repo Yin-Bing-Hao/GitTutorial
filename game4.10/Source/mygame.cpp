@@ -69,6 +69,7 @@
 #include "mygame.h"
 #include <thread>
 #include<mutex>
+#include<memory>
 
 using namespace std;
 namespace game_framework
@@ -144,6 +145,7 @@ void CGameStateInit::OnShow()
     pDC->TextOut(5, 455, "Press Alt-F4 or ESC to Quit.");
     pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
     CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+	//delete pDC;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -452,20 +454,20 @@ void CGameMap::SetIndexValue(int x, int y, int value)
 
 void CGameMap::InitializeBouncingBall(int ini_index, int row, int col)
 {
-    const int VELOCITY = 10;
+    /*const int VELOCITY = 10;
     const int BALL_PLC_HEIGHT = 15;
     int floor = Y + (row + 1) * MH - BALL_PLC_HEIGHT;
     bballs[ini_index].LoadBitmap();
     bballs[ini_index].SetFloor(floor);
     bballs[ini_index].SetVelocity(VELOCITY + col);
-    bballs[ini_index].SetXY(X + col * MW + MW / 2, floor);
+    bballs[ini_index].SetXY(X + col * MW + MW / 2, floor);*/
 }
 
 void CGameMap::RandomBouncingBall()
 {
-    const int MAX_RAND_NUM = 10;
+    /*const int MAX_RAND_NUM = 10;
     random_num = (rand() % MAX_RAND_NUM) + 1;
-    bballs = new CBouncingBall[random_num];
+    //bballs = new CBouncingBall[random_num];
     int ini_index = 0;
 
     for (int row = 0; row < 4; row++)
@@ -478,7 +480,7 @@ void CGameMap::RandomBouncingBall()
                 ini_index++;
             }
         }
-    }
+    }*/
 }
 
 void CGameMap::OnKeyDown(UINT nChar)
@@ -500,19 +502,28 @@ void CGameMap::SetBackLight(int y, int x, bool flag)
 
 void CGameMap::OnMove()
 {
-    for (int i = 0; i < random_num; i++)
+    /*for (int i = 0; i < random_num; i++)
     {
         bballs[i].OnMove();
-    }
+    }*/
 }
 
-CGameMap::~CGameMap() {}
+CGameMap::~CGameMap() 
+{
+	TRACE("Background size:%d\n", sizeof(Background[0][0]));
+	for (int i = 0; i < 48; i++)
+	{
+		delete[] Background[i];
+	}
+	delete[] Background;
+	Background = NULL;
+	TRACE("Background size:%d\n", sizeof(*Background));
+}
 #pragma endregion
 
 
 
 CGamePauseButton::CGamePauseButton() : X(1200), Y(880) {}
-
 void CGamePauseButton::LoadBitmap()
 {
     stop.LoadBitmap(GAME_STOP, RGB(255, 255, 255));
@@ -558,14 +569,18 @@ CGamePauseButton::~CGamePauseButton() {}
 mutex Search_mutex;
 
 CGameStateRun::CGameStateRun(CGame* g)
-    : CGameState(g), NUMBALLS(28)
+    : CGameState(g)
 {
-    // ball = new CBall [NUMBALLS];
 }
 
 CGameStateRun::~CGameStateRun()
 {
-    //delete [] ball;
+	for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
+	{
+		delete (*iter);
+	}
+	enemy.clear();
+	TRACE("Enemy vector size:%d\n", sizeof(enemy));
 }
 
 void CGameStateRun::OnBeginState()
@@ -586,18 +601,15 @@ void CGameStateRun::OnBeginState()
     //	ball[i].SetDelay(x_pos);
     //	ball[i].SetIsAlive(true);
     //}
-    people.Initialize();
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
-    hits_left.SetInteger(HITS_LEFT);					// 指定剩下的撞擊數
-    hits_left.SetTopLeft(HITS_LEFT_X, HITS_LEFT_Y);		// 指定剩下撞擊數的座標
     //CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
 }
 void CGameStateRun::Search()
 {
     Search_mutex.lock();
-    thread* search_enemy(new thread(&Soldier::searchEnemy, &people, map, enemy));
-
+	//unique_ptr<thread> search_enemy(new thread(&Soldier::searchEnemy, &people, &map, enemy));
+	
     for (int i = 0; i < 48; i++)
     {
         for (int j = 0; j < 64; j++)
@@ -610,14 +622,13 @@ void CGameStateRun::Search()
     {
         (*iter)->SetIsSaw(false);
     }
-
-    if (search_enemy->joinable()) search_enemy->join();
-
+	people.searchEnemy(&map, enemy);
+    //if (search_enemy->joinable()) search_enemy->join();
     Search_mutex.unlock();
 }
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
-    static int search_count = 0;
+    
 
     //
     // 如果希望修改cursor的樣式，則將下面程式的commment取消即可
@@ -632,6 +643,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
     //TRACE("enemy:%d\n", map.GetIndexValue(1, 5));
     if (!pause.GetPause())
     {
+		static int search_count = 0;
         //people.Perspective(map);
         vector<int> ptr = people.GetRoadLine();
         people.attackEnemy();
@@ -678,14 +690,14 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
             people.OnMove();
             map.SetIndexValue(people.GetIndexX(), people.GetIndexY(), 1);
-            people.MoveU(people.GetIsMoveNext(), map);
-            people.MoveRU(people.GetIsMoveNext(), map);
-            people.MoveR(people.GetIsMoveNext(), map);
-            people.MoveRD(people.GetIsMoveNext(), map);
-            people.MoveD(people.GetIsMoveNext(), map);
-            people.MoveLD(people.GetIsMoveNext(), map);
-            people.MoveL(people.GetIsMoveNext(), map);
-            people.MoveLU(people.GetIsMoveNext(), map);
+            people.MoveU(people.GetIsMoveNext(), &map);
+            people.MoveRU(people.GetIsMoveNext(), &map);
+            people.MoveR(people.GetIsMoveNext(), &map);
+            people.MoveRD(people.GetIsMoveNext(), &map);
+            people.MoveD(people.GetIsMoveNext(), &map);
+            people.MoveLD(people.GetIsMoveNext(), &map);
+            people.MoveL(people.GetIsMoveNext(), &map);
+            people.MoveLU(people.GetIsMoveNext(), &map);
             people.SetMovingUp(false);
             people.SetMovingRight(false);
             people.SetMovingDown(false);
@@ -698,9 +710,10 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
         if (search_count > 5)
         {
-            thread* search(new thread(&CGameStateRun::Search, this));
+			/*unique_ptr<thread> search(new thread(&CGameStateRun::Search, this));
 
-            if (search->joinable())search->join();
+            if (search->joinable())search->join();*/
+			Search();
 
             search_count = 0;
         }
@@ -754,15 +767,14 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     //
     // 開始載入資料
     //
-    enemy.push_back(new Enemy(1, 5, 0));
-    enemy.push_back(new Enemy(5, 1, 0));
-
+    //enemy.push_back(new Enemy(1, 5, 0));
+    //enemy.push_back(new Enemy(5, 1, 0));
     for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
     {
         (*iter)->LoadBitmap();
     }
 
-    people.LoadBitmap();
+	people.LoadBitmap();
     pause.LoadBitmap();
     background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
     map.LoadBitmap();
@@ -777,8 +789,6 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     help.LoadBitmap(IDB_HELP, RGB(255, 255, 255));				// 載入說明的圖形
     corner.LoadBitmap(IDB_CORNER);							// 載入角落圖形
     corner.ShowBitmap(background);							// 將corner貼到background
-    bball.LoadBitmap();										// 載入圖形
-    hits_left.LoadBitmap();
     //CAudio::Instance()->Load(AUDIO_NTUT,  "sounds\\song.mid");	// 載入編號2的聲音ntut.mid
     //
     // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -878,7 +888,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
     //TRACE("%d,%d\n", point.x, point.y);
     if (people.IsChoosen())
     {
-        people.SetRoadLine(mouse_x, mouse_y, map);
+        people.SetRoadLine(mouse_x, mouse_y, &map);
     }
 }
 
@@ -906,7 +916,7 @@ void CGameStateRun::OnShow()
     //
     //  貼上背景圖、撞擊數、球、擦子、彈跳的球
     //
-    help.ShowBitmap();					// 貼上說明圖
+    //help.ShowBitmap();					// 貼上說明圖
     map.OnShow();
     SetCursor(LoadCursor(NULL, IDC_CROSS));
     people.OnShow();

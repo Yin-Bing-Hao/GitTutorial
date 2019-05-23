@@ -14,6 +14,7 @@ namespace game_framework {
 	{
 	public:
 		Soldier();
+		~Soldier();
 		int  GetX1();					// 擦子左上角 x 座標
 		int  GetY1();					// 擦子左上角 y 座標
 		int  GetX2();					// 擦子右下角 x 座標
@@ -28,15 +29,15 @@ namespace game_framework {
 		void MoveRightIndex();
 		void MoveUpIndex();
 		void MoveDownIndex();
-		void MoveL(bool flag, CGameMap& map);
-		void MoveR(bool flag, CGameMap& map);
-		void MoveU(bool flag, CGameMap& map);
-		void MoveD(bool flag, CGameMap& map);
-		void MoveLU(bool flag, CGameMap& map);
-		void MoveLD(bool flag, CGameMap& map);
-		void MoveRU(bool flag, CGameMap& map);
-		void MoveRD(bool flag, CGameMap& map);
-		void TestNext(CGameMap& map);	//測試門484在旁邊
+		void MoveL(bool flag, CGameMap* map);
+		void MoveR(bool flag, CGameMap* map);
+		void MoveU(bool flag, CGameMap* map);
+		void MoveD(bool flag, CGameMap* map);
+		void MoveLU(bool flag, CGameMap* map);
+		void MoveLD(bool flag, CGameMap* map);
+		void MoveRU(bool flag, CGameMap* map);
+		void MoveRD(bool flag, CGameMap* map);
+		void TestNext(CGameMap* map);	//測試門484在旁邊
 		void TestInRedLine(CPoint point);
 		void SetMovingDown(bool flag);	// 設定是否正在往下移動
 		void SetMovingLeft(bool flag);	// 設定是否正在往左移動
@@ -65,13 +66,14 @@ namespace game_framework {
 		bool IsSetRoadLine(CPoint &point);				//484畫線
 		bool IsSetAction(CPoint &point);					//484做動作
 		bool GetIsMoveNext();				
-		void SetRoadLine(int mouse_x, int mouse_y, CGameMap& map);
+		void SetRoadLine(int mouse_x, int mouse_y, CGameMap* map);
 		const vector<int>& GetRoadLine();
 		const int GetWay();
-		void searchEnemy(CGameMap& map,vector<Enemy*>& enemys); //搜尋敵人
+		void searchEnemy(CGameMap* map,vector<Enemy*>& enemys); //搜尋敵人
 		void attackEnemy();
 		void shoot();
 	protected:
+		void linearSearch(Enemy* _target, double dx, double dy, CGameMap* map, vector<Enemy*>& enemys);
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
 		CAnimation breakPoint, lineUP, lineRU, lineRight, lineRD, lineDown, lineLD,lineLeft,lineLU;

@@ -7,6 +7,7 @@ namespace game_framework {
 	public:
 		Enemy(int x, int y,int dir);
 		//Enemy(int x, int y, Weapon); //«Ý§ó·sweapon class
+		~Enemy();
 		void OnMove();
 		void OnShow();
 		void LoadBitmap();

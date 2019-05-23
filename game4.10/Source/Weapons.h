@@ -20,7 +20,7 @@ namespace game_framework
 	{
 	public:
 		HK416();
-		virtual ~HK416();
+		~HK416();
 		virtual void Fire();
 		
 	private:
