@@ -8,7 +8,7 @@ namespace game_framework
 	class Weapon
 	{
 	public:
-		Weapon(int,int);
+		Weapon(int, int);
 		virtual ~Weapon();
 		virtual void Fire() {}
 		int GetDamage();

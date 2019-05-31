@@ -720,25 +720,27 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
         for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
         {
+			if ((*iter)->GetLifePoint() <= 0)
+			{
+				delete (*iter);
+				(*iter) = NULL;
+				enemy.erase(iter);
+
+				if (enemy.empty())
+				{
+					break;
+				}
+				else
+				{
+					iter = enemy.begin();
+				}
+			}
             (*iter)->OnMove();
             map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 2);
 
             //TRACE("Enemy_index:%d %d\n", (*iter)->GetIndexX(), (*iter)->GetIndexY());
             //TRACE("ENEMYLIFE %d\n", (*iter)->GetLifePoint());
-            if ((*iter)->GetLifePoint() <= 0)
-            {
-                delete (*iter);
-                enemy.erase(iter);
-
-                if (enemy.empty())
-                {
-                    break;
-                }
-                else
-                {
-                    iter = enemy.begin();
-                }
-            }
+            
         }
 
         /*for (int i = 0;i < COL;i++)
@@ -767,8 +769,8 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     //
     // 開始載入資料
     //
-    //enemy.push_back(new Enemy(1, 5, 0));
-    //enemy.push_back(new Enemy(5, 1, 0));
+    enemy.push_back(new Enemy(1, 5, 0));
+    enemy.push_back(new Enemy(5, 1, 0));
     for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
     {
         (*iter)->LoadBitmap();
@@ -789,6 +791,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     help.LoadBitmap(IDB_HELP, RGB(255, 255, 255));				// 載入說明的圖形
     corner.LoadBitmap(IDB_CORNER);							// 載入角落圖形
     corner.ShowBitmap(background);							// 將corner貼到background
+	people.Initialize();
     //CAudio::Instance()->Load(AUDIO_NTUT,  "sounds\\song.mid");	// 載入編號2的聲音ntut.mid
     //
     // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
