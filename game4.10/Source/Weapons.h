@@ -8,7 +8,8 @@ namespace game_framework
 	class Weapon
 	{
 	public:
-		Weapon(int, int);
+		void Init();
+		Weapon(int,int);
 		virtual ~Weapon();
 		virtual void Fire() {}
 		int GetDamage();
@@ -23,6 +24,15 @@ namespace game_framework
 		~HK416();
 		virtual void Fire();
 		
+	private:
+	};
+	class P9 :public Weapon
+	{
+	public:
+		P9();
+		~P9();
+		virtual void Fire();
+
 	private:
 	};
 	

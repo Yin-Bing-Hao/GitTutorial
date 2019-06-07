@@ -10,6 +10,7 @@ namespace game_framework {
 	class CGameMap;
 	class Enemy;
 	class Weapon;
+	class Line;
 	class Soldier
 	{
 	public:
@@ -58,16 +59,19 @@ namespace game_framework {
 		void SetNextDoor(bool flag);		//設定人在門旁邊
 		void SetChoosen(bool flag);			//設定人被選取
 		void SetRoadLine(bool flag);		//設定可畫線
+		void SetInRoadLine(bool flag);		//設定線上可做動作
 		void SetAction(bool flag);			//設定做動作
-		void DrawLineFirst(vector<int>::iterator iter,int *line_x,int *line_y);
-		void DrawLineSecond(vector<int>::iterator iter,int *line_x,int *line_y);
+		void DrawLineFirst(vector<Line*>::iterator iter,int *line_x,int *line_y);
+		void DrawLineSecond(vector<Line*>::iterator iter,int *line_x,int *line_y);
 		void SetXY(int nx, int ny);			// 設定擦子左上角座標
 		bool IsChoosen();					//484被選取
-		bool IsSetRoadLine(CPoint &point);				//484畫線
-		bool IsSetAction(CPoint &point);					//484做動作
+		bool IsSetRoadLine(CPoint &point);	//484畫線
+		bool IsSetAction(CPoint &point);	//484做動作
+		bool IsInRoadLine();				//484點在線上
 		bool GetIsMoveNext();				
 		void SetRoadLine(int mouse_x, int mouse_y, CGameMap* map);
-		const vector<int>& GetRoadLine();
+		void ChangeGun(int);
+		const vector<Line*>& GetRoadLine();
 		const int GetWay();
 		void searchEnemy(CGameMap* map,vector<Enemy*>& enemys); //搜尋敵人
 		void attackEnemy();
@@ -77,13 +81,15 @@ namespace game_framework {
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
 		CAnimation breakPoint, lineUP, lineRU, lineRight, lineRD, lineDown, lineLD,lineLeft,lineLU;
+		CMovingBitmap HK416_Photo,P9_Photo;
+		Weapon *equipment[4];
 		int x, y;					// 擦子左上角座標
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;
 		int x1, x2, y1, y2;
 		int x11, x12, x21, x22, y11, y12, y21, y22;
 		int end_x, end_y ;
-		int direction;
+		int direction,gun;
 		bool isMoveNextIndex;		//是否移動到下一格位置
 		bool isMovingDown;			// 是否正在往下移動
 		bool isMovingLeft;			// 是否正在往左移動
@@ -105,12 +111,15 @@ namespace game_framework {
 		bool isChoosen;
 		bool isSetRoadLine;
 		bool isSetAction;
-		vector<int> roadLine;
-		vector<int>::iterator way;
+		bool isInRoadLine;
+		vector<Line*> roadLine;
+		vector<Line*>::iterator way;
 		vector<vector<int> > line;
 		vector<int> lineXY;
 		Enemy *target;
 		Weapon *weapon;
+
 	};
+	
 }
 #endif // !Solider_H

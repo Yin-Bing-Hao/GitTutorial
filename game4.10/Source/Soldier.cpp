@@ -9,6 +9,7 @@
 #include "mygame.h"
 #include "Weapons.h"
 #include "Enemy.h"
+#include "Line.h"
 #include "Soldier.h"
 #include <thread>
 #include <memory>
@@ -24,6 +25,7 @@ namespace game_framework
 #pragma region Basic
 Soldier::Soldier()
 {
+    Initialize();
 }
 Soldier::~Soldier()
 {
@@ -39,14 +41,18 @@ void Soldier::Initialize()
     const int Y_POS = SIZE;
     x = X_POS;
     y = Y_POS;
+	gun = 0;
     index_x = index_y = 1;
 	x1 = x2 = y1 = y2 = x11 = x12 = x21 = x22 = y11 = y12 = y21 = y22= end_x= end_y = 0;
     isSetRoadLine = true;
     isChoosen = isWatchDown = isWatchLeft = isWatchLeftDown = isWatchLeftUp = isWatchRight = isWatchRightDown = isWatchRightUp = isWatchUp = isSetAction = false;
     isMovingLeft = isMovingRight = isMovingUp = isMovingDown = isMovingLeftDown = isMovingLeftUp = isMovingRightDown = isMovingRightUp = false;
-    isMoveNextIndex = false;
+    isMoveNextIndex = isInRoadLine= false;
     way = roadLine.end();
     direction = 2;
+
+	equipment[0] = new HK416();
+	equipment[1] = new P9();
 	weapon = new HK416();
 	target = NULL;
 }
@@ -70,6 +76,8 @@ void Soldier::LoadBitmap()
     lineLD.AddBitmap(IDB_LINELD, RGB(255, 255, 255));
     lineLU.AddBitmap(IDB_LINELU, RGB(255, 255, 255));
     breakPoint.AddBitmap(IDB_BALL, RGB(255, 255, 255));
+	HK416_Photo.LoadBitmap("Bitmaps/HK416N.bmp");
+	P9_Photo.LoadBitmap("Bitmaps/P9.bmp");
 }
 
 void Soldier::OnMove()
@@ -202,19 +210,19 @@ void Soldier::OnMove()
 }
 void Soldier::OnShow()
 {
-	if (!roadLine.empty()&&roadLine.back()!=-1)
-	{
-		int line_x = index_x, line_y = index_y;
+    if (!roadLine.empty() && roadLine.back()->getWatch()!= -1)
+    {
+        int line_x = index_x, line_y = index_y;
 
-		for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
-		{
-			DrawLineSecond(iter, &line_x, &line_y);
-			DrawLineFirst(iter, &line_x, &line_y);
-		}
+        for (vector<Line*>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
+        {
+            DrawLineSecond(iter, &line_x, &line_y);
+            DrawLineFirst(iter, &line_x, &line_y);
+        }
 
-		breakPoint.SetTopLeft(line_x * 40, line_y * 40);
-		breakPoint.OnShow();
-	}
+        breakPoint.SetTopLeft(line_x * 40, line_y * 40);
+        breakPoint.OnShow();
+    }
 
     if (isWatchDown)
     {
@@ -242,7 +250,7 @@ void Soldier::OnShow()
     }
     else if (way != roadLine.end())
     {
-        if(*way!=-1)direction = *way;
+		if ((*way)->getWatch()!= -1)direction = (*way)->getWatch();
 
         switch (direction)
         {
@@ -338,6 +346,19 @@ void Soldier::OnShow()
                 break;
         }
     }
+	switch (gun)
+	{
+	case 0:
+		HK416_Photo.SetTopLeft(0, 880);
+		HK416_Photo.ShowBitmap();
+		break;
+	case 1:
+		P9_Photo.SetTopLeft(0, 880);
+		P9_Photo.ShowBitmap();
+		break;
+	default:
+		break;
+	}
 }
 #pragma endregion
 
@@ -547,10 +568,15 @@ void Soldier::SetRoadLine(bool flag)
 {
     isSetRoadLine = flag;
 }
+void Soldier::SetInRoadLine(bool flag)
+{
+	isInRoadLine = flag;
+}
 void Soldier::SetAction(bool flag)
 {
     isSetAction = flag;
 }
+
 void Soldier::SetWatchUp(bool flag)
 {
     isWatchUp = flag;
@@ -688,7 +714,8 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys)
             Ly += dy;
         } while (map->GetIndexValue(Lix, Liy) < 3);
 	}
-	target = _target;
+	if(_target!=NULL)
+		target = _target;
 }
 
 void Soldier::attackEnemy()
@@ -700,6 +727,7 @@ void Soldier::attackEnemy()
 		if (aim_time > 10)
 		{
 			//TRACE("SHOOT!!!\n");
+			
 			this->shoot();
 			aim_time = 0;
 		}
@@ -713,10 +741,13 @@ void Soldier::attackEnemy()
 void Soldier::shoot()
 {
 	int damage=weapon->GetDamage();
-	//unique_ptr<thread> fire(new thread(&Weapon::Fire, weapon));
-	weapon->Fire();
+	TRACE("AAAA\n");
+	unique_ptr<thread> fire(new thread(&Weapon::Fire, weapon));
 	target->Hurt(damage);
-	//if (fire->joinable())fire->join();
+	if (target->GetLifePoint() <= 0) {
+		target = NULL;
+	}
+	if (fire->joinable())fire->join();
 	
 }
 #pragma endregion
@@ -724,6 +755,7 @@ void Soldier::shoot()
 #pragma region Action
 void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap* map)
 {
+
     if (roadLine.empty())
     {
         moving_index_x = index_x;
@@ -735,21 +767,18 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap* map)
 
     while (mouse_y > 0 && mouse_x < ROW && map->GetIndexValue(moving_index_x + 1, moving_index_y - 1) < 3 && mouse_x > moving_index_x && mouse_y < moving_index_y)
     {
-		if (!roadLine.empty() && roadLine.back() == 5)
-		{
-
-			TRACE("hellow\n");
-			roadLine.pop_back();
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 5)
+        {
+            roadLine.pop_back();
 			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
-		}
-		else
-		{
-			if (!roadLine.empty() && roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(1);
+        }
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(1));
 		}
 
         moving_index_x += 1;
@@ -758,164 +787,142 @@ void Soldier::SetRoadLine(int mouse_x, int mouse_y, CGameMap* map)
 
     while (mouse_y < COL && mouse_x < ROW && map->GetIndexValue(moving_index_x + 1, moving_index_y + 1) < 3 && mouse_x > moving_index_x && mouse_y >  moving_index_y)
     {
-		if (!roadLine.empty() && roadLine.back() == 7)
-		{
-
-			TRACE("hellow\n");
-			roadLine.pop_back();
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 7)
+        {
+            roadLine.pop_back();
 			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
 		}
-		else
-		{
-			if (!roadLine.empty() && roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(3);
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(3));
 		}
-
         moving_index_x += 1;
         moving_index_y += 1;
     }
 
     while (mouse_y < COL && mouse_x > 0 && map->GetIndexValue(moving_index_x - 1, moving_index_y + 1) < 3 && mouse_x <  moving_index_x && mouse_y >  moving_index_y)
     {
-		if (!roadLine.empty() && roadLine.back() == 1)
-		{
-
-			TRACE("hellow\n");
-			roadLine.pop_back();
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 1)
+        {
+            roadLine.pop_back();
 			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
 		}
-		else
-		{
-			if (!roadLine.empty() && roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(5);
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(5));
 		}
-
         moving_index_x -= 1;
         moving_index_y += 1;
     }
 
     while (mouse_y > 0 && mouse_x > 0 && map->GetIndexValue(moving_index_x - 1, moving_index_y - 1) < 3 && mouse_x < moving_index_x && mouse_y < moving_index_y)
     {
-		if (!roadLine.empty() && roadLine.back() == 3)
-		{
-
-			TRACE("hellow\n");
-			roadLine.pop_back();
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 3)
+        {
+            roadLine.pop_back();
 			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
 		}
-		else
-		{
-			if (!roadLine.empty() && roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(7);
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(7));
 		}
-
         moving_index_x -= 1;
         moving_index_y -= 1;
     }
 
     while (mouse_x < ROW && map->GetIndexValue(moving_index_x + 1, moving_index_y) < 3 && mouse_x > moving_index_x)
     {
-        if (!roadLine.empty() && roadLine.back() == 6)
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 6)
         {
-			TRACE("hellow\n");
             roadLine.pop_back();
-			if (roadLine.size()==0)
+			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
-        }
-		else
-		{
-			if (!roadLine.empty()&&roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(2);
-
+		}
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(2));
 		}
         moving_index_x += 1;
     }
 
     while (mouse_x > 0 && map->GetIndexValue(moving_index_x - 1, moving_index_y) < 3 && mouse_x < moving_index_x)
     {
-        if (!roadLine.empty() && roadLine.back() == 2)
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 2)
         {
-
-			TRACE("hellow\n");
-			roadLine.pop_back();
+            roadLine.pop_back();
 			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
-        }
-		else
-		{
-			if (!roadLine.empty() && roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(6);
 		}
-
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(6));
+		}
         moving_index_x -= 1;
     }
 
     while (mouse_y < COL && map->GetIndexValue(moving_index_x, moving_index_y + 1) < 3 && mouse_y > moving_index_y)
     {
-		if (!roadLine.empty() && roadLine.back() == 0)
-		{
-
-			TRACE("hellow\n");
-			roadLine.pop_back();
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 0)
+        {
+            roadLine.pop_back();
 			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
 		}
-		else
-		{
-			if (!roadLine.empty() && roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(4);
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(4));
 		}
-
         moving_index_y += 1;
     }
 
     while (mouse_y > 0 && map->GetIndexValue(moving_index_x, moving_index_y - 1) < 3 && mouse_y < moving_index_y)
     {
-		if (!roadLine.empty() && roadLine.back() == 4)
-		{
-
-			TRACE("hellow\n");
-			roadLine.pop_back();
+        if (!roadLine.empty() && roadLine.back()->getWatch() == 4)
+        {
+            roadLine.pop_back();
 			if (roadLine.size() == 0)
 			{
 				TRACE("empty\n");
-				roadLine.push_back(-1);
+				roadLine.push_back(new Line(-1));
 			}
 		}
-		else
-		{
-			if (!roadLine.empty() && roadLine.back() == -1) roadLine.pop_back();
-			roadLine.push_back(0);
+		else {
+			if (!roadLine.empty() && roadLine.back()->getWatch() == -1) roadLine.pop_back();
+			roadLine.push_back(new Line(0));
 		}
-
         moving_index_y -= 1;
     }
 
     if (!roadLine.empty())
         way = roadLine.begin();
 }
-const vector<int>& Soldier::GetRoadLine()
+void Soldier::ChangeGun(int num)
+{
+	gun = num;
+	weapon = equipment[gun];
+}
+const vector<Line*>& Soldier::GetRoadLine()
 {
     return roadLine;
 }
@@ -923,7 +930,7 @@ const int  Soldier::GetWay()
 {
     if (way != roadLine.end())
     {
-        return *way;
+        return (*way)->getWatch();
     }
 
     return -1;
@@ -949,9 +956,9 @@ bool Soldier::IsSetRoadLine(CPoint& point)
     {
         int Rx = index_x, Ry = index_y;
 
-        for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
+        for (vector<Line*>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
         {
-            switch (*iter)
+            switch ((*iter)->getWatch())
             {
                 case 0:
                     Ry--;
@@ -1002,9 +1009,9 @@ bool Soldier::IsSetAction(CPoint& point)
     int Mx = point.x / 40, My = point.y / 40;
     int Rx = index_x, Ry = index_y;
 
-    for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
+    for (vector<Line*>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
     {
-        switch (*iter)
+        switch ((*iter)->getWatch())
         {
             case 0:
                 Ry--;
@@ -1051,12 +1058,16 @@ bool Soldier::IsSetAction(CPoint& point)
 
     return false;
 }
+bool Soldier::IsInRoadLine()
+{
+	return isInRoadLine;
+}
 #pragma endregion
 
 #pragma region Draw
-void Soldier::DrawLineFirst(vector<int>::iterator iter, int* line_x, int* line_y)
+void Soldier::DrawLineFirst(vector<Line*>::iterator iter, int* line_x, int* line_y)
 {
-    switch (*iter)
+    switch ((*iter)->getWatch())
     {
         case 0:
             *line_y -= 1;
@@ -1114,9 +1125,9 @@ void Soldier::DrawLineFirst(vector<int>::iterator iter, int* line_x, int* line_y
             break;
     }
 }
-void Soldier::DrawLineSecond(vector<int>::iterator iter, int* line_x, int* line_y)
+void Soldier::DrawLineSecond(vector<Line*>::iterator iter, int* line_x, int* line_y)
 {
-    switch (*iter)
+    switch ((*iter)->getWatch())
     {
         case 0:
             lineUP.SetTopLeft(*line_x * 40, *line_y * 40);
@@ -1231,9 +1242,15 @@ void Soldier::TestInRedLine(CPoint point)
     int mouse_x = point.x / 40, mouse_y = point.y / 40;
     int line_x = index_x, line_y = index_y;
 
-    for (vector<int>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
+    for (vector<Line*>::iterator iter = roadLine.begin(); iter != roadLine.end(); iter++)
     {
-        switch (*iter)
+		if (line_x == mouse_x && line_y == mouse_y) {
+			isInRoadLine = true;
+			//TRACE("Mouse In the RoadLine.\n");
+			//TRACE("x=%d y=%d\n", line_x, line_y);
+			break;
+		}
+        switch ((*iter)->getWatch())
         {
             case 0:
                 line_y -= 1;
@@ -1274,9 +1291,12 @@ void Soldier::TestInRedLine(CPoint point)
             default:
                 break;
         }
+		
     }
 }
 
 #pragma endregion
+
+
 
 }

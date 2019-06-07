@@ -645,7 +645,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
     {
 		static int search_count = 0;
         //people.Perspective(map);
-        vector<int> ptr = people.GetRoadLine();
+        vector<Line*> ptr = people.GetRoadLine();
         people.attackEnemy();
 
         if (!ptr.empty())
@@ -771,11 +771,18 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     //
     enemy.push_back(new Enemy(1, 5, 0));
     enemy.push_back(new Enemy(5, 1, 0));
+	enemy.push_back(new Enemy(8, 2, 0));
     for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
     {
         (*iter)->LoadBitmap();
     }
-
+	CAudio::Instance()->Load(AUDIO_HK416_1, "Sounds\\AR15_gun_sound.mp3");
+	CAudio::Instance()->Load(AUDIO_HK416_2, "Sounds\\AR15_gun_sound.mp3");
+	CAudio::Instance()->Load(AUDIO_HK416_3, "Sounds\\AR15_gun_sound.mp3");
+	CAudio::Instance()->Load(AUDIO_HK416_4, "Sounds\\AR15_gun_sound.mp3");
+	CAudio::Instance()->Load(AUDIO_P9_1, "Sounds\\P9.mp3");
+	CAudio::Instance()->Load(AUDIO_P9_2, "Sounds\\P9.mp3");
+	CAudio::Instance()->Load(AUDIO_P9_3, "Sounds\\P9.mp3");
 	people.LoadBitmap();
     pause.LoadBitmap();
     background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
@@ -791,7 +798,6 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     help.LoadBitmap(IDB_HELP, RGB(255, 255, 255));				// 載入說明的圖形
     corner.LoadBitmap(IDB_CORNER);							// 載入角落圖形
     corner.ShowBitmap(background);							// 將corner貼到background
-	people.Initialize();
     //CAudio::Instance()->Load(AUDIO_NTUT,  "sounds\\song.mid");	// 載入編號2的聲音ntut.mid
     //
     // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -804,6 +810,10 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_UP = 0x57; // keyboard向上看
     const char KEY_RIGHT = 0x44; // keyboard向右看
     const char KEY_DOWN = 0x53; // keyboard向下看
+	const char KEY_1 = 0x31;	//武器1(大槍)
+	const char KEY_2 = 0x32;	//武器2(手槍)
+	const char KEY_3 = 0x33;	//
+	const char KEY_4 = 0x34;	//手雷
     map.OnKeyDown(nChar);
 
     if (nChar == KEY_LEFT)
@@ -825,6 +835,21 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     {
         people.SetWatchDown(true);
     }
+
+	if (people.IsInRoadLine()) {
+		if (nChar == KEY_1) {
+			people.ChangeGun(0);
+		}
+		else if (nChar == KEY_2) {
+			people.ChangeGun(1);
+		}
+		else if (nChar == KEY_3) {
+			people.ChangeGun(2);
+		}
+		else if (nChar == KEY_4) {
+			people.ChangeGun(3);
+		}
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -872,7 +897,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)
 {
     TRACE("Mouse left button up\n");
     people.SetChoosen(false);
-
+	people.SetInRoadLine(false);
     if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960 && pause.isChoosen())
     {
         if (!pause.GetPause())
@@ -893,6 +918,10 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
     {
         people.SetRoadLine(mouse_x, mouse_y, &map);
     }
+	if (people.IsInRoadLine())
+	{
+
+	}
 }
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作

@@ -23,24 +23,32 @@ namespace game_framework
 	{
 		return _damage;
 	}
-	HK416::HK416():Weapon(33,30)
-	{
-		CAudio::Instance()->Load(AUDIO_HK416_1, "Sounds/AR15_gun_sound.mp3");
-		CAudio::Instance()->Load(AUDIO_HK416_2, "Sounds/AR15_gun_sound.mp3");
-		CAudio::Instance()->Load(AUDIO_HK416_3, "Sounds/AR15_gun_sound.mp3");
-		CAudio::Instance()->Load(AUDIO_HK416_4, "Sounds/AR15_gun_sound.mp3");
+	HK416::HK416():Weapon(33,30){}
 
-	}
 	void HK416::Fire()
 	{
-		static int play_ID = AUDIO_HK416_1;
-		CAudio::Instance()->Play(play_ID, false);
-		play_ID++;
-		if (play_ID > AUDIO_HK416_4)
+		static int HK416_play_ID = AUDIO_HK416_1;
+		CAudio::Instance()->Play(HK416_play_ID, false);
+		HK416_play_ID++;
+		if (HK416_play_ID > AUDIO_HK416_4)
 		{
-			play_ID = AUDIO_HK416_1;
+			HK416_play_ID = AUDIO_HK416_1;
 		}
 	}
 	
 	HK416::~HK416() { TRACE("~HK416()\n"); }
+
+	P9::P9() :Weapon(20, 12){}
+	void P9::Fire()
+	{
+		static int play_ID = AUDIO_P9_1;
+		CAudio::Instance()->Play(play_ID, false);
+		play_ID++;
+		if (play_ID > AUDIO_P9_3)
+		{
+			play_ID = AUDIO_P9_1;
+		}
+	}
+
+	P9::~P9() { TRACE("~P9()\n"); }
 }
