@@ -14,6 +14,7 @@ namespace game_framework {
 		void SetObject(int num);
 	protected:
 		CMovingBitmap sand, wood, sidewalk, sand_light, wood_light;
+		CMovingBitmap floor_1, floor_2, floor_3, floor_1_Light, floor_2_Light, floor_3_Light;
 		bool isLight;
 	private:
 		int floor, ObjectNum;

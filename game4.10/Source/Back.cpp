@@ -37,6 +37,12 @@ namespace game_framework {
 			sidewalk.LoadBitmap(BACK_SIDEWALK, RGB(255, 255, 255));
 			sand_light.LoadBitmap("Bitmaps/sand_light.bmp", RGB(255, 255, 255));
 			wood_light.LoadBitmap("Bitmaps/wood_light.bmp", RGB(255, 255, 255));
+			floor_1.LoadBitmap("Bitmaps/floor_1.bmp", RGB(255, 255, 255));
+			floor_1_Light.LoadBitmap("Bitmaps/floor_1_Light.bmp", RGB(255, 255, 255));
+			floor_2.LoadBitmap("Bitmaps/floor_2.bmp", RGB(255, 255, 255));
+			floor_2_Light.LoadBitmap("Bitmaps/floor_2_Light.bmp", RGB(255, 255, 255));
+			floor_3.LoadBitmap("Bitmaps/floor_3.bmp", RGB(255, 255, 255));
+			floor_3_Light.LoadBitmap("Bitmaps/floor_3_Light.bmp", RGB(255, 255, 255));
 	}
 	void Back::OnShow()
 	{
@@ -68,6 +74,38 @@ namespace game_framework {
 			case 3:
 				sidewalk.SetTopLeft(X + MH, Y + MW);
 				sidewalk.ShowBitmap();
+				break;
+
+			case 4:
+				if (isLight) {
+					floor_1_Light.SetTopLeft(X, Y);
+					floor_1_Light.ShowBitmap();
+				}
+				else {
+					floor_1.SetTopLeft(X, Y);
+					floor_1.ShowBitmap();
+				}
+				break;
+			case 5:
+				if (isLight) {
+					floor_2_Light.SetTopLeft(X, Y);
+					floor_2_Light.ShowBitmap();
+				}
+				else {
+					floor_2.SetTopLeft(X, Y);
+					floor_2.ShowBitmap();
+				}
+				break;
+
+			case 6:
+				if (isLight) {
+					floor_3_Light.SetTopLeft(X , Y );
+					floor_3_Light.ShowBitmap();
+				}
+				else {
+					floor_3.SetTopLeft(X , Y );
+					floor_3.ShowBitmap();
+				}
 				break;
 			default:
 				break;

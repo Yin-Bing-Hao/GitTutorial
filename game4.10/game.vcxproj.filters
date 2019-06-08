@@ -138,7 +138,9 @@
     <ClCompile Include="Source\Line.cpp">
       <Filter>MyGame</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Furniture.cpp" />
+    <ClCompile Include="Source\Furniture.cpp">
+      <Filter>MyGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -186,7 +188,9 @@
     <ClInclude Include="Source\Line.h">
       <Filter>MyGame</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Furniture.h" />
+    <ClInclude Include="Source\Furniture.h">
+      <Filter>MyGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\game.rc">

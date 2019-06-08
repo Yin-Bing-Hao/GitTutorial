@@ -11,6 +11,7 @@ namespace game_framework {
 	class Enemy;
 	class Weapon;
 	class Line;
+	class Furniture;
 	class Soldier
 	{
 	public:
@@ -73,7 +74,7 @@ namespace game_framework {
 		void ChangeGun(int);
 		const vector<Line*>& GetRoadLine();
 		const int GetWay();
-		void searchEnemy(CGameMap* map,vector<Enemy*>& enemys); //·j´M¼Ä¤H
+		void searchEnemy(CGameMap* map,vector<Enemy*>& enemys,vector<Furniture*>& furniture); //·j´M¼Ä¤H
 		void attackEnemy();
 		void shoot();
 	protected:

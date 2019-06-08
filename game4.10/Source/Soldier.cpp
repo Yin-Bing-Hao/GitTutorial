@@ -628,7 +628,7 @@ void Soldier::SetXY(int nx, int ny)
 #pragma endregion
 
 #pragma region shoot
-void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys)
+void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys, vector<Furniture*>& furniture)
 {
     double dx, dy;
     double Lx, Ly;
@@ -674,7 +674,7 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys)
 	pi = 3.14159265 / 180.0;
     rotate_end = rotate_start + 90;
 	//TRACE("HEHEHEHEHEHE\n");
-    for (double rotate = rotate_start; rotate <= rotate_end; rotate += 0.02)
+    for (double rotate = rotate_start; rotate <= rotate_end; rotate += 0.125)
     {
         Lx = x+20 ;
         Ly = y+20 ;
@@ -708,6 +708,13 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys)
 							_target = (*iter);
                     }
                 }
+				for (vector<Furniture*>::iterator iter = furniture.begin(); iter != furniture.end(); iter++)
+				{
+					if ((*iter)->GetX() == Lix && (*iter)->GetY() == Liy)
+					{
+						(*iter)->SetIsSaw(true);
+					}
+				}
             }
 			map->SetBackLight(Light_iy, Light_ix, true);
             Lx += dx;
