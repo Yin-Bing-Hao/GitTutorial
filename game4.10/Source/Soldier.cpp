@@ -712,7 +712,7 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys)
 			map->SetBackLight(Light_iy, Light_ix, true);
             Lx += dx;
             Ly += dy;
-        } while (map->GetIndexValue(Lix, Liy) < 3);
+        } while (map->GetIndexValue(Lix, Liy) < 5);
 	}
 	if(_target!=NULL)
 		target = _target;

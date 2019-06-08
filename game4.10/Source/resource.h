@@ -81,6 +81,9 @@
 #define GAME_STOP                       213
 #define IDB_BITMAP6                     214
 #define GAME_START                      214
+#define WALL_RIGHT_T                    215
+#define WALL__LEFT_T                    216
+#define WALL_LEFT_T                     216
 #define IDC_README                      1001
 #define ID_FILE_PAUSE                   32771
 #define ID_TOGGLE_FULLSCREEN            32772

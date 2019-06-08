@@ -261,6 +261,7 @@
     <ClCompile Include="Source\Back.cpp" />
     <ClCompile Include="Source\CBouncingBall.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\Furniture.cpp" />
     <ClCompile Include="Source\Line.cpp" />
     <ClCompile Include="Source\Weapons.cpp" />
     <ClCompile Include="Source\Soldier.cpp" />
@@ -310,6 +311,7 @@
     <ClInclude Include="Source\Back.h" />
     <ClInclude Include="Source\CBouncingBall.h" />
     <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\Furniture.h" />
     <ClInclude Include="Source\Line.h" />
     <ClInclude Include="Source\Soldier.h" />
     <ClInclude Include="Source\game.h" />
@@ -366,12 +368,14 @@
     <Image Include="res\bmp00018.bmp" />
     <Image Include="res\bmp00019.bmp" />
     <Image Include="res\bmp00020.bmp" />
+    <Image Include="res\bmp00021.bmp" />
     <Image Include="res\door_str.bmp" />
     <Image Include="res\glass_ho.bmp" />
     <Image Include="res\glass_st.bmp" />
     <Image Include="res\wall_hor.bmp" />
     <Image Include="res\wall_inv.bmp" />
     <Image Include="res\wall_str.bmp" />
+    <Image Include="res\wall_t1.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

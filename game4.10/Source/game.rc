@@ -164,6 +164,10 @@ GAME_STOP               BITMAP                  "..\\res\\bmp00019.bmp"
 
 GAME_START              BITMAP                  "..\\res\\bmp00020.bmp"
 
+WALL_RIGHT_T            BITMAP                  "..\\res\\bmp00021.bmp"
+
+WALL_LEFT_T             BITMAP                  "..\\res\\wall_t1.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -41,6 +41,7 @@
 #include "Soldier.h"
 #include "Enemy.h"
 //#include "CBall.h"
+#include "Furniture.h"
 #include "CBouncingBall.h"
 #include "Back.h"
 
@@ -78,6 +79,7 @@ enum AUDIO_ID  				// 定義各種音效的編號
 // 每個Member function的Implementation都要弄懂
 /////////////////////////////////////////////////////////////////////////////
 class Back;
+
 class CGameStateInit : public CGameState
 {
     public:
@@ -114,7 +116,7 @@ class CGameMap
         ~CGameMap();
     protected:
         CMovingBitmap RightUpCorner, LeftUpCorner, RightDownCorner, LeftDownCorner, Horizonal, Vertical;
-        CMovingBitmap wall_Horizontal, wall_Straight, wall_LU, wall_LD, wall_RU, wall_RD, wall_Invertr_T, wall_T;
+        CMovingBitmap wall_Horizontal, wall_Straight, wall_LU, wall_LD, wall_RU, wall_RD, wall_Invertr_T, wall_T,wall_RT,wall_LT;
         CMovingBitmap glass_Straight, glass_Horizontal, glass_BrokenStraight, glass_BrokenHorizontal;
         CMovingBitmap door_StrUp, door_StrDown, door_HorRight, door_HorLeft;
 		CMovingBitmap sand, wood, sidewalk, sand_light, wood_light;
@@ -175,6 +177,7 @@ class CGameStateRun : public CGameState
         CMovingBitmap	corner;		// 角落圖
         Soldier			people;		// 拍子
 		vector<Enemy*>	enemy;		// 敵人們
+		vector<Furniture*> furniture;
 
 };
 

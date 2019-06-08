@@ -138,6 +138,7 @@
     <ClCompile Include="Source\Line.cpp">
       <Filter>MyGame</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Furniture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -185,6 +186,7 @@
     <ClInclude Include="Source\Line.h">
       <Filter>MyGame</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Furniture.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\game.rc">
@@ -316,6 +318,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\bmp00020.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\bmp00021.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wall_t1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
