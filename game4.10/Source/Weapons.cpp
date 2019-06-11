@@ -13,7 +13,12 @@
 
 namespace game_framework
 {
-	Weapon::Weapon(int damage, int ammon) :_damage(damage), _ammon(ammon) {}
+	static int gun_sound_count = 100;
+	Weapon::Weapon(int damage, int ammon,int sound_start) :_damage(damage), _ammon(ammon),_sound_count_start(sound_start)
+	{
+		gun_sound_count += 4;
+		_sound_count = _sound_count_start;
+	}
 
 	Weapon::~Weapon()
 	{
@@ -23,30 +28,37 @@ namespace game_framework
 	{
 		return _damage;
 	}
-	HK416::HK416():Weapon(33,30){}
+	HK416::HK416():Weapon(33,30, gun_sound_count)
+	{
+		for(int i= _sound_count_start;i< _sound_count_start+4;i++)
+			CAudio::Instance()->Load(i, "Sounds\\AR15_gun_sound.mp3");
+		TRACE("HK416:%d %d\n", _sound_count_start, _sound_count);
+	}
 
 	void HK416::Fire()
 	{
-		static int HK416_play_ID = AUDIO_HK416_1;
-		CAudio::Instance()->Play(HK416_play_ID, false);
-		HK416_play_ID++;
-		if (HK416_play_ID > AUDIO_HK416_4)
+		CAudio::Instance()->Play(_sound_count, false);
+		_sound_count++;
+		if (_sound_count > _sound_count_start + 3)
 		{
-			HK416_play_ID = AUDIO_HK416_1;
+			_sound_count = _sound_count_start;
 		}
 	}
 	
 	HK416::~HK416() { TRACE("~HK416()\n"); }
 
-	P9::P9() :Weapon(20, 12){}
+	P9::P9() :Weapon(20, 12, gun_sound_count){
+		for (int i = _sound_count_start;i < _sound_count_start + 4;i++)
+			CAudio::Instance()->Load(i, "Sounds\\P9.mp3");
+		TRACE("P9:%d %d\n", _sound_count_start, _sound_count);
+	}
 	void P9::Fire()
 	{
-		static int play_ID = AUDIO_P9_1;
-		CAudio::Instance()->Play(play_ID, false);
-		play_ID++;
-		if (play_ID > AUDIO_P9_3)
+		CAudio::Instance()->Play(_sound_count, false);
+		_sound_count++;
+		if (_sound_count > _sound_count_start+3)
 		{
-			play_ID = AUDIO_P9_1;
+			_sound_count = _sound_count_start;
 		}
 	}
 

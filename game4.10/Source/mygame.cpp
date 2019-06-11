@@ -78,6 +78,9 @@ namespace game_framework
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
 
+	static bool init_audio_play = false;
+	static bool run_init = false;
+	static bool run_init_load = true;
 CGameStateInit::CGameStateInit(CGame* g)
     : CGameState(g)
 {
@@ -93,7 +96,9 @@ void CGameStateInit::OnInit()
     //
     // 開始載入資料
     //
-    logo.LoadBitmap(IDB_BACKGROUND);
+	CAudio::Instance()->Load(AUDIO_INIT_BACKGRUOND, "Sounds\\background_sound.mp3");
+	background.LoadBitmap("Bitmaps/init_background.bmp");
+    //logo.LoadBitmap(IDB_BACKGROUND);
     Sleep(300);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
     //
     // 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
@@ -102,8 +107,15 @@ void CGameStateInit::OnInit()
 
 void CGameStateInit::OnBeginState()
 {
+	
 }
-
+void CGameStateInit::OnMove() {
+	if (!init_audio_play)
+	{
+		CAudio::Instance()->Play(AUDIO_INIT_BACKGRUOND, true);
+		init_audio_play = true;
+	}
+}
 void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     const char KEY_ESC = 27;
@@ -117,6 +129,9 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {
+	
+	CAudio::Instance()->Stop(AUDIO_INIT_BACKGRUOND);
+	init_audio_play = false;
     GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
 }
 
@@ -125,12 +140,12 @@ void CGameStateInit::OnShow()
     //
     // 貼上logo
     //
-    logo.SetTopLeft((SIZE_X - logo.Width()) / 2, SIZE_Y / 8);
-    logo.ShowBitmap();
+    //logo.SetTopLeft((SIZE_X - logo.Width()) / 2, SIZE_Y / 8);
+    //logo.ShowBitmap();
     //
     // Demo螢幕字型的使用，不過開發時請盡量避免直接使用字型，改用CMovingBitmap比較好
     //
-    CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
+    /*CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
     CFont f, *fp;
     f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
     fp = pDC->SelectObject(&f);					// 選用 font f
@@ -145,7 +160,9 @@ void CGameStateInit::OnShow()
     pDC->TextOut(5, 455, "Press Alt-F4 or ESC to Quit.");
     pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
     CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
-	//delete pDC;
+	//delete pDC;*/
+	background.SetTopLeft(0, 0);
+	background.ShowBitmap();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -211,27 +228,27 @@ CGameMap::CGameMap() : X(0), Y(0), MW(SIZE), MH(SIZE)
     random_num = 0;
     int map_init[COL][ROW] =
     {
-        {7, 6, 6, 6, 6, 6, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 6, 6, 6, 6, 6, 6, 6, 12, 6, 12, 6, 6, 6, 8},
-        {5, 0, 0, 0, 0, 0, 5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 2, 2, 0, 0, 0, 5, 0, 5, 2, 0, 2, 5},
-        {5, 0, 0, 0, 0, 0, 5, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 5, 0, 5, 2, 0, 2, 5},
-        {5, 0, 0, 0, 0, 0, 5, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 5, 0, 0, 0, 0, 0, 2, 2, 5, 0, 5, 2, 0, 2, 5},
-        {5, 0, 0, 0, 0, 0, 5, 0, 0, 2, 2, 2, 2, 2, 2, 0, 2, 5, 0, 0, 0, 0, 0, 2, 0, 5, 0, 5, 0, 0, 0, 5},
-        {5, 0, 0, 0, 0, 0, 5, 2, 2, 2, 0, 0, 0, 0, 0, 0, 2, 5, 2, 2, 2, 0, 0, 0, 0, 5, 0, 5, 0, 0, 2, 5},
-        {5, 0, 0, 0, 0, 0, 5, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 13, 6, 6, 6, 6, 6, 6, 6, 10, 0, 5, 0, 0, 2, 5},
-        {5, 0, 0, 0, 0, 0, 9, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 2, 5},
-        {5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5},
-        {13, 6, 6, 0, 0, 6, 6, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 0, 2, 5},
-        {5, 2, 2, 0, 0, 0, 2, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 6, 0, 6, 14},
-        {5, 0, 0, 0, 0, 0, 2, 2, 13, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-        {5, 0, 0, 0, 0, 0, 2, 2, 5, 2, 2, 0, 0, 2, 0, 2, 0, 0, 2, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-        {5, 0, 0, 2, 2, 0, 0, 0, 5, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 6, 6, 6, 6, 6, 6, 6, 6, 6, 14},
-        {5, 0, 2, 2, 2, 2, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 2, 2, 2, 2, 2, 0, 5},
-        {5, 0, 0, 2, 2, 0, 0, 2, 5, 0, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-        {5, 0, 0, 0, 0, 0, 0, 2, 5, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 5},
-        {5, 2, 2, 2, 0, 0, 0, 0, 5, 0, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 5, 0, 0, 0, 2, 2, 2, 2, 0, 2, 5},
-        {5, 2, 2, 2, 2, 0, 0, 2, 5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 5, 0, 0, 0, 0, 2, 2, 0, 0, 0, 5},
-        {5, 2, 2, 2, 0, 0, 0, 2, 5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 5, 2, 2, 2, 0, 0, 0, 0, 0, 0, 5},
-        {5, 0, 0, 0, 0, 2, 0, 2, 5, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 2, 5, 2, 2, 2, 2, 2, 0, 2, 2, 2, 5},
+        {0, 0, 7, 6, 6, 6, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 6, 6, 6, 6, 6, 6, 6, 12, 6, 12, 6, 6, 6, 8},
+        {0, 0, 5, 0, 0, 0, 5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 3, 0, 0, 0, 5, 0, 5, 3, 0, 3, 5},
+        {0, 0, 5, 0, 0, 0, 5, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 5, 0, 5, 3, 0, 3, 5},
+        {0, 0, 5, 0, 0, 0, 5, 3, 0, 0, 3, 0, 0, 3, 0, 0, 0, 5, 0, 0, 0, 0, 0, 3, 3, 5, 0, 5, 3, 0, 3, 5},
+        {0, 0, 5, 0, 0, 0, 5, 0, 0, 3, 3, 3, 3, 3, 3, 0, 3, 5, 0, 0, 0, 0, 0, 3, 0, 5, 0, 5, 0, 0, 0, 5},
+        {0, 0, 5, 0, 0, 0, 5, 3, 3, 3, 0, 0, 0, 0, 0, 0, 3, 5, 3, 3, 3, 0, 0, 0, 0, 5, 0, 5, 0, 0, 3, 5},
+        {0, 0, 5, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 0, 0, 0, 3, 13, 6, 6, 6, 6, 6, 6, 6, 10, 0, 5, 0, 0, 3, 5},
+        {0, 0, 0, 0, 0, 0, 9, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 5},
+        {0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5},
+        {7, 6, 11, 0, 0, 6, 6, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 3, 0, 3, 5},
+        {5, 3, 3, 0, 0, 0, 3, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 6, 0, 6, 14},
+        {5, 0, 0, 0, 0, 0, 3, 3, 13, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+        {5, 0, 0, 0, 0, 0, 3, 3, 5, 3, 3, 0, 0, 3, 0, 3, 0, 0, 3, 0, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+        {5, 0, 0, 3, 3, 0, 0, 0, 5, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 6, 6, 6, 6, 6, 6, 6, 6, 6, 14},
+        {5, 0, 3, 3, 3, 3, 0, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 3, 3, 3, 3, 3, 0, 5},
+        {5, 0, 0, 3, 3, 0, 0, 3, 5, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+        {5, 0, 0, 0, 0, 0, 0, 3, 5, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 5},
+        {5, 3, 3, 3, 0, 0, 0, 0, 5, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 0, 5, 0, 0, 0, 3, 3, 3, 3, 0, 3, 5},
+        {5, 3, 3, 3, 3, 0, 0, 3, 5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 5, 0, 0, 0, 0, 3, 3, 0, 0, 0, 5},
+        {5, 3, 3, 3, 0, 0, 0, 3, 5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 5, 3, 3, 3, 0, 0, 0, 0, 0, 0, 5},
+        {5, 0, 0, 0, 0, 3, 0, 3, 5, 3, 0, 0, 3, 3, 0, 0, 0, 0, 0, 3, 3, 5, 3, 3, 3, 3, 3, 0, 3, 3, 3, 5},
         {9, 6, 6, 6, 6, 6, 6, 6, 11, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 11, 6, 6, 6, 6, 6, 6, 6, 6, 6, 10},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2}
@@ -311,7 +328,7 @@ CGameMap::CGameMap() : X(0), Y(0), MW(SIZE), MH(SIZE)
         }
     }
 
-    map[1][1] = 1;  //出生點
+    //map[1][1] = 1;  //出生點
 }
 
 void CGameMap::LoadBitmap()
@@ -360,10 +377,7 @@ void CGameMap::OnShow()
             switch (map[j][i])
             {
 
-				case 3:
-					glass_BrokenHorizontal.SetTopLeft(X + (MW * i), Y + (MH * j));
-					glass_BrokenHorizontal.ShowBitmap();
-					break;
+			
 
 				case 4:
 					glass_BrokenStraight.SetTopLeft(X + (MW * i), Y + (MH * j));
@@ -584,8 +598,7 @@ CGameStateRun::CGameStateRun(CGame* g)
     : CGameState(g)
 {
 }
-
-CGameStateRun::~CGameStateRun()
+void CGameStateRun::Clear()
 {
 	for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
 	{
@@ -595,9 +608,17 @@ CGameStateRun::~CGameStateRun()
 	{
 		delete(*iter);
 	}
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+	{
+		delete (*iter);
+	}
 	enemy.clear();
 	furniture.clear();
-	
+	player.clear();
+}
+CGameStateRun::~CGameStateRun()
+{
+	Clear();
 }
 
 void CGameStateRun::OnBeginState()
@@ -621,11 +642,16 @@ void CGameStateRun::OnBeginState()
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
     //CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
+	if (run_init)
+	{
+		OnInit();
+		run_init = false;
+	}
 }
 void CGameStateRun::Search()
 {
-    Search_mutex.lock();
-	//unique_ptr<thread> search_enemy(new thread(&Soldier::searchEnemy, &people, &map, enemy));
+    //Search_mutex.lock();
+	//unique_ptr<thread> search_enemy(new thread(&Soldier::searchEnemy, &people, &map, enemy, furniture));
 	
     for (int i = 0; i < 48; i++)
     {
@@ -644,9 +670,15 @@ void CGameStateRun::Search()
     {
         (*iter)->SetIsSaw(false);
     }
-	people.searchEnemy(&map, enemy, furniture);
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+	{
+		unique_ptr<thread> search_enemy(new thread(&Soldier::searchEnemy, (*iter), &map, enemy, furniture));
+		if (search_enemy->joinable()) search_enemy->join();
+		//(*iter)->searchEnemy(&map, enemy, furniture);
+	}
+	//people.searchEnemy(&map, enemy, furniture);
     //if (search_enemy->joinable()) search_enemy->join();
-    Search_mutex.unlock();
+    //Search_mutex.unlock();
 }
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
@@ -667,74 +699,78 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
     {
 		static int search_count = 0;
         //people.Perspective(map);
-        vector<Line*> ptr = people.GetRoadLine();
-        people.attackEnemy();
+		for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+		{
+			vector<Line*> ptr = (*iter)->GetRoadLine();
+			(*iter)->attackEnemy();
 
-        if (!ptr.empty())
-        {
-            switch (people.GetWay())
-            {
-                case 0:
-                    people.SetMovingUp(true);
-                    break;
+			if (!ptr.empty())
+			{
+				switch ((*iter)->GetWay())
+				{
+				case 0:
+					(*iter)->SetMovingUp(true);
+					break;
 
-                case 1:
-                    people.SetMovingRightUp(true);
-                    break;
+				case 1:
+					(*iter)->SetMovingRightUp(true);
+					break;
 
-                case 2:
-                    people.SetMovingRight(true);
-                    break;
+				case 2:
+					(*iter)->SetMovingRight(true);
+					break;
 
-                case 3:
-                    people.SetMovingRightDown(true);
-                    break;
+				case 3:
+					(*iter)->SetMovingRightDown(true);
+					break;
 
-                case 4:
-                    people.SetMovingDown(true);
-                    break;
+				case 4:
+					(*iter)->SetMovingDown(true);
+					break;
 
-                case 5:
-                    people.SetMovingLeftDown(true);
-                    break;
+				case 5:
+					(*iter)->SetMovingLeftDown(true);
+					break;
 
-                case 6:
-                    people.SetMovingLeft(true);
-                    break;
+				case 6:
+					(*iter)->SetMovingLeft(true);
+					break;
 
-                case 7:
-                    people.SetMovingLeftUp(true);
-                    break;
+				case 7:
+					(*iter)->SetMovingLeftUp(true);
+					break;
 
-                default:
-                    break;
-            }
+				default:
+					break;
+				}
 
-            people.OnMove();
-            map.SetIndexValue(people.GetIndexX(), people.GetIndexY(), 1);
-            people.MoveU(people.GetIsMoveNext(), &map);
-            people.MoveRU(people.GetIsMoveNext(), &map);
-            people.MoveR(people.GetIsMoveNext(), &map);
-            people.MoveRD(people.GetIsMoveNext(), &map);
-            people.MoveD(people.GetIsMoveNext(), &map);
-            people.MoveLD(people.GetIsMoveNext(), &map);
-            people.MoveL(people.GetIsMoveNext(), &map);
-            people.MoveLU(people.GetIsMoveNext(), &map);
-            people.SetMovingUp(false);
-            people.SetMovingRight(false);
-            people.SetMovingDown(false);
-            people.SetMovingLeft(false);
-            people.SetMovingRightUp(false);
-            people.SetMovingRightDown(false);
-            people.SetMovingLeftUp(false);
-            people.SetMovingLeftDown(false);
-        }
+				(*iter)->OnMove();
+				map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 1);
+				(*iter)->MoveU((*iter)->GetIsMoveNext(), &map);
+				(*iter)->MoveRU((*iter)->GetIsMoveNext(), &map);
+				(*iter)->MoveR((*iter)->GetIsMoveNext(), &map);
+				(*iter)->MoveRD((*iter)->GetIsMoveNext(), &map);
+				(*iter)->MoveD((*iter)->GetIsMoveNext(), &map);
+				(*iter)->MoveLD((*iter)->GetIsMoveNext(), &map);
+				(*iter)->MoveL((*iter)->GetIsMoveNext(), &map);
+				(*iter)->MoveLU((*iter)->GetIsMoveNext(), &map);
+				(*iter)->SetMovingUp(false);
+				(*iter)->SetMovingRight(false);
+				(*iter)->SetMovingDown(false);
+				(*iter)->SetMovingLeft(false);
+				(*iter)->SetMovingRightUp(false);
+				(*iter)->SetMovingRightDown(false);
+				(*iter)->SetMovingLeftUp(false);
+				(*iter)->SetMovingLeftDown(false);
+			}
+		}
+        
 
         if (search_count > 5)
         {
-			/*unique_ptr<thread> search(new thread(&CGameStateRun::Search, this));
+			//unique_ptr<thread> search(new thread(&CGameStateRun::Search, this));
 
-            if (search->joinable())search->join();*/
+            //if (search->joinable())search->join();
 			Search();
 
             search_count = 0;
@@ -744,6 +780,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
         {
 			if ((*iter)->GetLifePoint() <= 0)
 			{
+				map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 0);
 				delete (*iter);
 				(*iter) = NULL;
 				enemy.erase(iter);
@@ -779,124 +816,147 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
         map.OnMove();
         search_count++;
     }
+	if (enemy.empty()||player.empty())
+	{
+		Clear();
+		run_init = true;
+		GotoGameState(GAME_STATE_OVER);
+	}
 }
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
-    //
-    // 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
-    //     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
-    //
-    ShowInitProgress(33);	// 接個前一個狀態的進度，此處進度視為33%
-    //
-    // 開始載入資料
-    //
+	//
+	// 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
+	//     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
+	//
+	ShowInitProgress(33);	// 接個前一個狀態的進度，此處進度視為33%
+	//
+	// 開始載入資料
+	//
 	furniture.push_back(new Furniture(7, 1, 36));
 	furniture.push_back(new Furniture(8, 2, 30));
 	furniture.push_back(new Furniture(7, 5, 35));
 	furniture.push_back(new Furniture(9, 4, 35));
 	furniture.push_back(new Furniture(12, 4, 35));
 	furniture.push_back(new Furniture(10, 3, 29));
-	furniture.push_back(new Furniture(13,3,29));
-	furniture.push_back(new Furniture(8,6,27));
-	furniture.push_back(new Furniture(16,5,22));
-	furniture.push_back(new Furniture(16,4,45));
-	furniture.push_back(new Furniture(18,5,4));
-	furniture.push_back(new Furniture(21,5,45));
-	furniture.push_back(new Furniture(23,2,36));
-	furniture.push_back(new Furniture(24,3,26));
-	furniture.push_back(new Furniture(20,1,17));
-	furniture.push_back(new Furniture(28,1,1));
-	furniture.push_back(new Furniture(30,1,1));
-	furniture.push_back(new Furniture(28,9,46));
-	furniture.push_back(new Furniture(30,9,46));
-	furniture.push_back(new Furniture(30,5,42));
-	furniture.push_back(new Furniture(5,20,39));
-	furniture.push_back(new Furniture(1,18,35));
-	furniture.push_back(new Furniture(1,17,9));
-	furniture.push_back(new Furniture(2,17,9));
-	furniture.push_back(new Furniture(3,17,9));
-	furniture.push_back(new Furniture(1,19,11));
-	furniture.push_back(new Furniture(2,19,11));
-	furniture.push_back(new Furniture(3,19,11));
-	furniture.push_back(new Furniture(4,18,10));
-	furniture.push_back(new Furniture(1,10,37));
-	furniture.push_back(new Furniture(2,10,37));
-	furniture.push_back(new Furniture(6,10,5));
-	furniture.push_back(new Furniture(3,14,33));
-	furniture.push_back(new Furniture(3,13,17));
-	furniture.push_back(new Furniture(3,15,19));
-	furniture.push_back(new Furniture(2,14,28));
-	furniture.push_back(new Furniture(5,14,26));
-	furniture.push_back(new Furniture(7,14,45));
-	furniture.push_back(new Furniture(7,15,38));
-	furniture.push_back(new Furniture(7,16,45));
-	furniture.push_back(new Furniture(7,18,1));
-	furniture.push_back(new Furniture(9,12,37));
-	furniture.push_back(new Furniture(10,12,37));
-	furniture.push_back(new Furniture(9,13,15));
-	furniture.push_back(new Furniture(10,13,15));
-	furniture.push_back(new Furniture(9,18,44));
-	furniture.push_back(new Furniture(12,16,35));
-	furniture.push_back(new Furniture(15,16,35));
-	furniture.push_back(new Furniture(11,16,12));
-	furniture.push_back(new Furniture(12,15,9));
-	furniture.push_back(new Furniture(13,15,9));
-	furniture.push_back(new Furniture(14,15,9));
-	furniture.push_back(new Furniture(15,15,9));
-	furniture.push_back(new Furniture(16,15,9));
-	furniture.push_back(new Furniture(17,15,9));
-	furniture.push_back(new Furniture(12,17,11));
-	furniture.push_back(new Furniture(13,17,11));
-	furniture.push_back(new Furniture(14,17,11));
-	furniture.push_back(new Furniture(15,17,11));
-	furniture.push_back(new Furniture(16,17,11));
-	furniture.push_back(new Furniture(17,17,11));
-	furniture.push_back(new Furniture(18,16,10));
-	furniture.push_back(new Furniture(12,20,39));
-	furniture.push_back(new Furniture(13,20,31));
-	furniture.push_back(new Furniture(19,20,23));
-	furniture.push_back(new Furniture(19,19,33));
-	furniture.push_back(new Furniture(19,18,21));
-	furniture.push_back(new Furniture(13,12,32));
-	furniture.push_back(new Furniture(15,12,38));
-	furniture.push_back(new Furniture(18,12,45));
-	furniture.push_back(new Furniture(20,12,45));
-	furniture.push_back(new Furniture(22,19,8));
-	furniture.push_back(new Furniture(25,20,19));
-	furniture.push_back(new Furniture(28,20,2));
-	furniture.push_back(new Furniture(25,14,41));
-	furniture.push_back(new Furniture(28,14,25));
-	furniture.push_back(new Furniture(29,14,46));
-	furniture.push_back(new Furniture(25,17,33));
-	furniture.push_back(new Furniture(25,16,9));
-	furniture.push_back(new Furniture(26,16,9));
-	furniture.push_back(new Furniture(25,18,11));
-	furniture.push_back(new Furniture(26,18,11));
-	furniture.push_back(new Furniture(24,16,10));
-	furniture.push_back(new Furniture(27,16,12));
-	
-    enemy.push_back(new Enemy(1, 5, 0));
-    enemy.push_back(new Enemy(5, 1, 0));
+	furniture.push_back(new Furniture(13, 3, 29));
+	furniture.push_back(new Furniture(8, 6, 27));
+	furniture.push_back(new Furniture(16, 5, 22));
+	furniture.push_back(new Furniture(16, 4, 45));
+	furniture.push_back(new Furniture(18, 5, 4));
+	furniture.push_back(new Furniture(21, 5, 45));
+	furniture.push_back(new Furniture(23, 2, 36));
+	furniture.push_back(new Furniture(24, 3, 26));
+	furniture.push_back(new Furniture(20, 1, 17));
+	furniture.push_back(new Furniture(28, 1, 1));
+	furniture.push_back(new Furniture(30, 1, 1));
+	furniture.push_back(new Furniture(28, 9, 46));
+	furniture.push_back(new Furniture(30, 9, 46));
+	furniture.push_back(new Furniture(30, 5, 42));
+	furniture.push_back(new Furniture(5, 20, 39));
+	furniture.push_back(new Furniture(1, 18, 35));
+	furniture.push_back(new Furniture(1, 17, 9));
+	furniture.push_back(new Furniture(2, 17, 9));
+	furniture.push_back(new Furniture(3, 17, 9));
+	furniture.push_back(new Furniture(1, 19, 11));
+	furniture.push_back(new Furniture(2, 19, 11));
+	furniture.push_back(new Furniture(3, 19, 11));
+	furniture.push_back(new Furniture(4, 18, 10));
+	furniture.push_back(new Furniture(1, 10, 37));
+	furniture.push_back(new Furniture(2, 10, 37));
+	furniture.push_back(new Furniture(6, 10, 5));
+	furniture.push_back(new Furniture(3, 14, 33));
+	furniture.push_back(new Furniture(3, 13, 17));
+	furniture.push_back(new Furniture(3, 15, 19));
+	furniture.push_back(new Furniture(2, 14, 28));
+	furniture.push_back(new Furniture(5, 14, 26));
+	furniture.push_back(new Furniture(7, 14, 45));
+	furniture.push_back(new Furniture(7, 15, 38));
+	furniture.push_back(new Furniture(7, 16, 45));
+	furniture.push_back(new Furniture(7, 18, 1));
+	furniture.push_back(new Furniture(9, 12, 37));
+	furniture.push_back(new Furniture(10, 12, 37));
+	furniture.push_back(new Furniture(9, 13, 15));
+	furniture.push_back(new Furniture(10, 13, 15));
+	furniture.push_back(new Furniture(9, 18, 44));
+	furniture.push_back(new Furniture(12, 16, 35));
+	furniture.push_back(new Furniture(15, 16, 35));
+	furniture.push_back(new Furniture(11, 16, 12));
+	furniture.push_back(new Furniture(12, 15, 9));
+	furniture.push_back(new Furniture(13, 15, 9));
+	furniture.push_back(new Furniture(14, 15, 9));
+	furniture.push_back(new Furniture(15, 15, 9));
+	furniture.push_back(new Furniture(16, 15, 9));
+	furniture.push_back(new Furniture(17, 15, 9));
+	furniture.push_back(new Furniture(12, 17, 11));
+	furniture.push_back(new Furniture(13, 17, 11));
+	furniture.push_back(new Furniture(14, 17, 11));
+	furniture.push_back(new Furniture(15, 17, 11));
+	furniture.push_back(new Furniture(16, 17, 11));
+	furniture.push_back(new Furniture(17, 17, 11));
+	furniture.push_back(new Furniture(18, 16, 10));
+	furniture.push_back(new Furniture(12, 20, 39));
+	furniture.push_back(new Furniture(13, 20, 31));
+	furniture.push_back(new Furniture(19, 20, 23));
+	furniture.push_back(new Furniture(19, 19, 33));
+	furniture.push_back(new Furniture(19, 18, 21));
+	furniture.push_back(new Furniture(13, 12, 32));
+	furniture.push_back(new Furniture(15, 12, 38));
+	furniture.push_back(new Furniture(18, 12, 45));
+	furniture.push_back(new Furniture(20, 12, 45));
+	furniture.push_back(new Furniture(22, 19, 8));
+	furniture.push_back(new Furniture(25, 20, 19));
+	furniture.push_back(new Furniture(28, 20, 2));
+	furniture.push_back(new Furniture(25, 14, 41));
+	furniture.push_back(new Furniture(28, 14, 25));
+	furniture.push_back(new Furniture(29, 14, 46));
+	furniture.push_back(new Furniture(25, 17, 33));
+	furniture.push_back(new Furniture(25, 16, 9));
+	furniture.push_back(new Furniture(26, 16, 9));
+	furniture.push_back(new Furniture(25, 18, 11));
+	furniture.push_back(new Furniture(26, 18, 11));
+	furniture.push_back(new Furniture(24, 16, 10));
+	furniture.push_back(new Furniture(27, 16, 12));
+
+	enemy.push_back(new Enemy(1, 5, 0));
+	enemy.push_back(new Enemy(5, 1, 0));
 	enemy.push_back(new Enemy(8, 2, 0));
+
+	player.push_back(new Soldier(1, 1));
+	player.push_back(new Soldier(1, 2));
+	player.push_back(new Soldier(1, 3));
+	player.push_back(new Soldier(1, 4));
 	for (vector<Furniture*>::iterator iter = furniture.begin(); iter != furniture.end(); iter++) {
 		(*iter)->LoadBitmap();
 	}
-    for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
-    {
-        (*iter)->LoadBitmap();
-    }
-	CAudio::Instance()->Load(AUDIO_HK416_1, "Sounds\\AR15_gun_sound.mp3");
+	for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
+	{
+		(*iter)->LoadBitmap();
+	}
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+	{
+		(*iter)->LoadBitmap();
+	}
+	if(run_init_load)
+	{
+	/*CAudio::Instance()->Load(AUDIO_HK416_1, "Sounds\\AR15_gun_sound.mp3");
 	CAudio::Instance()->Load(AUDIO_HK416_2, "Sounds\\AR15_gun_sound.mp3");
 	CAudio::Instance()->Load(AUDIO_HK416_3, "Sounds\\AR15_gun_sound.mp3");
-	CAudio::Instance()->Load(AUDIO_HK416_4, "Sounds\\AR15_gun_sound.mp3");
+	CAudio::Instance()->Load(AUDIO_HK416_4, "Sounds\\AR15_gun_sound.mp3");*/
 	CAudio::Instance()->Load(AUDIO_P9_1, "Sounds\\P9.mp3");
 	CAudio::Instance()->Load(AUDIO_P9_2, "Sounds\\P9.mp3");
 	CAudio::Instance()->Load(AUDIO_P9_3, "Sounds\\P9.mp3");
-	people.LoadBitmap();
-    pause.LoadBitmap();
-    background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
-    map.LoadBitmap();
+
+
+	pause.LoadBitmap();
+	background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
+	map.LoadBitmap();
+	help.LoadBitmap(IDB_HELP, RGB(255, 255, 255));				// 載入說明的圖形
+	corner.LoadBitmap(IDB_CORNER);							// 載入角落圖形
+	corner.ShowBitmap(background);							// 將corner貼到background
+	run_init_load = false;
+	}
     //
     // 完成部分Loading動作，提高進度
     //
@@ -905,9 +965,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     //
     // 繼續載入其他資料
     //
-    help.LoadBitmap(IDB_HELP, RGB(255, 255, 255));				// 載入說明的圖形
-    corner.LoadBitmap(IDB_CORNER);							// 載入角落圖形
-    corner.ShowBitmap(background);							// 將corner貼到background
+    
     //CAudio::Instance()->Load(AUDIO_NTUT,  "sounds\\song.mid");	// 載入編號2的聲音ntut.mid
     //
     // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -926,7 +984,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	const char KEY_4 = 0x34;	//手雷
     map.OnKeyDown(nChar);
 
-    if (nChar == KEY_LEFT)
+    /*if (nChar == KEY_LEFT)
     {
         people.SetWatchLeft(true);
     }
@@ -959,7 +1017,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		else if (nChar == KEY_4) {
 			people.ChangeGun(3);
 		}
-	}
+	}*/
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -969,7 +1027,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_RIGHT = 0x44; // keyboard向右看
     const char KEY_DOWN = 0x53; // keyboard向下看
 
-    if (nChar == KEY_LEFT)
+    /*if (nChar == KEY_LEFT)
         people.SetWatchLeft(false);
 
     if (nChar == KEY_RIGHT)
@@ -979,23 +1037,28 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
         people.SetWatchUp(false);
 
     if (nChar == KEY_DOWN)
-        people.SetWatchDown(false);
+        people.SetWatchDown(false);*/
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
     TRACE("Mouse left button down\n");
-    people.TestInRedLine(point);
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+	{
+		(*iter)->TestInRedLine(point);
 
-    if (people.IsSetRoadLine(point))
-    {
-        TRACE("Get choosen\n");
-        people.SetChoosen(true);
-    }
-    else if (people.IsSetAction(point))
-    {
-        TRACE("Action\n");
-    }
+		if ((*iter)->IsSetRoadLine(point))
+		{
+			TRACE("Get choosen\n");
+			(*iter)->SetChoosen(true);
+		}
+		else if ((*iter)->IsSetAction(point))
+		{
+			TRACE("Action\n");
+		}
+
+	}
+    
 
     if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960)
     {
@@ -1006,8 +1069,11 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)
 {
     TRACE("Mouse left button up\n");
-    people.SetChoosen(false);
-	people.SetInRoadLine(false);
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+	{
+		(*iter)->SetChoosen(false);
+		(*iter)->SetInRoadLine(false);
+	}
     if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960 && pause.isChoosen())
     {
         if (!pause.GetPause())
@@ -1024,24 +1090,27 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
     mouse_y = point.y / SIZE;
 
     //TRACE("%d,%d\n", point.x, point.y);
-    if (people.IsChoosen())
-    {
-        people.SetRoadLine(mouse_x, mouse_y, &map);
-    }
-	if (people.IsInRoadLine())
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 	{
+		if ((*iter)->IsChoosen())
+		{
+			(*iter)->SetRoadLine(mouse_x, mouse_y, &map);
+		}
+		if ((*iter)->IsInRoadLine())
+		{
 
+		}
 	}
 }
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
-    people.SetMovingRight(true);
+    //people.SetMovingRight(true);
 }
 
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
-    people.SetMovingRight(false);
+    //people.SetMovingRight(false);
 }
 
 void CGameStateRun::GetMouse(UINT nFlags, CPoint point)
@@ -1061,7 +1130,10 @@ void CGameStateRun::OnShow()
     //help.ShowBitmap();					// 貼上說明圖
     map.OnShow();
     SetCursor(LoadCursor(NULL, IDC_CROSS));
-    people.OnShow();
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+	{
+		(*iter)->OnShow();
+	}
     corner.SetTopLeft(0, 0);
     corner.ShowBitmap();
     corner.SetTopLeft(SIZE_X - corner.Width(), SIZE_Y - corner.Height());

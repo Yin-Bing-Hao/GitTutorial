@@ -15,7 +15,7 @@ namespace game_framework {
 	class Soldier
 	{
 	public:
-		Soldier();
+		Soldier(int x,int y);
 		~Soldier();
 		int  GetX1();					// 擦子左上角 x 座標
 		int  GetY1();					// 擦子左上角 y 座標
@@ -91,6 +91,7 @@ namespace game_framework {
 		int x11, x12, x21, x22, y11, y12, y21, y22;
 		int end_x, end_y ;
 		int direction,gun;
+		int reaction_time, shoot_count_time;
 		bool isMoveNextIndex;		//是否移動到下一格位置
 		bool isMovingDown;			// 是否正在往下移動
 		bool isMovingLeft;			// 是否正在往左移動

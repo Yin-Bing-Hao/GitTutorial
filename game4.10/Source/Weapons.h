@@ -9,20 +9,22 @@ namespace game_framework
 	{
 	public:
 		void Init();
-		Weapon(int,int);
+		Weapon(int,int,int);
 		virtual ~Weapon();
 		virtual void Fire() {}
 		int GetDamage();
 	protected:
 		int _damage;
 		int _ammon;
+		int _sound_count_start;
+		int _sound_count;
 	};
 	class HK416 :public Weapon
 	{
 	public:
 		HK416();
 		~HK416();
-		virtual void Fire();
+		void Fire();
 		
 	private:
 	};

@@ -62,6 +62,7 @@ namespace game_framework
 
 enum AUDIO_ID  				// 定義各種音效的編號
 {
+	AUDIO_INIT_BACKGRUOND,
     AUDIO_DING,				// 0
     AUDIO_LAKE,				// 1
     AUDIO_NTUT,				// 2
@@ -90,8 +91,10 @@ class CGameStateInit : public CGameState
         void OnLButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
     protected:
         void OnShow();									// 顯示這個狀態的遊戲畫面
+		void OnMove();
     private:
         CMovingBitmap logo;								// csie的logo
+		CMovingBitmap background;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -169,13 +172,14 @@ class CGameStateRun : public CGameState
     protected:
         void OnMove();									// 移動遊戲元素
         void OnShow();									// 顯示這個狀態的遊戲畫面
+		void Clear();
     private:
         CGameMap		map;
         CGamePauseButton pause;
         CMovingBitmap	background;	// 背景圖
         CMovingBitmap	help;		// 說明圖
         CMovingBitmap	corner;		// 角落圖
-        Soldier			people;		// 拍子
+        vector<Soldier*>player;		// 拍子
 		vector<Enemy*>	enemy;		// 敵人們
 		vector<Furniture*> furniture;
 
