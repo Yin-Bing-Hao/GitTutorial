@@ -91,7 +91,7 @@ namespace game_framework {
 		int x1, x2, y1, y2;
 		int x11, x12, x21, x22, y11, y12, y21, y22;
 		int end_x, end_y ;
-		int direction,gun;
+		int direction,gun,lock_enemy;
 		int reaction_time, shoot_count_time;
 		int blood;
 		bool isMoveNextIndex;		//是否移動到下一格位置

@@ -133,10 +133,18 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {
+	if (point.x >= 65 && point.x <= 220 && point.y >= 649 && point.y <= 699)
+	{
+		CAudio::Instance()->Stop(AUDIO_INIT_BACKGRUOND);
+		init_audio_play = false;
+		GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
+	}
+	if (point.x >= 65 && point.x <= 220 && point.y >= 792 && point.y <= 842)
+	{
+		GotoGameState(4);
+		//exit(0);
+	}
 	
-	CAudio::Instance()->Stop(AUDIO_INIT_BACKGRUOND);
-	init_audio_play = false;
-    GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
 }
 
 void CGameStateInit::OnShow()
@@ -181,11 +189,11 @@ CGameStateOver::CGameStateOver(CGame* g)
 void CGameStateOver::OnBeginState()
 {
 	if (enemy_all_die) {
-		CAudio::Instance()->Play(AUDIO_MISSION_COMPLETE, true);
+		CAudio::Instance()->Play(AUDIO_MISSION_COMPLETE, false);
 		
 	}
 	else if (fail) {
-		CAudio::Instance()->Play(AUDIO_MISSION_FAIL, true);
+		CAudio::Instance()->Play(AUDIO_MISSION_FAIL, false);
 		
 	}
 }
@@ -755,7 +763,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 				}
 
 				(*iter)->OnMove();
-				map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 1);
+				if(map.GetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY())==0)map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 1);
 				(*iter)->MoveU((*iter)->GetIsMoveNext(), &map);
 				(*iter)->MoveRU((*iter)->GetIsMoveNext(), &map);
 				(*iter)->MoveR((*iter)->GetIsMoveNext(), &map);
@@ -1043,6 +1051,7 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 		{
 			TRACE("Get choosen\n");
 			(*iter)->SetChoosen(true);
+			break;
 		}
 		else if ((*iter)->IsSetAction(point))
 		{

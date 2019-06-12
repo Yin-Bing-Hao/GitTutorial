@@ -30,6 +30,7 @@ Soldier::Soldier(int x,int y,int z)
 	blood = z;
 	shoot_count_time = 0;
 	reaction_time = 10;
+	lock_enemy = -1;
     Initialize();
 }
 Soldier::~Soldier()
@@ -264,7 +265,8 @@ void Soldier::OnShow()
     }
     else if (way != roadLine.end())
     {
-		if ((*way)->getWatch()!= -1)direction = (*way)->getWatch();
+		if (lock_enemy != -1) direction = lock_enemy;
+		else if ((*way)->getWatch()!= -1)direction = (*way)->getWatch();
 
         switch (direction)
         {
@@ -661,6 +663,7 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys, vector<Furnitur
     double rotate_start, rotate_end;
 	int Light_ix, Light_iy, Lix, Liy;
     double pi;
+	double enemy_dir=-1;
 	Enemy *_target = NULL;
 
     switch (direction)
@@ -732,6 +735,8 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys, vector<Furnitur
                         (*iter)->SetIsSaw(true);
 						if(_target==NULL)
 							_target = (*iter);
+						if (enemy_dir == -1)
+							enemy_dir = rotate;
                     }
                 }
             }
@@ -752,6 +757,20 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys, vector<Furnitur
 	}
 	//if(_target!=NULL)
 		target = _target;
+		if (enemy_dir != -1)
+		{
+			if (enemy_dir >= 360)enemy_dir -= 360;
+			if (enemy_dir <= 22.5 || enemy_dir > 337.5)lock_enemy = 2;
+			else if (enemy_dir <= 67.5 && enemy_dir > 22.5)lock_enemy = 1;
+			else if (enemy_dir <= 112.5 && enemy_dir > 67.5)lock_enemy = 0;
+			else if (enemy_dir <= 157.5 && enemy_dir > 112.5)lock_enemy = 7;
+			else if (enemy_dir <= 202.5 && enemy_dir > 157.5)lock_enemy = 6;
+			else if (enemy_dir <= 247.5 && enemy_dir > 202.5)lock_enemy = 5;
+			else if (enemy_dir <= 292.5 && enemy_dir > 247.5)lock_enemy = 4;
+			else if (enemy_dir <= 337.5 && enemy_dir > 292.5)lock_enemy = 3;
+		}
+		else lock_enemy = -1;
+		//lock_enemy = enemy_dir;
 }
 
 void Soldier::attackEnemy()

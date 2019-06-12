@@ -509,7 +509,10 @@ CGame::CGame()
 CGame::~CGame()
 {
 	for (int i = 0; i < NUM_GAME_STATES; i++)
-		delete gameStateTable[i];
+	{
+		if(gameStateTable[i]!=NULL)delete gameStateTable[i];
+	}
+		
 }
 
 CGame *CGame::Instance()
@@ -699,6 +702,16 @@ void CGame::OnSuspend()
 
 void CGame::SetGameState(int state)
 {
+	if (state == 4)
+	{
+		for (int i = 0;i < NUM_GAME_STATES;i++)
+		{
+			delete gameStateTable[i];
+			gameStateTable[i] = NULL;
+		}
+		
+		exit(0);
+	}
 	ASSERT(state >=0 && state < NUM_GAME_STATES);
 	gameState = gameStateTable[state];
 	gameState->OnBeginState();
