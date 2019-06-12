@@ -15,7 +15,7 @@ namespace game_framework {
 	class Soldier
 	{
 	public:
-		Soldier(int x,int y);
+		Soldier(int x,int y,int z);
 		~Soldier();
 		int  GetX1();					// 擦子左上角 x 座標
 		int  GetY1();					// 擦子左上角 y 座標
@@ -23,6 +23,7 @@ namespace game_framework {
 		int  GetY2();					// 擦子右下角 y 座標
 		int	GetIndexX();
 		int GetIndexY();
+		int GetBlood();
 		void Initialize();				// 設定擦子為初始值
 		void LoadBitmap();				// 載入圖形
 		void OnMove();					// 移動擦子
@@ -92,6 +93,7 @@ namespace game_framework {
 		int end_x, end_y ;
 		int direction,gun;
 		int reaction_time, shoot_count_time;
+		int blood;
 		bool isMoveNextIndex;		//是否移動到下一格位置
 		bool isMovingDown;			// 是否正在往下移動
 		bool isMovingLeft;			// 是否正在往左移動

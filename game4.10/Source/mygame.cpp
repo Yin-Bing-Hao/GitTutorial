@@ -81,6 +81,10 @@ namespace game_framework
 	static bool init_audio_play = false;
 	static bool run_init = false;
 	static bool run_init_load = true;
+	static bool enemy_all_die = false;
+	static bool no_injury = true;
+	static bool in_time = true;
+	static bool fail = false;
 CGameStateInit::CGameStateInit(CGame* g)
     : CGameState(g)
 {
@@ -174,17 +178,16 @@ CGameStateOver::CGameStateOver(CGame* g)
 {
 }
 
-void CGameStateOver::OnMove()
-{
-    counter--;
-
-    if (counter < 0)
-        GotoGameState(GAME_STATE_INIT);
-}
-
 void CGameStateOver::OnBeginState()
 {
-    counter = 30 * 5; // 5 seconds
+	if (enemy_all_die) {
+		CAudio::Instance()->Play(AUDIO_MISSION_COMPLETE, true);
+		
+	}
+	else if (fail) {
+		CAudio::Instance()->Play(AUDIO_MISSION_FAIL, true);
+		
+	}
 }
 
 void CGameStateOver::OnInit()
@@ -197,6 +200,12 @@ void CGameStateOver::OnInit()
     //
     // 開始載入資料
     //
+	One_Star.LoadBitmap("Bitmaps/One_Star.bmp", RGB(255, 255, 255));
+	Two_Star.LoadBitmap("Bitmaps/Two_Star.bmp", RGB(255, 255, 255));
+	Three_Star.LoadBitmap("Bitmaps/Three_Star.bmp", RGB(255, 255, 255));
+	Fail.LoadBitmap("Bitmaps/FAIL.bmp", RGB(255, 255, 255));
+	CAudio::Instance()->Load(AUDIO_MISSION_COMPLETE, "Sounds\\mission_complete.mp3");
+	CAudio::Instance()->Load(AUDIO_MISSION_FAIL, "Sounds\\mission_fail.mp3");
     Sleep(300);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
     //
     // 最終進度為100%
@@ -204,19 +213,63 @@ void CGameStateOver::OnInit()
     ShowInitProgress(100);
 }
 
+void CGameStateOver::OnMove()
+{
+	
+}
+
+void CGameStateOver::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	if (enemy_all_die) 
+	{
+		if (point.x > 690 && point.x < 825 && point.y>600 && point.y < 650) {
+			CAudio::Instance()->Stop(AUDIO_MISSION_COMPLETE);
+			GotoGameState(GAME_STATE_RUN);
+		}
+		else if (point.x > 460 && point.x < 600 && point.y>600 && point.y < 650) {
+			CAudio::Instance()->Stop(AUDIO_MISSION_COMPLETE);
+			GotoGameState(GAME_STATE_INIT);
+		}
+	}
+	else if (fail) 
+	{
+		TRACE("%d %d\n", point.x, point.y);
+		if (point.x > 570 && point.x < 705 && point.y>530 && point.y < 580) 
+		{
+			CAudio::Instance()->Stop(AUDIO_MISSION_FAIL);
+			GotoGameState(GAME_STATE_RUN);
+		}
+	}
+}
+
 void CGameStateOver::OnShow()
 {
-    CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
-    CFont f, *fp;
-    f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
-    fp = pDC->SelectObject(&f);					// 選用 font f
-    pDC->SetBkColor(RGB(0, 0, 0));
-    pDC->SetTextColor(RGB(255, 255, 0));
-    char str[80];								// Demo 數字對字串的轉換
-    sprintf(str, "Game Over ! (%d)", counter / 30);
-    pDC->TextOut(240, 210, str);
-    pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
-    CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+    
+
+	if (enemy_all_die && in_time && no_injury) {
+		Three_Star.ShowBitmap();
+	}
+	else if (enemy_all_die && in_time || enemy_all_die && no_injury) {
+		Two_Star.ShowBitmap();
+	}
+	else if (enemy_all_die) {
+		One_Star.ShowBitmap();
+	}
+	else if (fail) {
+		Fail.ShowBitmap();
+		CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
+		CFont f, *fp;
+		f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
+		fp = pDC->SelectObject(&f);					// 選用 font f
+		pDC->SetBkColor(RGB(24, 23, 21));
+		pDC->SetTextColor(RGB(255, 255, 0));
+		char str[80];								// Demo 數字對字串的轉換
+		sprintf(str, "Mission Fail!!");
+		pDC->TextOut(570, 365, str);
+		pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
+		CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC*/
+	}
+	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -443,26 +496,6 @@ void CGameMap::OnShow()
                     glass_Straight.ShowBitmap();
                     break;
 
-               /* case 15:
-                    door_HorLeft.SetTopLeft(X + (MW * i), Y + (MH * j));
-                    door_HorLeft.ShowBitmap();
-                    break;
-
-                case 16:
-                    door_HorRight.SetTopLeft(X + (MW * i), Y + (MH * j));
-                    door_HorRight.ShowBitmap();
-                    break;
-
-                case 17:
-                    door_StrUp.SetTopLeft(X + (MW * i), Y + (MH * j));
-                    door_StrUp.ShowBitmap();
-                    break;
-
-                case 18:
-                    door_StrDown.SetTopLeft(X + (MW * i), Y + (MH * j));
-                    door_StrDown.ShowBitmap();
-                    break;*/
-
                 default:
                     break;
             }
@@ -480,40 +513,17 @@ void CGameMap::SetIndexValue(int x, int y, int value)
 
 void CGameMap::InitializeBouncingBall(int ini_index, int row, int col)
 {
-    /*const int VELOCITY = 10;
-    const int BALL_PLC_HEIGHT = 15;
-    int floor = Y + (row + 1) * MH - BALL_PLC_HEIGHT;
-    bballs[ini_index].LoadBitmap();
-    bballs[ini_index].SetFloor(floor);
-    bballs[ini_index].SetVelocity(VELOCITY + col);
-    bballs[ini_index].SetXY(X + col * MW + MW / 2, floor);*/
+   
 }
 
 void CGameMap::RandomBouncingBall()
 {
-    /*const int MAX_RAND_NUM = 10;
-    random_num = (rand() % MAX_RAND_NUM) + 1;
-    //bballs = new CBouncingBall[random_num];
-    int ini_index = 0;
-
-    for (int row = 0; row < 4; row++)
-    {
-        for (int col = 0; col < 5; col++)
-        {
-            if (map[row][col] != 0 && ini_index < random_num)
-            {
-                InitializeBouncingBall(ini_index, row, col);
-                ini_index++;
-            }
-        }
-    }*/
+  
 }
 
 void CGameMap::OnKeyDown(UINT nChar)
 {
     const int KEY_SPACE = 0x20;
-    /*if (nChar == KEY_SPACE)
-    	RandomBouncingBall();*/
 }
 
 Back CGameMap::GetBackGround()
@@ -631,14 +641,8 @@ void CGameStateRun::OnBeginState()
     const int HITS_LEFT_Y = 0;
     const int BACKGROUND_X = 60;
     const int ANIMATION_SPEED = 15;
-    //for (int i = 0; i < NUMBALLS; i++)  				// 設定球的起始座標
-    //{
-    //	int x_pos = i % BALL_PER_ROW;
-    //	int y_pos = i / BALL_PER_ROW;
-    //	ball[i].SetXY(x_pos * BALL_GAP + BALL_XY_OFFSET, y_pos * BALL_GAP + BALL_XY_OFFSET);
-    //	ball[i].SetDelay(x_pos);
-    //	ball[i].SetIsAlive(true);
-    //}
+	counter = 30 * 300; // 5 seconds
+    
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
     //CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
@@ -683,11 +687,17 @@ void CGameStateRun::Search()
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
     
-
+	counter--;
+	if (counter < 0) {
+		Clear();
+		fail = true;
+		run_init = true;
+		GotoGameState(GAME_STATE_OVER);
+	}
     //
     // 如果希望修改cursor的樣式，則將下面程式的commment取消即可
     //
-    // SetCursor(AfxGetApp()->LoadCursor(IDC_GAMECURSOR));
+     SetCursor(AfxGetApp()->LoadCursor(IDC_GAMECURSOR));
     //
     // 移動背景圖的座標
     //
@@ -816,10 +826,23 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
         map.OnMove();
         search_count++;
     }
-	if (enemy.empty()||player.empty())
+	for (vector<Soldier*>::iterator iter = player.begin(); iter < player.end(); iter++) {
+		if ((*iter)->GetBlood() != 100) {
+			no_injury = false;
+		}
+	}
+	if (counter < 6000) in_time = false;
+	if (player.empty()) {
+		Clear();
+		run_init = true;
+		fail = true;
+		GotoGameState(GAME_STATE_OVER);
+	}
+	else if (enemy.empty()&& counter>=0)
 	{
 		Clear();
 		run_init = true;
+		enemy_all_die = true;
 		GotoGameState(GAME_STATE_OVER);
 	}
 }
@@ -923,10 +946,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	enemy.push_back(new Enemy(5, 1, 0));
 	enemy.push_back(new Enemy(8, 2, 0));
 
-	player.push_back(new Soldier(1, 1));
-	player.push_back(new Soldier(1, 2));
-	player.push_back(new Soldier(1, 3));
-	player.push_back(new Soldier(1, 4));
+	player.push_back(new Soldier(1, 1, 100));
+	player.push_back(new Soldier(1, 2, 100));
+	player.push_back(new Soldier(1, 3, 100));
+	player.push_back(new Soldier(1, 4, 100));
 	for (vector<Furniture*>::iterator iter = furniture.begin(); iter != furniture.end(); iter++) {
 		(*iter)->LoadBitmap();
 	}
@@ -984,27 +1007,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	const char KEY_4 = 0x34;	//手雷
     map.OnKeyDown(nChar);
 
-    /*if (nChar == KEY_LEFT)
-    {
-        people.SetWatchLeft(true);
-    }
 
-    if (nChar == KEY_RIGHT)
-    {
-        people.SetWatchRight(true);
-    }
-
-    if (nChar == KEY_UP)
-    {
-        people.SetWatchUp(true);
-    }
-
-    if (nChar == KEY_DOWN)
-    {
-        people.SetWatchDown(true);
-    }
-
-	if (people.IsInRoadLine()) {
+	/*if (people.IsInRoadLine()) {
 		if (nChar == KEY_1) {
 			people.ChangeGun(0);
 		}
@@ -1026,18 +1030,6 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_UP = 0x57; // keyboard向上看
     const char KEY_RIGHT = 0x44; // keyboard向右看
     const char KEY_DOWN = 0x53; // keyboard向下看
-
-    /*if (nChar == KEY_LEFT)
-        people.SetWatchLeft(false);
-
-    if (nChar == KEY_RIGHT)
-        people.SetWatchRight(false);
-
-    if (nChar == KEY_UP)
-        people.SetWatchUp(false);
-
-    if (nChar == KEY_DOWN)
-        people.SetWatchDown(false);*/
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
@@ -1088,8 +1080,6 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
     static int mouse_x, mouse_y;
     mouse_x = point.x / SIZE;
     mouse_y = point.y / SIZE;
-
-    //TRACE("%d,%d\n", point.x, point.y);
 	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 	{
 		if ((*iter)->IsChoosen())
@@ -1105,12 +1095,10 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
-    //people.SetMovingRight(true);
 }
 
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
-    //people.SetMovingRight(false);
 }
 
 void CGameStateRun::GetMouse(UINT nFlags, CPoint point)
@@ -1119,17 +1107,19 @@ void CGameStateRun::GetMouse(UINT nFlags, CPoint point)
 
 void CGameStateRun::OnShow()
 {
-    //
-    //  注意：Show裡面千萬不要移動任何物件的座標，移動座標的工作應由Move做才對，
-    //        否則當視窗重新繪圖時(OnDraw)，物件就會移動，看起來會很怪。換個術語
-    //        說，Move負責MVC中的Model，Show負責View，而View不應更動Model。
-    //
-    //
-    //  貼上背景圖、撞擊數、球、擦子、彈跳的球
-    //
-    //help.ShowBitmap();					// 貼上說明圖
+	CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
+	CFont f, *fp;
+	f.CreatePointFont(200, "Times New Roman");	// 產生 font f; 200表示20 point的字
+	fp = pDC->SelectObject(&f);					// 選用 font f
+	pDC->SetBkColor(RGB(0, 0, 0));
+	pDC->SetTextColor(RGB(255, 255, 255));
+	char str[80];								// Demo 數字對字串的轉換
+	sprintf(str, "時間剩下:%d", counter / 30);
+	pDC->TextOut(900, 900, str);
+	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
+	CDDraw::ReleaseBackCDC();
+
     map.OnShow();
-    SetCursor(LoadCursor(NULL, IDC_CROSS));
 	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 	{
 		(*iter)->OnShow();

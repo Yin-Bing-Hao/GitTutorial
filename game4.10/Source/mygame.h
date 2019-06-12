@@ -72,7 +72,9 @@ enum AUDIO_ID  				// 定義各種音效的編號
 	AUDIO_HK416_4,
 	AUDIO_P9_1,
 	AUDIO_P9_2,
-	AUDIO_P9_3
+	AUDIO_P9_3,
+	AUDIO_MISSION_FAIL,
+	AUDIO_MISSION_COMPLETE
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -182,6 +184,7 @@ class CGameStateRun : public CGameState
         vector<Soldier*>player;		// 拍子
 		vector<Enemy*>	enemy;		// 敵人們
 		vector<Furniture*> furniture;
+		int counter;
 
 };
 
@@ -196,11 +199,13 @@ class CGameStateOver : public CGameState
         CGameStateOver(CGame* g);
         void OnBeginState();							// 設定每次重玩所需的變數
         void OnInit();
+		void OnLButtonDown(UINT nFlags, CPoint point);
     protected:
         void OnMove();									// 移動遊戲元素
         void OnShow();									// 顯示這個狀態的遊戲畫面
     private:
         int counter;	// 倒數之計數器
+		CMovingBitmap One_Star, Two_Star, Three_Star, Fail;
 };
 
 }

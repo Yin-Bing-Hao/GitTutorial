@@ -23,10 +23,11 @@ namespace game_framework
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma region Basic
-Soldier::Soldier(int x,int y)
+Soldier::Soldier(int x,int y,int z)
 {
 	index_x = x;
 	index_y = y;
+	blood = z;
 	shoot_count_time = 0;
 	reaction_time = 10;
     Initialize();
@@ -402,6 +403,10 @@ int Soldier::GetIndexX()
 int Soldier::GetIndexY()
 {
     return index_y;
+}
+int Soldier::GetBlood()
+{
+	return blood;
 }
 #pragma endregion
 
