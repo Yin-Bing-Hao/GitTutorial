@@ -74,7 +74,12 @@ enum AUDIO_ID  				// 定義各種音效的編號
 	AUDIO_P9_2,
 	AUDIO_P9_3,
 	AUDIO_MISSION_FAIL,
-	AUDIO_MISSION_COMPLETE
+	AUDIO_MISSION_COMPLETE,
+	AUDIO_NEWGAME_1,
+	AUDIO_NEWGAME_2,
+	AUDIO_NEWGAME_3,
+	AUDIO_NEWGAME_4,
+	AUDIO_OK
 };
 
 /////////////////////////////////////////////////////////////////////////////

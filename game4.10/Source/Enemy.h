@@ -18,8 +18,7 @@ namespace game_framework {
 		void Hurt(int);
 		int GetLifePoint();
 	private:
-		CAnimation CEU, CELU, CEL, CEDL, CED, CEDR, CER, CEUR;
-		CAnimation test;
+		CMovingBitmap enemy_U, enemy_RU, enemy_R, enemy_RD, enemy_D, enemy_LD, enemy_L, enemy_LU;
 		int lifePoint;
 		int x, y;					// 人物左上角座標
 		int index_x, index_y;

@@ -28,7 +28,15 @@ namespace game_framework {
 	}
 	void Enemy::LoadBitmap()
 	{
-		test.AddBitmap("Bitmaps/Soldier2_LD.bmp", RGB(255, 255, 255));
+		enemy_U.LoadBitmap("Bitmaps/enemy_Up.bmp", RGB(255, 255, 255));
+		enemy_RU.LoadBitmap("Bitmaps/enemy_RU.bmp", RGB(255, 255, 255));
+		enemy_R.LoadBitmap("Bitmaps/enemy_Right.bmp", RGB(255, 255, 255));
+		enemy_RD.LoadBitmap("Bitmaps/enemy_RD.bmp", RGB(255, 255, 255));
+		enemy_D.LoadBitmap("Bitmaps/enemy_Down.bmp", RGB(255, 255, 255));
+		enemy_LD.LoadBitmap("Bitmaps/enemy_LD.bmp", RGB(255, 255, 255));
+		enemy_L.LoadBitmap("Bitmaps/enemy_Left.bmp", RGB(255, 255, 255));
+		enemy_LU.LoadBitmap("Bitmaps/enemy_LU.bmp", RGB(255, 255, 255));
+
 	}
 	int Enemy::GetIndexX()
 	{
@@ -50,8 +58,50 @@ namespace game_framework {
 	{
 		if (isSaw)
 		{
-			test.SetTopLeft(x, y);
-			test.OnShow();
+			switch (direction) {
+			case 0:
+				enemy_U.SetTopLeft(x, y);
+				enemy_U.ShowBitmap();
+				break;
+
+			case 1:
+				enemy_RU.SetTopLeft(x, y);
+				enemy_RU.ShowBitmap();
+				break;
+
+			case 2:
+				enemy_R.SetTopLeft(x, y);
+				enemy_R.ShowBitmap();
+				break;
+
+			case 3:
+				enemy_RD.SetTopLeft(x, y);
+				enemy_RD.ShowBitmap();
+				break;
+
+			case 4:
+				enemy_D.SetTopLeft(x, y);
+				enemy_D.ShowBitmap();
+				break;
+
+			case 5:
+				enemy_LD.SetTopLeft(x, y);
+				enemy_LD.ShowBitmap();
+				break;
+
+			case 6:
+				enemy_L.SetTopLeft(x, y);
+				enemy_L.ShowBitmap();
+				break;
+
+			case 7:
+				enemy_LU.SetTopLeft(x, y);
+				enemy_LU.ShowBitmap();
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
 	void Enemy::Hurt(int damage)

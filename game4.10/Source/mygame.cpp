@@ -83,6 +83,7 @@ namespace game_framework
 	static bool run_init_load = true;
 	static bool enemy_all_die = false;
 	static bool no_injury = true;
+	static bool new_game = true;
 	static bool in_time = true;
 	static bool fail = false;
 CGameStateInit::CGameStateInit(CGame* g)
@@ -651,6 +652,7 @@ void CGameStateRun::OnBeginState()
     const int ANIMATION_SPEED = 15;
 	counter = 30 * 300; // 5 seconds
     
+	new_game = true;
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
     //CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
@@ -695,6 +697,15 @@ void CGameStateRun::Search()
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
     
+	if (new_game) {
+		CAudio::Instance()->Play(AUDIO_NEWGAME_1, false);
+		CAudio::Instance()->Play(AUDIO_NEWGAME_2, false);
+		CAudio::Instance()->Play(AUDIO_NEWGAME_3, false);
+		CAudio::Instance()->Play(AUDIO_NEWGAME_4, false);
+		CAudio::Instance()->Play(AUDIO_OK, false);
+		new_game = false;
+	}
+
 	counter--;
 	if (counter < 0) {
 		Clear();
@@ -978,6 +989,12 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	CAudio::Instance()->Load(AUDIO_P9_1, "Sounds\\P9.mp3");
 	CAudio::Instance()->Load(AUDIO_P9_2, "Sounds\\P9.mp3");
 	CAudio::Instance()->Load(AUDIO_P9_3, "Sounds\\P9.mp3");
+
+	CAudio::Instance()->Load(AUDIO_NEWGAME_1, "Sounds\\newgame.mp3");
+	CAudio::Instance()->Load(AUDIO_NEWGAME_2, "Sounds\\newgame.mp3");
+	CAudio::Instance()->Load(AUDIO_NEWGAME_3, "Sounds\\newgame.mp3");
+	CAudio::Instance()->Load(AUDIO_NEWGAME_4, "Sounds\\newgame.mp3");
+	CAudio::Instance()->Load(AUDIO_OK, "Sounds\\ok.mp3");
 
 
 	pause.LoadBitmap();
