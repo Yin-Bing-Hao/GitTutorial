@@ -979,13 +979,13 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	furniture.push_back(new Furniture(25, 14, 41));
 	furniture.push_back(new Furniture(28, 14, 25));
 	furniture.push_back(new Furniture(29, 14, 46));
-	furniture.push_back(new Furniture(25, 17, 33));
-	furniture.push_back(new Furniture(25, 16, 9));
+	furniture.push_back(new Furniture(26, 17, 33));
 	furniture.push_back(new Furniture(26, 16, 9));
-	furniture.push_back(new Furniture(25, 18, 11));
+	furniture.push_back(new Furniture(27, 16, 9));
 	furniture.push_back(new Furniture(26, 18, 11));
-	furniture.push_back(new Furniture(24, 16, 10));
-	furniture.push_back(new Furniture(27, 16, 12));
+	furniture.push_back(new Furniture(27, 18, 11));
+	furniture.push_back(new Furniture(25, 17, 12));
+	furniture.push_back(new Furniture(28, 17, 10));
 
 	enemy.push_back(new Enemy(3, 3, 4));
 	enemy.push_back(new Enemy(5, 1, 5));

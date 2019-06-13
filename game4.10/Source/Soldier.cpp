@@ -61,7 +61,7 @@ void Soldier::Initialize()
     isSetRoadLine = true;
     isChoosen = isWatchDown = isWatchLeft = isWatchLeftDown = isWatchLeftUp = isWatchRight = isWatchRightDown = isWatchRightUp = isWatchUp = isSetAction = false;
     isMovingLeft = isMovingRight = isMovingUp = isMovingDown = isMovingLeftDown = isMovingLeftUp = isMovingRightDown = isMovingRightUp = false;
-    isMoveNextIndex = isInRoadLine= false;
+    isMoveNextIndex = isInRoadLine= isShoot=false;
     way = roadLine.end();
     direction = 2;
 
@@ -92,6 +92,27 @@ void Soldier::LoadBitmap()
 	peopleLUU.AddBitmap("Bitmaps/Soldier2_LUU.bmp", RGB(255, 255, 255));
 	peopleRDU.AddBitmap("Bitmaps/Soldier2_RDU.bmp", RGB(255, 255, 255));
 	peopleLDU.AddBitmap("Bitmaps/Soldier2_LDU.bmp", RGB(255, 255, 255));
+
+	//-----
+	peopleL_fire.AddBitmap("Bitmaps/Soldier2_Left_fire.bmp", RGB(255, 255, 255));
+	peopleU_fire.AddBitmap("Bitmaps/Soldier2_Up_fire.bmp", RGB(255, 255, 255));
+	peopleR_fire.AddBitmap("Bitmaps/Soldier2_Right_fire.bmp", RGB(255, 255, 255));
+	peopleD_fire.AddBitmap("Bitmaps/Soldier2_Down_fire.bmp", RGB(255, 255, 255));
+
+	peopleRU_fire.AddBitmap("Bitmaps/Soldier2_RU_fire.bmp", RGB(255, 255, 255));
+	peopleLU_fire.AddBitmap("Bitmaps/Soldier2_LU_fire.bmp", RGB(255, 255, 255));
+	peopleRD_fire.AddBitmap("Bitmaps/Soldier2_RD_fire.bmp", RGB(255, 255, 255));
+	peopleLD_fire.AddBitmap("Bitmaps/Soldier2_LD_fire.bmp", RGB(255, 255, 255));
+
+	peopleRUD_fire.AddBitmap("Bitmaps/Soldier2_RUD_fire.bmp", RGB(255, 255, 255));
+	peopleLUD_fire.AddBitmap("Bitmaps/Soldier2_LUD_fire.bmp", RGB(255, 255, 255));
+	peopleRDD_fire.AddBitmap("Bitmaps/Soldier2_RDD_fire.bmp", RGB(255, 255, 255));
+	peopleLDD_fire.AddBitmap("Bitmaps/Soldier2_LDD_fire.bmp", RGB(255, 255, 255));
+
+	peopleRUU_fire.AddBitmap("Bitmaps/Soldier2_RUU_fire.bmp", RGB(255, 255, 255));
+	peopleLUU_fire.AddBitmap("Bitmaps/Soldier2_LUU_fire.bmp", RGB(255, 255, 255));
+	peopleRDU_fire.AddBitmap("Bitmaps/Soldier2_RDU_fire.bmp", RGB(255, 255, 255));
+	peopleLDU_fire.AddBitmap("Bitmaps/Soldier2_LDU_fire.bmp", RGB(255, 255, 255));
 
     lineUP.AddBitmap(IDB_LINEUP, RGB(255, 255, 255));
     lineRight.AddBitmap(IDB_LINERIGHT, RGB(255, 255, 255));
@@ -283,75 +304,174 @@ void Soldier::OnShow()
         switch (direction)
         {
             case 0:
-                peopleU.SetTopLeft(x, y);
-                peopleU.OnShow();
+				if (isShoot) {
+					peopleU_fire.SetTopLeft(x, y);
+					peopleU_fire.OnShow();
+				}
+				else {
+					peopleU.SetTopLeft(x, y);
+					peopleU.OnShow();
+				}
                 break;
 
             case 1:
-                peopleRU.SetTopLeft(x, y);
-                peopleRU.OnShow();
+				if (isShoot) {
+					peopleRU_fire.SetTopLeft(x, y);
+					peopleRU_fire.OnShow();
+				}
+				else {
+					peopleRU.SetTopLeft(x, y);
+					peopleRU.OnShow();
+				}
                 break;
 
             case 2:
-                peopleR.SetTopLeft(x, y);
-                peopleR.OnShow();
+				if (isShoot) {
+					peopleR_fire.SetTopLeft(x, y);
+					peopleR_fire.OnShow();
+				}
+				else {
+					peopleR.SetTopLeft(x, y);
+					peopleR.OnShow();
+				}
+
                 break;
 
             case 3:
-                peopleRD.SetTopLeft(x, y);
-                peopleRD.OnShow();
+				if (isShoot) {
+					peopleRD_fire.SetTopLeft(x, y);
+					peopleRD_fire.OnShow();
+				}
+				else {
+					peopleRD.SetTopLeft(x, y);
+					peopleRD.OnShow();
+				}
                 break;
 
             case 4:
-                peopleD.SetTopLeft(x, y);
-                peopleD.OnShow();
+				if (isShoot) {
+					peopleD_fire.SetTopLeft(x, y);
+					peopleD_fire.OnShow();
+				}
+				else {
+					peopleD.SetTopLeft(x, y);
+					peopleD.OnShow();
+				}
                 break;
 
             case 5:
-                peopleLD.SetTopLeft(x, y);
-                peopleLD.OnShow();
+				if (isShoot) {
+					peopleLD_fire.SetTopLeft(x, y);
+					peopleLD_fire.OnShow();
+				}
+				else {
+					peopleLD.SetTopLeft(x, y);
+					peopleLD.OnShow();
+				}
                 break;
 
             case 6:
-                peopleL.SetTopLeft(x, y);
-                peopleL.OnShow();
+				if (isShoot) {
+					peopleL_fire.SetTopLeft(x, y);
+					peopleL_fire.OnShow();
+				}
+				else {
+					peopleL.SetTopLeft(x, y);
+					peopleL.OnShow();
+				}
                 break;
 
             case 7:
-                peopleLU.SetTopLeft(x, y);
-                peopleLU.OnShow();
+				if (isShoot) {
+					peopleLU_fire.SetTopLeft(x, y);
+					peopleLU_fire.OnShow();
+				}
+				else {
+					peopleLU.SetTopLeft(x, y);
+					peopleLU.OnShow();
+				}
                 break;
 			case 8:
-				peopleRUD.SetTopLeft(x, y);
-				peopleRUD.OnShow();
+				if (isShoot) {
+					peopleRUD_fire.SetTopLeft(x, y);
+					peopleRUD_fire.OnShow();
+				}
+				else {
+					peopleRUD.SetTopLeft(x, y);
+					peopleRUD.OnShow();
+				}
 				break;
 			case 9:
-				peopleRUU.SetTopLeft(x, y);
-				peopleRUU.OnShow();
+				if (isShoot) {
+					peopleRUU_fire.SetTopLeft(x, y);
+					peopleRUU_fire.OnShow();
+				}
+				else {
+					peopleRUU.SetTopLeft(x, y);
+					peopleRUU.OnShow();
+				}
 				break;
 			case 10:
-				peopleLUU.SetTopLeft(x, y);
-				peopleLUU.OnShow();
+				if (isShoot) {
+					peopleLUU_fire.SetTopLeft(x, y);
+					peopleLUU_fire.OnShow();
+				}
+				else {
+					peopleLUU.SetTopLeft(x, y);
+					peopleLUU.OnShow();
+				}
 				break;
 			case 11:
-				peopleLUD.SetTopLeft(x, y);
-				peopleLUD.OnShow();
+				if (isShoot) {
+					peopleLUD_fire.SetTopLeft(x, y);
+					peopleLUD_fire.OnShow();
+				}
+				else {
+					peopleLUD.SetTopLeft(x, y);
+					peopleLUD.OnShow();
+				}
+
 				break;
 			case 12:
-				peopleLDU.SetTopLeft(x, y);
-				peopleLDU.OnShow();
+				if (isShoot) {
+					peopleLDU_fire.SetTopLeft(x, y);
+					peopleLDU_fire.OnShow();
+				}
+				else {
+					peopleLDU.SetTopLeft(x, y);
+					peopleLDU.OnShow();
+				}
 				break;
 			case 13:
-				peopleLDD.SetTopLeft(x, y);
-				peopleLDD.OnShow();
+				if (isShoot) {
+					peopleLDD_fire.SetTopLeft(x, y);
+					peopleLDD_fire.OnShow();
+				}
+				else {
+					peopleLDD.SetTopLeft(x, y);
+					peopleLDD.OnShow();
+				}
 				break;
 			case 14:
-				peopleRDD.SetTopLeft(x, y);
-				peopleRDD.OnShow();
+				if (isShoot) {
+					peopleRDD_fire.SetTopLeft(x, y);
+					peopleRDD_fire.OnShow();
+				}
+				else {
+					peopleRDD.SetTopLeft(x, y);
+					peopleRDD.OnShow();
+				}
 				break;
 			case 15:
-				peopleRDU.SetTopLeft(x, y);
-				peopleRDU.OnShow();
+				if (isShoot) {
+					peopleRDU_fire.SetTopLeft(x, y);
+					peopleRDU_fire.OnShow();
+				}
+				else {
+					peopleRDU.SetTopLeft(x, y);
+					peopleRDU.OnShow();
+				}
+
 				break;
 
             default:
@@ -362,76 +482,174 @@ void Soldier::OnShow()
     {
         switch (direction)
         {
-            case 0:
-                peopleU.SetTopLeft(x, y);
-                peopleU.OnShow();
-                break;
+		case 0:
+			if (isShoot) {
+				peopleU_fire.SetTopLeft(x, y);
+				peopleU_fire.OnShow();
+			}
+			else {
+				peopleU.SetTopLeft(x, y);
+				peopleU.OnShow();
+			}
+			break;
 
-            case 1:
-                peopleRU.SetTopLeft(x, y);
-                peopleRU.OnShow();
-                break;
+		case 1:
+			if (isShoot) {
+				peopleRU_fire.SetTopLeft(x, y);
+				peopleRU_fire.OnShow();
+			}
+			else {
+				peopleRU.SetTopLeft(x, y);
+				peopleRU.OnShow();
+			}
+			break;
 
-            case 2:
-                peopleR.SetTopLeft(x, y);
-                peopleR.OnShow();
-                break;
+		case 2:
+			if (isShoot) {
+				peopleR_fire.SetTopLeft(x, y);
+				peopleR_fire.OnShow();
+			}
+			else {
+				peopleR.SetTopLeft(x, y);
+				peopleR.OnShow();
+			}
 
-            case 3:
-                peopleRD.SetTopLeft(x, y);
-                peopleRD.OnShow();
-                break;
+			break;
 
-            case 4:
-                peopleD.SetTopLeft(x, y);
-                peopleD.OnShow();
-                break;
+		case 3:
+			if (isShoot) {
+				peopleRD_fire.SetTopLeft(x, y);
+				peopleRD_fire.OnShow();
+			}
+			else {
+				peopleRD.SetTopLeft(x, y);
+				peopleRD.OnShow();
+			}
+			break;
 
-            case 5:
-                peopleLD.SetTopLeft(x, y);
-                peopleLD.OnShow();
-                break;
+		case 4:
+			if (isShoot) {
+				peopleD_fire.SetTopLeft(x, y);
+				peopleD_fire.OnShow();
+			}
+			else {
+				peopleD.SetTopLeft(x, y);
+				peopleD.OnShow();
+			}
+			break;
 
-            case 6:
-                peopleL.SetTopLeft(x, y);
-                peopleL.OnShow();
-                break;
+		case 5:
+			if (isShoot) {
+				peopleLD_fire.SetTopLeft(x, y);
+				peopleLD_fire.OnShow();
+			}
+			else {
+				peopleLD.SetTopLeft(x, y);
+				peopleLD.OnShow();
+			}
+			break;
 
-            case 7:
-                peopleLU.SetTopLeft(x, y);
-                peopleLU.OnShow();
-                break;
-			case 8:
+		case 6:
+			if (isShoot) {
+				peopleL_fire.SetTopLeft(x, y);
+				peopleL_fire.OnShow();
+			}
+			else {
+				peopleL.SetTopLeft(x, y);
+				peopleL.OnShow();
+			}
+			break;
+
+		case 7:
+			if (isShoot) {
+				peopleLU_fire.SetTopLeft(x, y);
+				peopleLU_fire.OnShow();
+			}
+			else {
+				peopleLU.SetTopLeft(x, y);
+				peopleLU.OnShow();
+			}
+			break;
+		case 8:
+			if (isShoot) {
+				peopleRUD_fire.SetTopLeft(x, y);
+				peopleRUD_fire.OnShow();
+			}
+			else {
 				peopleRUD.SetTopLeft(x, y);
 				peopleRUD.OnShow();
-				break;
-			case 9:
+			}
+			break;
+		case 9:
+			if (isShoot) {
+				peopleRUU_fire.SetTopLeft(x, y);
+				peopleRUU_fire.OnShow();
+			}
+			else {
 				peopleRUU.SetTopLeft(x, y);
 				peopleRUU.OnShow();
-				break;
-			case 10:
+			}
+			break;
+		case 10:
+			if (isShoot) {
+				peopleLUU_fire.SetTopLeft(x, y);
+				peopleLUU_fire.OnShow();
+			}
+			else {
 				peopleLUU.SetTopLeft(x, y);
 				peopleLUU.OnShow();
-				break;
-			case 11:
+			}
+			break;
+		case 11:
+			if (isShoot) {
+				peopleLUD_fire.SetTopLeft(x, y);
+				peopleLUD_fire.OnShow();
+			}
+			else {
 				peopleLUD.SetTopLeft(x, y);
 				peopleLUD.OnShow();
-				break;
-			case 12:
+			}
+
+			break;
+		case 12:
+			if (isShoot) {
+				peopleLDU_fire.SetTopLeft(x, y);
+				peopleLDU_fire.OnShow();
+			}
+			else {
 				peopleLDU.SetTopLeft(x, y);
 				peopleLDU.OnShow();
-				break;
-			case 13:
+			}
+			break;
+		case 13:
+			if (isShoot) {
+				peopleLDD_fire.SetTopLeft(x, y);
+				peopleLDD_fire.OnShow();
+			}
+			else {
 				peopleLDD.SetTopLeft(x, y);
 				peopleLDD.OnShow();
-				break;
-			case 14:
+			}
+			break;
+		case 14:
+			if (isShoot) {
+				peopleRDD_fire.SetTopLeft(x, y);
+				peopleRDD_fire.OnShow();
+			}
+			else {
 				peopleRDD.SetTopLeft(x, y);
 				peopleRDD.OnShow();
-				break;
-			case 15:
+			}
+			break;
+		case 15:
+			if (isShoot) {
+				peopleRDU_fire.SetTopLeft(x, y);
+				peopleRDU_fire.OnShow();
+			}
+			else {
 				peopleRDU.SetTopLeft(x, y);
 				peopleRDU.OnShow();
+			}
 				break;
             default:
                 break;
@@ -450,6 +668,7 @@ void Soldier::OnShow()
 	default:
 		break;
 	}
+	isShoot = false;
 }
 #pragma endregion
 
@@ -880,7 +1099,10 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys, vector<Furnitur
 			else if (enemy_dir <= 326.25 && enemy_dir > 303.75)lock_enemy = 3;
 			else if (enemy_dir <= 348.75 && enemy_dir > 326.25)lock_enemy = 15;
 		}
-		else lock_enemy = -1;
+		else 
+		{
+			lock_enemy = -1; 
+		}
 		//lock_enemy = enemy_dir;
 }
 
@@ -907,6 +1129,7 @@ void Soldier::shoot()
 {
 	int damage=weapon->GetDamage();
 	TRACE("AAAA\n");
+	isShoot = true;
 	unique_ptr<thread> fire(new thread(&Weapon::Fire, weapon));
 	target->GetHurt(damage);
 	if (target->GetLifePoint() <= 0) {

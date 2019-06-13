@@ -84,6 +84,9 @@ namespace game_framework {
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
 		CAnimation peopleRUD, peopleLUD, peopleRDD, peopleLDD, peopleRUU, peopleLUU, peopleRDU, peopleLDU;
+		CAnimation peopleR_fire, peopleL_fire, peopleU_fire, peopleD_fire;		// 擦子的動畫
+		CAnimation peopleRU_fire, peopleLU_fire, peopleRD_fire, peopleLD_fire;
+		CAnimation peopleRUD_fire, peopleLUD_fire, peopleRDD_fire, peopleLDD_fire, peopleRUU_fire, peopleLUU_fire, peopleRDU_fire, peopleLDU_fire;
 		CAnimation breakPoint, lineUP, lineRU, lineRight, lineRD, lineDown, lineLD,lineLeft,lineLU;
 		CMovingBitmap HK416_Photo,P9_Photo;
 		Weapon *equipment[4];
@@ -118,6 +121,7 @@ namespace game_framework {
 		bool isSetRoadLine;
 		bool isSetAction;
 		bool isInRoadLine;
+		bool isShoot;
 		vector<Line*> roadLine;
 		vector<Line*>::iterator way;
 		vector<vector<int> > line;
