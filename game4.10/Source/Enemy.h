@@ -27,7 +27,7 @@ namespace game_framework {
 		int shoot_count_time, reaction_time;
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;
-		int direction;				//看的方向
+		int direction,init_way;				//看的方向
 		bool isMovingDown;			// 是否正在往下移動
 		bool isMovingLeft;			// 是否正在往左移動
 		bool isMovingRight;			// 是否正在往右移動

@@ -250,7 +250,7 @@ void CGameStateOver::OnShow()
 	if (enemy_all_die && in_time && no_injury) {
 		Three_Star.ShowBitmap();
 	}
-	else if (enemy_all_die && in_time || enemy_all_die && no_injury) {
+	else if (enemy_all_die&&(in_time ||no_injury)) {
 		Two_Star.ShowBitmap();
 	}
 	else if (enemy_all_die) {
@@ -639,9 +639,12 @@ void CGameStateRun::OnBeginState()
     const int ANIMATION_SPEED = 15;
 	counter = 30 * 300; // 5 seconds 
 	new_game = true;
+	in_time = true;
+	no_injury = true;
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
 	pause.SetSoviet(false);
+	enemy_all_die = false;
 	if (run_init)
 	{
 		OnInit();

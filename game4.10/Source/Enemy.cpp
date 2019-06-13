@@ -14,10 +14,11 @@
 #include "Enemy.h"
 #include<iostream>
 namespace game_framework {
-	Enemy::Enemy(int x,int y,int dir):index_x(x),index_y(y),direction(dir)
+	Enemy::Enemy(int x,int y,int dir):index_x(x),index_y(y), init_way(dir)
 	{
 		shoot_count_time = 0;
 		reaction_time = 20;
+		lock_enemy = -1;
 		Initialize();
 	}
 	Enemy::~Enemy() { 
@@ -47,16 +48,6 @@ namespace game_framework {
 		enemy_LD.LoadBitmap("Bitmaps/enemy_LD.bmp", RGB(255, 255, 255));
 		enemy_L.LoadBitmap("Bitmaps/enemy_Left.bmp", RGB(255, 255, 255));
 		enemy_LU.LoadBitmap("Bitmaps/enemy_LU.bmp", RGB(255, 255, 255));
-
-		/*enemyRUD.LoadBitmap("Bitmaps/enemy_RUD.bmp", RGB(255, 255, 255));
-		enemyLUD.LoadBitmap("Bitmaps/enemy_LUD.bmp", RGB(255, 255, 255));
-		enemyRDD.LoadBitmap("Bitmaps/enemy_RDD.bmp", RGB(255, 255, 255));
-		enemyLDD.LoadBitmap("Bitmaps/enemy_LDD.bmp", RGB(255, 255, 255));
-
-		enemyRUU.LoadBitmap("Bitmaps/enemy_RUU.bmp", RGB(255, 255, 255));
-		enemyLUU.LoadBitmap("Bitmaps/enemy_LUU.bmp", RGB(255, 255, 255));
-		enemyRDU.LoadBitmap("Bitmaps/enemy_RDU.bmp", RGB(255, 255, 255));
-		enemyLDU.LoadBitmap("Bitmaps/enemy_LDU.bmp", RGB(255, 255, 255));*/
 	}
 	int Enemy::GetIndexX()
 	{
@@ -78,6 +69,8 @@ namespace game_framework {
 	{
 		if (isSaw)
 		{
+			if (lock_enemy != -1)direction = lock_enemy;
+			else direction = init_way;
 			switch (direction) {
 			case 0:
 				enemy_U.SetTopLeft(x, y);
@@ -224,27 +217,19 @@ namespace game_framework {
 			}
 		}
 		target = _target;
-		/*if (enemy_dir != -1)
+		if (enemy_dir != -1)
 		{
 			if (enemy_dir >= 360)enemy_dir -= 360;
-			if (enemy_dir <= 11.25 || enemy_dir > 348.75)lock_enemy = 2;
-			else if (enemy_dir <= 33.75 && enemy_dir > 11.25)lock_enemy = 8;
-			else if (enemy_dir <= 56.25 && enemy_dir > 33.75)lock_enemy = 1;
-			else if (enemy_dir <= 78.75 && enemy_dir > 56.25)lock_enemy = 9;
-			else if (enemy_dir <= 101.25 && enemy_dir > 78.75)lock_enemy = 0;
-			else if (enemy_dir <= 123.75 && enemy_dir > 101.25)lock_enemy = 10;
-			else if (enemy_dir <= 146.25 && enemy_dir > 123.75)lock_enemy = 7;
-			else if (enemy_dir <= 168.75 && enemy_dir > 146.25)lock_enemy = 11;
-			else if (enemy_dir <= 191.25 && enemy_dir > 168.75)lock_enemy = 6;
-			else if (enemy_dir <= 213.75 && enemy_dir > 191.25)lock_enemy = 12;
-			else if (enemy_dir <= 236.25 && enemy_dir > 213.75)lock_enemy = 5;
-			else if (enemy_dir <= 258.75 && enemy_dir > 236.25)lock_enemy = 13;
-			else if (enemy_dir <= 281.25 && enemy_dir > 258.75)lock_enemy = 4;
-			else if (enemy_dir <= 303.75 && enemy_dir > 281.25)lock_enemy = 14;
-			else if (enemy_dir <= 326.25 && enemy_dir > 303.75)lock_enemy = 3;
-			else if (enemy_dir <= 348.75 && enemy_dir > 326.25)lock_enemy = 15;
+			if (enemy_dir <= 22.5 || enemy_dir > 337.5)lock_enemy = 2;
+			else if (enemy_dir <= 67.5 && enemy_dir > 22.5)lock_enemy = 1;
+			else if (enemy_dir <= 112.5 && enemy_dir > 67.5)lock_enemy = 0;
+			else if (enemy_dir <= 157.5 && enemy_dir > 112.5)lock_enemy = 7;
+			else if (enemy_dir <= 202.5 && enemy_dir > 157.5)lock_enemy = 6;
+			else if (enemy_dir <= 247.5 && enemy_dir > 202.5)lock_enemy = 5;
+			else if (enemy_dir <= 292.5 && enemy_dir > 247.5)lock_enemy = 4;
+			else if (enemy_dir <= 337.5 && enemy_dir > 292.5)lock_enemy = 3;
 		}
-		else lock_enemy = -1;*/
+		else lock_enemy = -1;
 		//lock_enemy = enemy_dir;
 	}
 
