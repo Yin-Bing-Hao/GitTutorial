@@ -1,6 +1,5 @@
 #ifndef FURNITURE_H
 #define FURNITURE_H
-
 namespace game_framework {
 	class Furniture
 	{
@@ -35,5 +34,4 @@ namespace game_framework {
 		CMovingBitmap weed_1_black, weed_2_black;
 	};
 }
-
 #endif 

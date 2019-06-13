@@ -1,6 +1,5 @@
 #ifndef ENEMEY_H
 #define ENEMEY_H
-
 namespace game_framework {
 	class Enemy
 	{
@@ -51,7 +50,6 @@ namespace game_framework {
 		Weapon *weapon;
 	};
 }
-
 #endif // !ENEMEY_H
 
 

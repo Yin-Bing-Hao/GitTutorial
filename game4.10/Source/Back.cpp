@@ -1,24 +1,16 @@
 #include "stdafx.h"
-
 #include "Resource.h"
 #include "MainFrm.h"
 #include "gameDoc.h"
-
 #include <mmsystem.h>
 #include <windows.h>
 #include <ddraw.h>
 #include "audio.h"
-
 #include "gamelib.h"
 #include "Back.h"
 #include "mygame.h"
-
-
 namespace game_framework {
-	Back::Back()
-	{
-
-	}
+	Back::Back(){}
 	Back::Back(int NUM, int Lux, int Luy) {
 		Initialize();
 		floor = NUM;
@@ -46,7 +38,6 @@ namespace game_framework {
 	}
 	void Back::OnShow()
 	{
-		
 		switch (floor)
 			{
 			case 1:
@@ -59,7 +50,6 @@ namespace game_framework {
 					wood.ShowBitmap();
 				}
 				break;
-
 			case 2:
 				if (isLight) {
 					sand_light.SetTopLeft(X , Y );
@@ -70,12 +60,10 @@ namespace game_framework {
 					sand.ShowBitmap();
 				}
 				break;
-
 			case 3:
 				sidewalk.SetTopLeft(X + MH, Y + MW);
 				sidewalk.ShowBitmap();
 				break;
-
 			case 4:
 				if (isLight) {
 					floor_1_Light.SetTopLeft(X, Y);
@@ -96,7 +84,6 @@ namespace game_framework {
 					floor_2.ShowBitmap();
 				}
 				break;
-
 			case 6:
 				if (isLight) {
 					floor_3_Light.SetTopLeft(X , Y );

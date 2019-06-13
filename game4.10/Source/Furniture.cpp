@@ -8,7 +8,6 @@
 #include "mygame.h"
 #include "Furniture.h"
 #include<iostream>
-
 namespace game_framework {
 	Furniture::Furniture(int ix, int iy, int itype)
 	{
@@ -16,9 +15,7 @@ namespace game_framework {
 		y = iy;
 		type = itype;
 	}
-	Furniture::~Furniture()
-	{
-	}
+	Furniture::~Furniture(){}
 	int Furniture::GetX()
 	{
 		return x;
@@ -217,7 +214,6 @@ namespace game_framework {
 				weed_2.SetTopLeft(x * 40, y * 40);
 				weed_2.ShowBitmap();
 				break;
-
 			default:
 				break;
 			}
@@ -409,7 +405,6 @@ namespace game_framework {
 				weed_2_black.SetTopLeft(x * 40, y * 40);
 				weed_2_black.ShowBitmap();
 				break;
-
 			default:
 				break;
 			}
@@ -463,8 +458,6 @@ namespace game_framework {
 		TVtable_right.LoadBitmap("Bitmaps/Furniture/TVtable_right.bmp", RGB(255, 255, 255));
 		weed_1.LoadBitmap("Bitmaps/Furniture/weed_1.bmp", RGB(255, 255, 255));
 		weed_2.LoadBitmap("Bitmaps/Furniture/weed_2.bmp", RGB(255, 255, 255));
-
-
 		bed_down_black.LoadBitmap("Bitmaps/Furniture/bed_down_black.bmp", RGB(255, 255, 255));
 		bed_left_black.LoadBitmap("Bitmaps/Furniture/bed_left_black.bmp", RGB(255, 255, 255));
 		bed_right_black.LoadBitmap("Bitmaps/Furniture/bed_right_black.bmp", RGB(255, 255, 255));

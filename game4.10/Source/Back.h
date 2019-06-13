@@ -1,6 +1,5 @@
 #ifndef BACK_H
 #define BACK_H
-
 namespace game_framework {
 	class Back {
 	public:
@@ -21,7 +20,5 @@ namespace game_framework {
 		int X, Y;
 		int MW, MH;
 	};
-
 }
-
 #endif // !Back_H

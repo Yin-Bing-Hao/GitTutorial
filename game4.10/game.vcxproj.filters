@@ -120,9 +120,6 @@
     <ClCompile Include="Source\mygame.cpp">
       <Filter>MyGame</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CBouncingBall.cpp">
-      <Filter>MyGame</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Soldier.cpp">
       <Filter>MyGame</Filter>
     </ClCompile>
@@ -168,9 +165,6 @@
       <Filter>MFC</Filter>
     </ClInclude>
     <ClInclude Include="Source\mygame.h">
-      <Filter>MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CBouncingBall.h">
       <Filter>MyGame</Filter>
     </ClInclude>
     <ClInclude Include="Source\Soldier.h">

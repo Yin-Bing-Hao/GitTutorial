@@ -39,8 +39,6 @@ namespace game_framework {
 		void MoveLD(bool flag, CGameMap* map);
 		void MoveRU(bool flag, CGameMap* map);
 		void MoveRD(bool flag, CGameMap* map);
-		void TestNext(CGameMap* map);	//測試門484在旁邊
-		void TestInRedLine(CPoint point);
 		void SetMovingDown(bool flag);	// 設定是否正在往下移動
 		void SetMovingLeft(bool flag);	// 設定是否正在往左移動
 		void SetMovingRight(bool flag); // 設定是否正在往右移動
@@ -79,6 +77,7 @@ namespace game_framework {
 		void shoot();
 		void GetHurt(int);
 		int GetLifePoint();
+		void superman();
 	protected:
 		void linearSearch(Enemy* _target, double dx, double dy, CGameMap* map, vector<Enemy*>& enemys);
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫

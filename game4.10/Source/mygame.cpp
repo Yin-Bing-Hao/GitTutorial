@@ -103,7 +103,6 @@ void CGameStateInit::OnInit()
     //
 	CAudio::Instance()->Load(AUDIO_INIT_BACKGRUOND, "Sounds\\background_sound.mp3");
 	background.LoadBitmap("Bitmaps/init_background.bmp");
-    //logo.LoadBitmap(IDB_BACKGROUND);
     Sleep(300);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
     //
     // 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
@@ -142,8 +141,6 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 	if (point.x >= 65 && point.x <= 220 && point.y >= 792 && point.y <= 842)
 	{
-		//GotoGameState(4);
-		//exit(0);
 		PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
 	}
 	
@@ -151,30 +148,6 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CGameStateInit::OnShow()
 {
-    //
-    // 貼上logo
-    //
-    //logo.SetTopLeft((SIZE_X - logo.Width()) / 2, SIZE_Y / 8);
-    //logo.ShowBitmap();
-    //
-    // Demo螢幕字型的使用，不過開發時請盡量避免直接使用字型，改用CMovingBitmap比較好
-    //
-    /*CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
-    CFont f, *fp;
-    f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
-    fp = pDC->SelectObject(&f);					// 選用 font f
-    pDC->SetBkColor(RGB(0, 0, 0));
-    pDC->SetTextColor(RGB(255, 255, 0));
-    pDC->TextOut(120, 220, "Please click mouse or press SPACE to begin.");
-    pDC->TextOut(5, 395, "Press Ctrl-F to switch in between window mode and full screen mode.");
-
-    if (ENABLE_GAME_PAUSE)
-        pDC->TextOut(5, 425, "Press Ctrl-Q to pause the Game.");
-
-    pDC->TextOut(5, 455, "Press Alt-F4 or ESC to Quit.");
-    pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
-    CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
-	//delete pDC;*/
 	background.SetTopLeft(0, 0);
 	background.ShowBitmap();
 }
@@ -190,6 +163,7 @@ CGameStateOver::CGameStateOver(CGame* g)
 
 void CGameStateOver::OnBeginState()
 {
+	CAudio::Instance()->Stop(AUDIO_FUCKYEA);
 	if (enemy_all_die) {
 		CAudio::Instance()->Play(AUDIO_MISSION_COMPLETE, false);
 		
@@ -288,7 +262,6 @@ void CGameStateOver::OnShow()
 #pragma region CGameMap
 CGameMap::CGameMap() : X(0), Y(0), MW(SIZE), MH(SIZE)
 {
-    random_num = 0;
     int map_init[COL][ROW] =
     {
         {0, 0, 7, 6, 6, 6, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 6, 6, 6, 6, 6, 6, 6, 12, 6, 12, 6, 6, 6, 8},
@@ -378,7 +351,6 @@ CGameMap::CGameMap() : X(0), Y(0), MW(SIZE), MH(SIZE)
         for (int j = 0; j < 32; j++)
         {
             map[i][j] = map_init[i][j];
-            //Background[i * 32 + j] = new Back(back_init[i][j], back_init[i + 1][j], back_init[i][j + 1], back_init[i + 1][j + 1], j * 40, i * 40);
         }
     }
 
@@ -422,6 +394,10 @@ void CGameMap::LoadBitmap()
             Background[i][j].LoadBitmap();
         }
     }
+}
+void CGameMap::OnMove()
+{
+
 }
 void CGameMap::OnShow()
 {
@@ -520,17 +496,6 @@ void CGameMap::SetIndexValue(int x, int y, int value)
 {
     map[y][x] = value;
 }
-
-void CGameMap::InitializeBouncingBall(int ini_index, int row, int col)
-{
-   
-}
-
-void CGameMap::RandomBouncingBall()
-{
-  
-}
-
 void CGameMap::OnKeyDown(UINT nChar)
 {
     const int KEY_SPACE = 0x20;
@@ -545,15 +510,6 @@ void CGameMap::SetBackLight(int y, int x, bool flag)
 {
     Background[y][x].SetLight(flag);
 }
-
-void CGameMap::OnMove()
-{
-    /*for (int i = 0; i < random_num; i++)
-    {
-        bballs[i].OnMove();
-    }*/
-}
-
 CGameMap::~CGameMap() 
 {
 	TRACE("Background size:%d\n", sizeof(Background[0][0]));
@@ -566,50 +522,64 @@ CGameMap::~CGameMap()
 	TRACE("Background size:%d\n", sizeof(*Background));
 }
 #pragma endregion
-
-
-
-CGamePauseButton::CGamePauseButton() : X(1200), Y(880) {}
+CGamePauseButton::CGamePauseButton() : X(1200), Y(880) 
+{
+	isSoviet = false;
+	isChoose = false;
+	isPause = false;
+}
 void CGamePauseButton::LoadBitmap()
 {
+	soviet.LoadBitmap("Bitmaps/Soviet.bmp");
     stop.LoadBitmap(GAME_STOP, RGB(255, 255, 255));
     start.LoadBitmap(GAME_START, RGB(255, 255, 255));
 }
-
 void CGamePauseButton::OnShow()
 {
-    if (!isPause)
-    {
-        stop.SetTopLeft(X, Y);
-        stop.ShowBitmap();
-    }
-    else
-    {
-        start.SetTopLeft(X, Y);
-        start.ShowBitmap();
-    }
+	if (isSoviet)
+	{
+		soviet.SetTopLeft(X, Y);
+		soviet.ShowBitmap();
+		isPause = false;
+	}
+	else
+	{
+		if (!isPause)
+		{
+			stop.SetTopLeft(X, Y);
+			stop.ShowBitmap();
+		}
+		else
+		{
+			start.SetTopLeft(X, Y);
+			start.ShowBitmap();
+		}
+	}
 }
-
+void CGamePauseButton::SetSoviet(bool flag)
+{
+	isSoviet = flag;
+}
+bool CGamePauseButton::GetSoviet()
+{
+	return isSoviet;
+}
 void CGamePauseButton::SetPause(bool flag)
 {
     isPause = flag;
 }
-
 bool CGamePauseButton::GetPause()
 {
     return isPause;
 }
-
 void CGamePauseButton::SetChoosen(bool flag)
 {
     isChoose = flag;
 }
-
 bool CGamePauseButton::isChoosen()
 {
     return isChoose;
 }
-
 CGamePauseButton::~CGamePauseButton() {}
 
 mutex Search_mutex;
@@ -640,7 +610,6 @@ CGameStateRun::~CGameStateRun()
 {
 	Clear();
 }
-
 void CGameStateRun::OnBeginState()
 {
     const int BALL_GAP = 90;
@@ -651,12 +620,11 @@ void CGameStateRun::OnBeginState()
     const int HITS_LEFT_Y = 0;
     const int BACKGROUND_X = 60;
     const int ANIMATION_SPEED = 15;
-	counter = 30 * 300; // 5 seconds
-    
+	counter = 30 * 300; // 5 seconds 
 	new_game = true;
     background.SetTopLeft(BACKGROUND_X, 0);				// 設定背景的起始座標
     help.SetTopLeft(0, SIZE_Y - help.Height());			// 設定說明圖的起始座標
-    //CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
+	pause.SetSoviet(false);
 	if (run_init)
 	{
 		OnInit();
@@ -665,9 +633,7 @@ void CGameStateRun::OnBeginState()
 }
 void CGameStateRun::Search()
 {
-    //Search_mutex.lock();
-	//unique_ptr<thread> search_enemy(new thread(&Soldier::searchEnemy, &people, &map, enemy, furniture));
-	
+    Search_mutex.lock();
     for (int i = 0; i < 48; i++)
     {
         for (int j = 0; j < 64; j++)
@@ -675,26 +641,22 @@ void CGameStateRun::Search()
             map.SetBackLight(i, j, false);
         }
     }
-
 	for (vector<Furniture*>::iterator iter = furniture.begin(); iter != furniture.end(); iter++)
 	{
 		(*iter)->SetIsSaw(false);
 	}
-
-    for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
-    {
-        (*iter)->SetIsSaw(false);
+	for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
+	{
+		(*iter)->SetIsSaw(false|| pause.GetSoviet());
 		unique_ptr<thread> search_player(new thread(&Enemy::searchEnemy, (*iter), &map, player));
 		if (search_player->joinable()) search_player->join();
-    }
+	}
 	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 	{
 		unique_ptr<thread> search_enemy(new thread(&Soldier::searchEnemy, (*iter), &map, enemy, furniture));
 		if (search_enemy->joinable()) search_enemy->join();
 	}
-	//people.searchEnemy(&map, enemy, furniture);
-    //if (search_enemy->joinable()) search_enemy->join();
-    //Search_mutex.unlock();
+	Search_mutex.unlock();
 }
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
@@ -729,7 +691,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
     if (!pause.GetPause())
     {
 		static int search_count = 0;
-        //people.Perspective(map);
 		for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 		{
 			if ((*iter) != NULL) {
@@ -760,41 +721,31 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 						case 0:
 							(*iter)->SetMovingUp(true);
 							break;
-
 						case 1:
 							(*iter)->SetMovingRightUp(true);
 							break;
-
 						case 2:
 							(*iter)->SetMovingRight(true);
 							break;
-
 						case 3:
 							(*iter)->SetMovingRightDown(true);
 							break;
-
 						case 4:
 							(*iter)->SetMovingDown(true);
 							break;
-
 						case 5:
 							(*iter)->SetMovingLeftDown(true);
 							break;
-
 						case 6:
 							(*iter)->SetMovingLeft(true);
 							break;
-
 						case 7:
 							(*iter)->SetMovingLeftUp(true);
 							break;
-
 						default:
 							break;
 						}
-
 						(*iter)->OnMove();
-						
 						(*iter)->MoveU((*iter)->GetIsMoveNext(), &map);
 						(*iter)->MoveRU((*iter)->GetIsMoveNext(), &map);
 						(*iter)->MoveR((*iter)->GetIsMoveNext(), &map);
@@ -836,47 +787,17 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			(*iter)->OnMove();
 			(*iter)->attackPlayer();
 			map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 2);
-
-			//TRACE("Enemy_index:%d %d\n", (*iter)->GetIndexX(), (*iter)->GetIndexY());
-			//TRACE("ENEMYLIFE %d\n", (*iter)->GetLifePoint());
-
 		}
-
         if (search_count > 5)
         {
-			//unique_ptr<thread> search(new thread(&CGameStateRun::Search, this));
-
-            //if (search->joinable())search->join();
-			Search();
-
+			unique_ptr<thread> search(new thread(&CGameStateRun::Search, this));
+            if (search->joinable())search->join();
             search_count = 0;
         }
-
-        
-
-        /*for (int i = 0;i < COL;i++)
-        {
-        	for (int j = 0;j < ROW;j++)
-        	{
-        		if(map.GetIndexValue(j,i)==1)
-        			TRACE("Soldier in map %d %d\n", j, i);
-        	}
-        }*/
-        //
-        // 移動擦子
-        //
         map.OnMove();
         search_count++;
     }
-	/*if (no_injury)
-	{
-		for (vector<Soldier*>::iterator iter = player.begin(); iter < player.end(); iter++) {
-			if ((*iter)->GetLifePoint() != 100) {
-				no_injury = false;
-			}
-		}
-	}*/
-	if (counter < 6000) in_time = false;
+	if (counter < 4500) in_time = false;
 	if (player.empty()) {
 		Clear();
 		run_init = true;
@@ -891,7 +812,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		GotoGameState(GAME_STATE_OVER);
 	}
 }
-
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
 	//
@@ -979,14 +899,13 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	furniture.push_back(new Furniture(25, 14, 41));
 	furniture.push_back(new Furniture(28, 14, 25));
 	furniture.push_back(new Furniture(29, 14, 46));
-	furniture.push_back(new Furniture(26, 17, 33));
+	furniture.push_back(new Furniture(25, 17, 33));
+	furniture.push_back(new Furniture(25, 16, 9));
 	furniture.push_back(new Furniture(26, 16, 9));
-	furniture.push_back(new Furniture(27, 16, 9));
+	furniture.push_back(new Furniture(25, 18, 11));
 	furniture.push_back(new Furniture(26, 18, 11));
-	furniture.push_back(new Furniture(27, 18, 11));
-	furniture.push_back(new Furniture(25, 17, 12));
-	furniture.push_back(new Furniture(28, 17, 10));
-
+	furniture.push_back(new Furniture(24, 16, 10));
+	furniture.push_back(new Furniture(27, 16, 12));
 	enemy.push_back(new Enemy(3, 3, 4));
 	enemy.push_back(new Enemy(5, 1, 5));
 	enemy.push_back(new Enemy(5, 15, 0));
@@ -996,7 +915,6 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	enemy.push_back(new Enemy(24, 2, 6));
 	enemy.push_back(new Enemy(18, 4, 0));
 	enemy.push_back(new Enemy(9, 10, 0));
-
 	player.push_back(new Soldier(1, 1, 100));
 	player.push_back(new Soldier(1, 2, 100));
 	player.push_back(new Soldier(1, 3, 100));
@@ -1014,21 +932,13 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	}
 	if(run_init_load)
 	{
-	/*CAudio::Instance()->Load(AUDIO_HK416_1, "Sounds\\AR15_gun_sound.mp3");
-	CAudio::Instance()->Load(AUDIO_HK416_2, "Sounds\\AR15_gun_sound.mp3");
-	CAudio::Instance()->Load(AUDIO_HK416_3, "Sounds\\AR15_gun_sound.mp3");
-	CAudio::Instance()->Load(AUDIO_HK416_4, "Sounds\\AR15_gun_sound.mp3");*/
-	CAudio::Instance()->Load(AUDIO_P9_1, "Sounds\\P9.mp3");
-	CAudio::Instance()->Load(AUDIO_P9_2, "Sounds\\P9.mp3");
-	CAudio::Instance()->Load(AUDIO_P9_3, "Sounds\\P9.mp3");
-
 	CAudio::Instance()->Load(AUDIO_NEWGAME_1, "Sounds\\newgame.mp3");
 	CAudio::Instance()->Load(AUDIO_NEWGAME_2, "Sounds\\newgame.mp3");
 	CAudio::Instance()->Load(AUDIO_NEWGAME_3, "Sounds\\newgame.mp3");
 	CAudio::Instance()->Load(AUDIO_NEWGAME_4, "Sounds\\newgame.mp3");
 	CAudio::Instance()->Load(AUDIO_OK, "Sounds\\ok.mp3");
-
-
+	CAudio::Instance()->Load(AUDIO_FUCKYEA, "Sounds\\USSR.mp3");
+	CAudio::Instance()->Load(AUDIO_LMG, "Sounds\\LMG.mp3");
 	pause.LoadBitmap();
 	background.LoadBitmap(IDB_BACKGROUND);					// 載入背景的圖形
 	map.LoadBitmap();
@@ -1045,13 +955,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
     //
     // 繼續載入其他資料
     //
-    
-    //CAudio::Instance()->Load(AUDIO_NTUT,  "sounds\\song.mid");	// 載入編號2的聲音ntut.mid
-    //
-    // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
-    //
 }
-
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     const char KEY_LEFT = 0x41; // keyboard向左看
@@ -1062,23 +966,22 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	const char KEY_2 = 0x32;	//武器2(手槍)
 	const char KEY_3 = 0x33;	//
 	const char KEY_4 = 0x34;	//手雷
+	const char KEY_ENTER = 13;
     map.OnKeyDown(nChar);
-
-
-	/*if (people.IsInRoadLine()) {
-		if (nChar == KEY_1) {
-			people.ChangeGun(0);
+	if (nChar == KEY_ENTER)
+	{
+		CAudio::Instance()->Play(AUDIO_FUCKYEA, true);
+		CAudio::Instance()->Play(AUDIO_LMG,false);
+		pause.SetSoviet(true);
+		for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+		{
+			(*iter)->superman();
 		}
-		else if (nChar == KEY_2) {
-			people.ChangeGun(1);
+		for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
+		{
+			(*iter)->SetIsSaw(true);
 		}
-		else if (nChar == KEY_3) {
-			people.ChangeGun(2);
-		}
-		else if (nChar == KEY_4) {
-			people.ChangeGun(3);
-		}
-	}*/
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -1088,14 +991,11 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_RIGHT = 0x44; // keyboard向右看
     const char KEY_DOWN = 0x53; // keyboard向下看
 }
-
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
     TRACE("Mouse left button down\n");
 	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 	{
-		(*iter)->TestInRedLine(point);
-
 		if ((*iter)->IsSetRoadLine(point))
 		{
 			TRACE("Get choosen\n");
@@ -1108,14 +1008,11 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 		}
 
 	}
-    
-
     if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960)
     {
         pause.SetChoosen(true);
     }
 }
-
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)
 {
     TRACE("Mouse left button up\n");
@@ -1132,7 +1029,6 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)
             pause.SetPause(false);
     }
 }
-
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
     static int mouse_x, mouse_y;
@@ -1144,25 +1040,17 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 		{
 			(*iter)->SetRoadLine(mouse_x, mouse_y, &map);
 		}
-		if ((*iter)->IsInRoadLine())
-		{
-
-		}
 	}
 }
-
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
 }
-
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
 }
-
 void CGameStateRun::GetMouse(UINT nFlags, CPoint point)
 {
 }
-
 void CGameStateRun::OnShow()
 {
 	CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
@@ -1176,7 +1064,6 @@ void CGameStateRun::OnShow()
 	pDC->TextOut(900, 900, str);
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();
-
     map.OnShow();
 	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 	{

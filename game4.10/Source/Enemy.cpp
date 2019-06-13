@@ -13,7 +13,6 @@
 #include "Soldier.h"
 #include "Enemy.h"
 #include<iostream>
-
 namespace game_framework {
 	Enemy::Enemy(int x,int y,int dir):index_x(x),index_y(y),direction(dir)
 	{

@@ -16,12 +16,9 @@ namespace game_framework {
 		_watch = watch;
 		_count = 0;
 	}
-
 	unsigned int Line::getWatch()
 	{
 		return _watch;
 	}
-
-
 	Line::~Line() {}
 }

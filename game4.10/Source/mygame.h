@@ -40,9 +40,7 @@
 
 #include "Soldier.h"
 #include "Enemy.h"
-//#include "CBall.h"
 #include "Furniture.h"
-#include "CBouncingBall.h"
 #include "Back.h"
 
 
@@ -79,7 +77,9 @@ enum AUDIO_ID  				// 定義各種音效的編號
 	AUDIO_NEWGAME_2,
 	AUDIO_NEWGAME_3,
 	AUDIO_NEWGAME_4,
-	AUDIO_OK
+	AUDIO_OK,
+	AUDIO_FUCKYEA,
+	AUDIO_LMG
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -115,14 +115,12 @@ class CGameMap
         CGameMap();
         void LoadBitmap();
         void OnShow();
+		void OnMove();
         int GetIndexValue(int, int);
         void SetIndexValue(int, int, int);
-        void OnMove();
         void OnKeyDown(UINT);
 		Back GetBackGround();
 		void SetBackLight(int,int, bool flag);
-        void RandomBouncingBall();
-        void InitializeBouncingBall(int, int, int);
         ~CGameMap();
     protected:
         CMovingBitmap RightUpCorner, LeftUpCorner, RightDownCorner, LeftDownCorner, Horizonal, Vertical;
@@ -135,9 +133,7 @@ class CGameMap
         const int MW, MH;
         //CBouncingBall* bballs;
 		Back** Background;
-        int random_num;
 };
-
 class CGamePauseButton
 {
     public:
@@ -148,16 +144,16 @@ class CGamePauseButton
 		bool GetPause();
         void SetChoosen(bool flag);
         bool isChoosen();
+		void SetSoviet(bool);
+		bool GetSoviet();
         ~CGamePauseButton();
     protected:
         const int X, Y;
-        CMovingBitmap stop, start;
+        CMovingBitmap stop, start,soviet;
 		bool isPause;
         bool isChoose;
+		bool isSoviet;
 };
-
-
-
 class CGameStateRun : public CGameState
 {
     public:
@@ -175,7 +171,6 @@ class CGameStateRun : public CGameState
         void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
         void GetMouse(UINT nFlags, CPoint point);
 		void Search();
-
     protected:
         void OnMove();									// 移動遊戲元素
         void OnShow();									// 顯示這個狀態的遊戲畫面
@@ -212,7 +207,6 @@ class CGameStateOver : public CGameState
         int counter;	// 倒數之計數器
 		CMovingBitmap One_Star, Two_Star, Three_Star, Fail;
 };
-
 }
 
 #endif // !MYGAME_H
