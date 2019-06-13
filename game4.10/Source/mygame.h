@@ -186,10 +186,10 @@ class CGameStateRun : public CGameState
         CMovingBitmap	background;	// 背景圖
         CMovingBitmap	help;		// 說明圖
         CMovingBitmap	corner;		// 角落圖
-        vector<Soldier*>player;		// 拍子
+        vector<Soldier*>player;		// 玩家們
 		vector<Enemy*>	enemy;		// 敵人們
-		vector<Furniture*> furniture;
-		int counter;
+		vector<Furniture*> furniture;//家具
+		int counter;	//計數器
 
 };
 

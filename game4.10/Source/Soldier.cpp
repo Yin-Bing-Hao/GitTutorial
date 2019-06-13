@@ -27,7 +27,7 @@ Soldier::Soldier(int x,int y,int z)
 {
 	index_x = x;
 	index_y = y;
-	blood = z;
+	lifepoint = z;
 	shoot_count_time = 0;
 	reaction_time = 10;
 	lock_enemy = -1;
@@ -77,10 +77,22 @@ void Soldier::LoadBitmap()
     peopleU.AddBitmap("Bitmaps/Soldier2_Up.bmp", RGB(255, 255, 255));
     peopleR.AddBitmap("Bitmaps/Soldier2_Right.bmp", RGB(255, 255, 255));
     peopleD.AddBitmap("Bitmaps/Soldier2_Down.bmp", RGB(255, 255, 255));
+
     peopleRU.AddBitmap("Bitmaps/Soldier2_RU.bmp", RGB(255, 255, 255));
     peopleLU.AddBitmap("Bitmaps/Soldier2_LU.bmp", RGB(255, 255, 255));
     peopleRD.AddBitmap("Bitmaps/Soldier2_RD.bmp", RGB(255, 255, 255));
     peopleLD.AddBitmap("Bitmaps/Soldier2_LD.bmp", RGB(255, 255, 255));
+
+	peopleRUD.AddBitmap("Bitmaps/Soldier2_RUD.bmp", RGB(255, 255, 255));
+	peopleLUD.AddBitmap("Bitmaps/Soldier2_LUD.bmp", RGB(255, 255, 255));
+	peopleRDD.AddBitmap("Bitmaps/Soldier2_RDD.bmp", RGB(255, 255, 255));
+	peopleLDD.AddBitmap("Bitmaps/Soldier2_LDD.bmp", RGB(255, 255, 255));
+
+	peopleRUU.AddBitmap("Bitmaps/Soldier2_RUU.bmp", RGB(255, 255, 255));
+	peopleLUU.AddBitmap("Bitmaps/Soldier2_LUU.bmp", RGB(255, 255, 255));
+	peopleRDU.AddBitmap("Bitmaps/Soldier2_RDU.bmp", RGB(255, 255, 255));
+	peopleLDU.AddBitmap("Bitmaps/Soldier2_LDU.bmp", RGB(255, 255, 255));
+
     lineUP.AddBitmap(IDB_LINEUP, RGB(255, 255, 255));
     lineRight.AddBitmap(IDB_LINERIGHT, RGB(255, 255, 255));
     lineDown.AddBitmap(IDB_LINEDOWN, RGB(255, 255, 255));
@@ -309,6 +321,38 @@ void Soldier::OnShow()
                 peopleLU.SetTopLeft(x, y);
                 peopleLU.OnShow();
                 break;
+			case 8:
+				peopleRUD.SetTopLeft(x, y);
+				peopleRUD.OnShow();
+				break;
+			case 9:
+				peopleRUU.SetTopLeft(x, y);
+				peopleRUU.OnShow();
+				break;
+			case 10:
+				peopleLUU.SetTopLeft(x, y);
+				peopleLUU.OnShow();
+				break;
+			case 11:
+				peopleLUD.SetTopLeft(x, y);
+				peopleLUD.OnShow();
+				break;
+			case 12:
+				peopleLDU.SetTopLeft(x, y);
+				peopleLDU.OnShow();
+				break;
+			case 13:
+				peopleLDD.SetTopLeft(x, y);
+				peopleLDD.OnShow();
+				break;
+			case 14:
+				peopleRDD.SetTopLeft(x, y);
+				peopleRDD.OnShow();
+				break;
+			case 15:
+				peopleRDU.SetTopLeft(x, y);
+				peopleRDU.OnShow();
+				break;
 
             default:
                 break;
@@ -357,7 +401,38 @@ void Soldier::OnShow()
                 peopleLU.SetTopLeft(x, y);
                 peopleLU.OnShow();
                 break;
-
+			case 8:
+				peopleRUD.SetTopLeft(x, y);
+				peopleRUD.OnShow();
+				break;
+			case 9:
+				peopleRUU.SetTopLeft(x, y);
+				peopleRUU.OnShow();
+				break;
+			case 10:
+				peopleLUU.SetTopLeft(x, y);
+				peopleLUU.OnShow();
+				break;
+			case 11:
+				peopleLUD.SetTopLeft(x, y);
+				peopleLUD.OnShow();
+				break;
+			case 12:
+				peopleLDU.SetTopLeft(x, y);
+				peopleLDU.OnShow();
+				break;
+			case 13:
+				peopleLDD.SetTopLeft(x, y);
+				peopleLDD.OnShow();
+				break;
+			case 14:
+				peopleRDD.SetTopLeft(x, y);
+				peopleRDD.OnShow();
+				break;
+			case 15:
+				peopleRDU.SetTopLeft(x, y);
+				peopleRDU.OnShow();
+				break;
             default:
                 break;
         }
@@ -405,10 +480,6 @@ int Soldier::GetIndexX()
 int Soldier::GetIndexY()
 {
     return index_y;
-}
-int Soldier::GetBlood()
-{
-	return blood;
 }
 #pragma endregion
 
@@ -652,7 +723,14 @@ void Soldier::SetXY(int nx, int ny)
     x = nx;
     y = ny;
 }
-
+void Soldier::GetHurt(int damage)
+{
+	lifepoint -= damage;
+}
+int Soldier::GetLifePoint()
+{
+	return lifepoint;
+}
 #pragma endregion
 
 #pragma region shoot
@@ -699,6 +777,31 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys, vector<Furnitur
         case 7:
             rotate_start = 90;
             break;
+
+		case 9:
+			rotate_start = 337.5;
+			break;
+		case 10:
+			rotate_start = 22.5;
+			break;
+		case 11:
+			rotate_start = 67.5;
+			break;
+		case 12:
+			rotate_start = 112.5;
+			break;
+		case 13:
+			rotate_start = 157.5;
+			break;
+		case 14:
+			rotate_start = 202.5;
+			break;
+		case 15:
+			rotate_start = 247.5;
+			break;
+		case 16:
+			rotate_start = 292.5;
+			break;
     }
 	pi = 3.14159265 / 180.0;
     rotate_end = rotate_start + 90;
@@ -760,14 +863,22 @@ void Soldier::searchEnemy(CGameMap* map, vector<Enemy*>& enemys, vector<Furnitur
 		if (enemy_dir != -1)
 		{
 			if (enemy_dir >= 360)enemy_dir -= 360;
-			if (enemy_dir <= 22.5 || enemy_dir > 337.5)lock_enemy = 2;
-			else if (enemy_dir <= 67.5 && enemy_dir > 22.5)lock_enemy = 1;
-			else if (enemy_dir <= 112.5 && enemy_dir > 67.5)lock_enemy = 0;
-			else if (enemy_dir <= 157.5 && enemy_dir > 112.5)lock_enemy = 7;
-			else if (enemy_dir <= 202.5 && enemy_dir > 157.5)lock_enemy = 6;
-			else if (enemy_dir <= 247.5 && enemy_dir > 202.5)lock_enemy = 5;
-			else if (enemy_dir <= 292.5 && enemy_dir > 247.5)lock_enemy = 4;
-			else if (enemy_dir <= 337.5 && enemy_dir > 292.5)lock_enemy = 3;
+			if (enemy_dir <= 11.25 || enemy_dir > 348.75)lock_enemy = 2;
+			else if (enemy_dir <= 33.75 && enemy_dir > 11.25)lock_enemy = 8;
+			else if (enemy_dir <= 56.25 && enemy_dir > 33.75)lock_enemy = 1;
+			else if (enemy_dir <= 78.75 && enemy_dir > 56.25)lock_enemy = 9;
+			else if (enemy_dir <= 101.25 && enemy_dir > 78.75)lock_enemy = 0;
+			else if (enemy_dir <= 123.75 && enemy_dir > 101.25)lock_enemy = 10;
+			else if (enemy_dir <= 146.25 && enemy_dir > 123.75)lock_enemy = 7;
+			else if (enemy_dir <= 168.75 && enemy_dir > 146.25)lock_enemy = 11;
+			else if (enemy_dir <= 191.25 && enemy_dir > 168.75)lock_enemy = 6;
+			else if (enemy_dir <= 213.75 && enemy_dir > 191.25)lock_enemy = 12;
+			else if (enemy_dir <= 236.25 && enemy_dir > 213.75)lock_enemy = 5;
+			else if (enemy_dir <= 258.75 && enemy_dir > 236.25)lock_enemy = 13;
+			else if (enemy_dir <= 281.25 && enemy_dir > 258.75)lock_enemy = 4;
+			else if (enemy_dir <= 303.75 && enemy_dir > 281.25)lock_enemy = 14;
+			else if (enemy_dir <= 326.25 && enemy_dir > 303.75)lock_enemy = 3;
+			else if (enemy_dir <= 348.75 && enemy_dir > 326.25)lock_enemy = 15;
 		}
 		else lock_enemy = -1;
 		//lock_enemy = enemy_dir;
@@ -797,7 +908,7 @@ void Soldier::shoot()
 	int damage=weapon->GetDamage();
 	TRACE("AAAA\n");
 	unique_ptr<thread> fire(new thread(&Weapon::Fire, weapon));
-	target->Hurt(damage);
+	target->GetHurt(damage);
 	if (target->GetLifePoint() <= 0) {
 		target = NULL;
 	}

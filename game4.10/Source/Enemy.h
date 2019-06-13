@@ -15,12 +15,17 @@ namespace game_framework {
 		int GetIndexX();
 		int GetIndexY();
 		void SetIsSaw(bool flag);
-		void Hurt(int);
+		void GetHurt(int);
 		int GetLifePoint();
+		void searchEnemy(CGameMap* map, vector<Soldier*>& players);
+		void attackPlayer();
+		void shoot();
 	private:
 		CMovingBitmap enemy_U, enemy_RU, enemy_R, enemy_RD, enemy_D, enemy_LD, enemy_L, enemy_LU;
+		CMovingBitmap enemyRUD, enemyLUD, enemyRDD, enemyLDD, enemyRUU, enemyLUU, enemyRDU, enemyLDU;
 		int lifePoint;
 		int x, y;					// 人物左上角座標
+		int shoot_count_time, reaction_time;
 		int index_x, index_y;
 		int moving_index_x, moving_index_y;
 		int direction;				//看的方向
@@ -41,6 +46,9 @@ namespace game_framework {
 		bool isWatchLeftDown;			//是否往左下看
 		bool isWatchRightUp;			//是否往右上看
 		bool isSaw;						//是否被看到
+		Soldier* target;
+		int lock_enemy;
+		Weapon *weapon;
 	};
 }
 

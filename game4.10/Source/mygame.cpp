@@ -142,8 +142,9 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 	if (point.x >= 65 && point.x <= 220 && point.y >= 792 && point.y <= 842)
 	{
-		GotoGameState(4);
+		//GotoGameState(4);
 		//exit(0);
+		PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
 	}
 	
 }
@@ -683,12 +684,13 @@ void CGameStateRun::Search()
     for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
     {
         (*iter)->SetIsSaw(false);
+		unique_ptr<thread> search_player(new thread(&Enemy::searchEnemy, (*iter), &map, player));
+		if (search_player->joinable()) search_player->join();
     }
 	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 	{
 		unique_ptr<thread> search_enemy(new thread(&Soldier::searchEnemy, (*iter), &map, enemy, furniture));
 		if (search_enemy->joinable()) search_enemy->join();
-		//(*iter)->searchEnemy(&map, enemy, furniture);
 	}
 	//people.searchEnemy(&map, enemy, furniture);
     //if (search_enemy->joinable()) search_enemy->join();
@@ -730,83 +732,91 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
         //people.Perspective(map);
 		for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
 		{
-			vector<Line*> ptr = (*iter)->GetRoadLine();
-			(*iter)->attackEnemy();
-
-			if (!ptr.empty())
-			{
-				switch ((*iter)->GetWay())
+			if ((*iter) != NULL) {
+				if ((*iter)->GetLifePoint() <= 0)
 				{
-				case 0:
-					(*iter)->SetMovingUp(true);
-					break;
-
-				case 1:
-					(*iter)->SetMovingRightUp(true);
-					break;
-
-				case 2:
-					(*iter)->SetMovingRight(true);
-					break;
-
-				case 3:
-					(*iter)->SetMovingRightDown(true);
-					break;
-
-				case 4:
-					(*iter)->SetMovingDown(true);
-					break;
-
-				case 5:
-					(*iter)->SetMovingLeftDown(true);
-					break;
-
-				case 6:
-					(*iter)->SetMovingLeft(true);
-					break;
-
-				case 7:
-					(*iter)->SetMovingLeftUp(true);
-					break;
-
-				default:
-					break;
+					map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 0);
+					delete (*iter);
+					(*iter) = NULL;
+					player.erase(iter);
+					no_injury = false;
+					if (player.empty())
+					{
+						break;
+					}
+					else
+					{
+						iter = player.begin();
+					}
 				}
+				else {
+					vector<Line*> ptr = (*iter)->GetRoadLine();
+					(*iter)->attackEnemy();
+					if (map.GetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY()) == 0)map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 1);
+					if (!ptr.empty())
+					{
+						switch ((*iter)->GetWay())
+						{
+						case 0:
+							(*iter)->SetMovingUp(true);
+							break;
 
-				(*iter)->OnMove();
-				if(map.GetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY())==0)map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 1);
-				(*iter)->MoveU((*iter)->GetIsMoveNext(), &map);
-				(*iter)->MoveRU((*iter)->GetIsMoveNext(), &map);
-				(*iter)->MoveR((*iter)->GetIsMoveNext(), &map);
-				(*iter)->MoveRD((*iter)->GetIsMoveNext(), &map);
-				(*iter)->MoveD((*iter)->GetIsMoveNext(), &map);
-				(*iter)->MoveLD((*iter)->GetIsMoveNext(), &map);
-				(*iter)->MoveL((*iter)->GetIsMoveNext(), &map);
-				(*iter)->MoveLU((*iter)->GetIsMoveNext(), &map);
-				(*iter)->SetMovingUp(false);
-				(*iter)->SetMovingRight(false);
-				(*iter)->SetMovingDown(false);
-				(*iter)->SetMovingLeft(false);
-				(*iter)->SetMovingRightUp(false);
-				(*iter)->SetMovingRightDown(false);
-				(*iter)->SetMovingLeftUp(false);
-				(*iter)->SetMovingLeftDown(false);
+						case 1:
+							(*iter)->SetMovingRightUp(true);
+							break;
+
+						case 2:
+							(*iter)->SetMovingRight(true);
+							break;
+
+						case 3:
+							(*iter)->SetMovingRightDown(true);
+							break;
+
+						case 4:
+							(*iter)->SetMovingDown(true);
+							break;
+
+						case 5:
+							(*iter)->SetMovingLeftDown(true);
+							break;
+
+						case 6:
+							(*iter)->SetMovingLeft(true);
+							break;
+
+						case 7:
+							(*iter)->SetMovingLeftUp(true);
+							break;
+
+						default:
+							break;
+						}
+
+						(*iter)->OnMove();
+						
+						(*iter)->MoveU((*iter)->GetIsMoveNext(), &map);
+						(*iter)->MoveRU((*iter)->GetIsMoveNext(), &map);
+						(*iter)->MoveR((*iter)->GetIsMoveNext(), &map);
+						(*iter)->MoveRD((*iter)->GetIsMoveNext(), &map);
+						(*iter)->MoveD((*iter)->GetIsMoveNext(), &map);
+						(*iter)->MoveLD((*iter)->GetIsMoveNext(), &map);
+						(*iter)->MoveL((*iter)->GetIsMoveNext(), &map);
+						(*iter)->MoveLU((*iter)->GetIsMoveNext(), &map);
+						(*iter)->SetMovingUp(false);
+						(*iter)->SetMovingRight(false);
+						(*iter)->SetMovingDown(false);
+						(*iter)->SetMovingLeft(false);
+						(*iter)->SetMovingRightUp(false);
+						(*iter)->SetMovingRightDown(false);
+						(*iter)->SetMovingLeftUp(false);
+						(*iter)->SetMovingLeftDown(false);
+					}
+				}
 			}
 		}
-        
-
-        if (search_count > 5)
-        {
-			//unique_ptr<thread> search(new thread(&CGameStateRun::Search, this));
-
-            //if (search->joinable())search->join();
-			Search();
-
-            search_count = 0;
-        }
-
-        for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
-        {
+		for (vector<Enemy*>::iterator iter = enemy.begin(); iter != enemy.end(); iter++)
+		{
 			if ((*iter)->GetLifePoint() <= 0)
 			{
 				map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 0);
@@ -823,13 +833,26 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 					iter = enemy.begin();
 				}
 			}
-            (*iter)->OnMove();
-            map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 2);
+			(*iter)->OnMove();
+			(*iter)->attackPlayer();
+			map.SetIndexValue((*iter)->GetIndexX(), (*iter)->GetIndexY(), 2);
 
-            //TRACE("Enemy_index:%d %d\n", (*iter)->GetIndexX(), (*iter)->GetIndexY());
-            //TRACE("ENEMYLIFE %d\n", (*iter)->GetLifePoint());
-            
+			//TRACE("Enemy_index:%d %d\n", (*iter)->GetIndexX(), (*iter)->GetIndexY());
+			//TRACE("ENEMYLIFE %d\n", (*iter)->GetLifePoint());
+
+		}
+
+        if (search_count > 5)
+        {
+			//unique_ptr<thread> search(new thread(&CGameStateRun::Search, this));
+
+            //if (search->joinable())search->join();
+			Search();
+
+            search_count = 0;
         }
+
+        
 
         /*for (int i = 0;i < COL;i++)
         {
@@ -845,11 +868,14 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
         map.OnMove();
         search_count++;
     }
-	for (vector<Soldier*>::iterator iter = player.begin(); iter < player.end(); iter++) {
-		if ((*iter)->GetBlood() != 100) {
-			no_injury = false;
+	/*if (no_injury)
+	{
+		for (vector<Soldier*>::iterator iter = player.begin(); iter < player.end(); iter++) {
+			if ((*iter)->GetLifePoint() != 100) {
+				no_injury = false;
+			}
 		}
-	}
+	}*/
 	if (counter < 6000) in_time = false;
 	if (player.empty()) {
 		Clear();
@@ -961,9 +987,15 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	furniture.push_back(new Furniture(24, 16, 10));
 	furniture.push_back(new Furniture(27, 16, 12));
 
-	enemy.push_back(new Enemy(1, 5, 0));
-	enemy.push_back(new Enemy(5, 1, 0));
-	enemy.push_back(new Enemy(8, 2, 0));
+	enemy.push_back(new Enemy(3, 3, 4));
+	enemy.push_back(new Enemy(5, 1, 5));
+	enemy.push_back(new Enemy(5, 15, 0));
+	enemy.push_back(new Enemy(9, 3, 2));
+	enemy.push_back(new Enemy(28, 1, 4));
+	enemy.push_back(new Enemy(27, 18, 7));
+	enemy.push_back(new Enemy(24, 2, 6));
+	enemy.push_back(new Enemy(18, 4, 0));
+	enemy.push_back(new Enemy(9, 10, 0));
 
 	player.push_back(new Soldier(1, 1, 100));
 	player.push_back(new Soldier(1, 2, 100));

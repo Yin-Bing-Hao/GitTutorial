@@ -5,16 +5,26 @@
 #include "audio.h"
 #include "gamelib.h"
 #include <vector>
+#include <cmath>
+#include <thread>
+#include <memory>
 #include "mygame.h"
+#include "Weapons.h"
+#include "Soldier.h"
 #include "Enemy.h"
 #include<iostream>
 
 namespace game_framework {
 	Enemy::Enemy(int x,int y,int dir):index_x(x),index_y(y),direction(dir)
 	{
+		shoot_count_time = 0;
+		reaction_time = 20;
 		Initialize();
 	}
-	Enemy::~Enemy() { TRACE("~Enemy()\n"); }
+	Enemy::~Enemy() { 
+		TRACE("~Enemy()\n"); 
+		delete weapon;
+	}
 	void Enemy::Initialize()
 	{
 		const int X_POS = SIZE;
@@ -25,6 +35,8 @@ namespace game_framework {
 		x = index_x * 40;
 		y = index_y * 40;
 		lifePoint = 100;
+		weapon = new P9();
+		target = NULL;
 	}
 	void Enemy::LoadBitmap()
 	{
@@ -37,6 +49,15 @@ namespace game_framework {
 		enemy_L.LoadBitmap("Bitmaps/enemy_Left.bmp", RGB(255, 255, 255));
 		enemy_LU.LoadBitmap("Bitmaps/enemy_LU.bmp", RGB(255, 255, 255));
 
+		/*enemyRUD.LoadBitmap("Bitmaps/enemy_RUD.bmp", RGB(255, 255, 255));
+		enemyLUD.LoadBitmap("Bitmaps/enemy_LUD.bmp", RGB(255, 255, 255));
+		enemyRDD.LoadBitmap("Bitmaps/enemy_RDD.bmp", RGB(255, 255, 255));
+		enemyLDD.LoadBitmap("Bitmaps/enemy_LDD.bmp", RGB(255, 255, 255));
+
+		enemyRUU.LoadBitmap("Bitmaps/enemy_RUU.bmp", RGB(255, 255, 255));
+		enemyLUU.LoadBitmap("Bitmaps/enemy_LUU.bmp", RGB(255, 255, 255));
+		enemyRDU.LoadBitmap("Bitmaps/enemy_RDU.bmp", RGB(255, 255, 255));
+		enemyLDU.LoadBitmap("Bitmaps/enemy_LDU.bmp", RGB(255, 255, 255));*/
 	}
 	int Enemy::GetIndexX()
 	{
@@ -104,7 +125,7 @@ namespace game_framework {
 			}
 		}
 	}
-	void Enemy::Hurt(int damage)
+	void Enemy::GetHurt(int damage)
 	{
 		lifePoint -= damage;
 	}
@@ -112,4 +133,153 @@ namespace game_framework {
 	{
 		return lifePoint;
 	}
+	void Enemy::searchEnemy(CGameMap* map, vector<Soldier*>& players)
+	{
+		double dx, dy;
+		double Lx, Ly;
+		double rotate_start, rotate_end;
+		int Light_ix, Light_iy, Lix, Liy;
+		double pi;
+		double enemy_dir = -1;
+		Soldier *_target = NULL;
+
+		switch (direction)
+		{
+		case 0:
+			rotate_start = 45;
+			break;
+
+		case 1:
+			rotate_start = 0;
+			break;
+
+		case 2:
+			rotate_start = 315;
+			break;
+
+		case 3:
+			rotate_start = 270;
+			break;
+
+		case 4:
+			rotate_start = 225;
+			break;
+
+		case 5:
+			rotate_start = 180;
+			break;
+
+		case 6:
+			rotate_start = 135;
+			break;
+
+		case 7:
+			rotate_start = 90;
+			break;
+		}
+		pi = 3.14159265 / 180.0;
+		rotate_end = rotate_start + 90;
+		TRACE("enemy search:%f %f", rotate_start, rotate_end);
+		//TRACE("HEHEHEHEHEHE\n");
+		for (double rotate = rotate_start; rotate <= rotate_end; rotate += 0.125)
+		{
+			Lx = x + 20;
+			Ly = y + 20;
+			Lix = static_cast<int>(Lx) / 40;
+			Liy = static_cast<int>(Ly) / 40;
+
+			dx = 20 * cos(rotate * pi);
+			dy = -20 * sin(rotate * pi);
+			//------µø³¥
+			Light_ix = static_cast<int>(Lx) / 20;
+			Light_iy = static_cast<int>(Ly) / 20;
+
+			//TRACE("Search:%d %d %d\n", dx, dy, rotate);
+
+			do
+			{
+				//TRACE("Search:%d %d %d\n", Lix, Liy, rotate);
+				Lix = static_cast<int>(Lx) / 40;
+				Liy = static_cast<int>(Ly) / 40;
+				Light_ix = static_cast<int>(Lx) / 20;
+				Light_iy = static_cast<int>(Ly) / 20;
+				if (map->GetIndexValue(Lix, Liy) == 1)
+				{
+					for (vector<Soldier*>::iterator iter = players.begin(); iter != players.end(); iter++)
+					{
+						if ((*iter)->GetIndexX() == Lix && (*iter)->GetIndexY() == Liy)
+						{
+							enemy_dir = rotate;
+							_target = (*iter);
+							break;
+						}
+					}
+				}
+				Lx += dx;
+				Ly += dy;
+			} while (map->GetIndexValue(Lix, Liy) < 5 && (Lx > 0 && Lx < ROW*SIZE&&Ly>0 && Ly < COL*SIZE));
+			if (_target != NULL)
+			{
+				
+				break;
+			}
+		}
+		target = _target;
+		/*if (enemy_dir != -1)
+		{
+			if (enemy_dir >= 360)enemy_dir -= 360;
+			if (enemy_dir <= 11.25 || enemy_dir > 348.75)lock_enemy = 2;
+			else if (enemy_dir <= 33.75 && enemy_dir > 11.25)lock_enemy = 8;
+			else if (enemy_dir <= 56.25 && enemy_dir > 33.75)lock_enemy = 1;
+			else if (enemy_dir <= 78.75 && enemy_dir > 56.25)lock_enemy = 9;
+			else if (enemy_dir <= 101.25 && enemy_dir > 78.75)lock_enemy = 0;
+			else if (enemy_dir <= 123.75 && enemy_dir > 101.25)lock_enemy = 10;
+			else if (enemy_dir <= 146.25 && enemy_dir > 123.75)lock_enemy = 7;
+			else if (enemy_dir <= 168.75 && enemy_dir > 146.25)lock_enemy = 11;
+			else if (enemy_dir <= 191.25 && enemy_dir > 168.75)lock_enemy = 6;
+			else if (enemy_dir <= 213.75 && enemy_dir > 191.25)lock_enemy = 12;
+			else if (enemy_dir <= 236.25 && enemy_dir > 213.75)lock_enemy = 5;
+			else if (enemy_dir <= 258.75 && enemy_dir > 236.25)lock_enemy = 13;
+			else if (enemy_dir <= 281.25 && enemy_dir > 258.75)lock_enemy = 4;
+			else if (enemy_dir <= 303.75 && enemy_dir > 281.25)lock_enemy = 14;
+			else if (enemy_dir <= 326.25 && enemy_dir > 303.75)lock_enemy = 3;
+			else if (enemy_dir <= 348.75 && enemy_dir > 326.25)lock_enemy = 15;
+		}
+		else lock_enemy = -1;*/
+		//lock_enemy = enemy_dir;
+	}
+
+	void Enemy::attackPlayer()
+	{
+		TRACE("WTFFFFFF\n");
+		if (target != NULL)
+		{
+			
+			if (shoot_count_time > reaction_time)
+			{
+				//TRACE("SHOOT!!!\n");
+
+				this->shoot();
+				shoot_count_time = 5;
+			}
+			shoot_count_time++;
+		}
+		else
+		{
+			shoot_count_time = 0;
+		}
+	}
+	void Enemy::shoot()
+	{
+		int damage = weapon->GetDamage();
+		TRACE("enemy shoot\n");
+		unique_ptr<thread> fire(new thread(&Weapon::Fire, weapon));
+		target->GetHurt(damage);
+		if (target->GetLifePoint() <= 0) {
+			target = NULL;
+		}
+		if (fire->joinable())fire->join();
+
+	}
 }
+

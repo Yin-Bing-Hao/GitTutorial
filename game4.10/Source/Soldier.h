@@ -23,7 +23,6 @@ namespace game_framework {
 		int  GetY2();					// 擦子右下角 y 座標
 		int	GetIndexX();
 		int GetIndexY();
-		int GetBlood();
 		void Initialize();				// 設定擦子為初始值
 		void LoadBitmap();				// 載入圖形
 		void OnMove();					// 移動擦子
@@ -78,10 +77,13 @@ namespace game_framework {
 		void searchEnemy(CGameMap* map,vector<Enemy*>& enemys,vector<Furniture*>& furniture); //搜尋敵人
 		void attackEnemy();
 		void shoot();
+		void GetHurt(int);
+		int GetLifePoint();
 	protected:
 		void linearSearch(Enemy* _target, double dx, double dy, CGameMap* map, vector<Enemy*>& enemys);
 		CAnimation peopleR,peopleL,peopleU,peopleD;		// 擦子的動畫
 		CAnimation peopleRU, peopleLU, peopleRD, peopleLD;
+		CAnimation peopleRUD, peopleLUD, peopleRDD, peopleLDD, peopleRUU, peopleLUU, peopleRDU, peopleLDU;
 		CAnimation breakPoint, lineUP, lineRU, lineRight, lineRD, lineDown, lineLD,lineLeft,lineLU;
 		CMovingBitmap HK416_Photo,P9_Photo;
 		Weapon *equipment[4];
@@ -93,7 +95,7 @@ namespace game_framework {
 		int end_x, end_y ;
 		int direction,gun,lock_enemy;
 		int reaction_time, shoot_count_time;
-		int blood;
+		int lifepoint;
 		bool isMoveNextIndex;		//是否移動到下一格位置
 		bool isMovingDown;			// 是否正在往下移動
 		bool isMovingLeft;			// 是否正在往左移動
