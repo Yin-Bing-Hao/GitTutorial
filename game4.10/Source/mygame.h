@@ -102,6 +102,7 @@ class CGameStateInit : public CGameState
     private:
         CMovingBitmap logo;								// csieªºlogo
 		CMovingBitmap background;
+		CMovingBitmap about;
 };
 
 /////////////////////////////////////////////////////////////////////////////

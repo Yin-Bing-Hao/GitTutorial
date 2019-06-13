@@ -86,6 +86,7 @@ namespace game_framework
 	static bool new_game = true;
 	static bool in_time = true;
 	static bool fail = false;
+	static bool About = false;
 CGameStateInit::CGameStateInit(CGame* g)
     : CGameState(g)
 {
@@ -103,6 +104,7 @@ void CGameStateInit::OnInit()
     //
 	CAudio::Instance()->Load(AUDIO_INIT_BACKGRUOND, "Sounds\\background_sound.mp3");
 	background.LoadBitmap("Bitmaps/init_background.bmp");
+	about.LoadBitmap("Bitmaps/About.bmp");
     Sleep(300);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
     //
     // 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
@@ -139,6 +141,16 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 		init_audio_play = false;
 		GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
 	}
+	if (!About) {
+		if (point.x >= 65 && point.x <= 143 && point.y >= 722 && point.y <= 772) {
+			About = true;
+		}
+	}
+	else {
+		if (point.x >= 460 && point.x <= 590 && point.y >= 800 && point.y <= 855) {
+			About = false;
+		}
+	}
 	if (point.x >= 65 && point.x <= 220 && point.y >= 792 && point.y <= 842)
 	{
 		PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
@@ -150,6 +162,11 @@ void CGameStateInit::OnShow()
 {
 	background.SetTopLeft(0, 0);
 	background.ShowBitmap();
+
+	if (About) {
+		about.SetTopLeft(190, 60);
+		about.ShowBitmap();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
