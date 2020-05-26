@@ -9,26 +9,26 @@
 #include "Furniture.h"
 #include<iostream>
 namespace game_framework {
-	Furniture::Furniture(int ix, int iy, int itype)
+	Furniture::Furniture(int ix, int iy, int itype)	//家具(X軸，Y軸，家具種類)
 	{
 		x = ix;
 		y = iy;
 		type = itype;
 	}
 	Furniture::~Furniture(){}
-	int Furniture::GetX()
+	int Furniture::GetX()	//取得X軸值
 	{
 		return x;
 	}
-	int Furniture::GetY()
+	int Furniture::GetY()	//取得Y軸值
 	{
 		return y;
 	}
 
-	void Furniture::OnShow()
+	void Furniture::OnShow()	//顯示
 	{
-		if (isSaw) {
-			switch (type)
+		if (isSaw) {			//被Solider看到的請況
+			switch (type)		//家具種類
 			{
 			case 1:
 				bed_down.SetTopLeft(x * 40, y * 40);
@@ -219,7 +219,7 @@ namespace game_framework {
 			}
 		}
 		else {
-			switch (type)
+			switch (type)	//家具種類
 			{
 			case 1:
 				bed_down_black.SetTopLeft(x * 40, y * 40);
@@ -410,7 +410,7 @@ namespace game_framework {
 			}
 		}
 	}
-	void Furniture::LoadBitmap()
+	void Furniture::LoadBitmap()	//圖片讀取
 	{
 		bed_down.LoadBitmap("Bitmaps/Furniture/bed_down.bmp", RGB(255, 255, 255));
 		bed_left.LoadBitmap("Bitmaps/Furniture/bed_left.bmp", RGB(255, 255, 255));
@@ -505,7 +505,7 @@ namespace game_framework {
 		weed_1_black.LoadBitmap("Bitmaps/Furniture/weed_1_black.bmp", RGB(255, 255, 255));
 		weed_2_black.LoadBitmap("Bitmaps/Furniture/weed_2_black.bmp", RGB(255, 255, 255));
 	}
-	void Furniture::SetIsSaw(bool flag)
+	void Furniture::SetIsSaw(bool flag)	//設定此家具是否被看到
 	{
 		isSaw = flag;
 	}

@@ -11,18 +11,18 @@
 #include "mygame.h"
 namespace game_framework {
 	Back::Back(){}
-	Back::Back(int NUM, int Lux, int Luy) {
+	Back::Back(int NUM, int Lux, int Luy) {	//背景(圖片編號，X軸，Y軸)
 		Initialize();
 		floor = NUM;
 		X = Lux;
 		Y = Luy;
 	}
 	Back::~Back(){}
-	void Back::Initialize()
+	void Back::Initialize()	//設定初始值
 	{
-		isLight = false;
+		isLight = false;	//初始值：圖片未看到(灰暗)
 	}
-	void Back::LoadBitmap()
+	void Back::LoadBitmap()	//圖片讀取
 	{
 			sand.LoadBitmap("Bitmaps/sand.bmp", RGB(255, 255, 255));
 			wood.LoadBitmap("Bitmaps/wood.bmp", RGB(255, 255, 255));
@@ -36,73 +36,73 @@ namespace game_framework {
 			floor_3.LoadBitmap("Bitmaps/floor_3.bmp", RGB(255, 255, 255));
 			floor_3_Light.LoadBitmap("Bitmaps/floor_3_Light.bmp", RGB(255, 255, 255));
 	}
-	void Back::OnShow()
+	void Back::OnShow()	//顯示
 	{
-		switch (floor)
+		switch (floor)	//地板種類
 			{
 			case 1:
 				if (isLight) {
 					wood_light.SetTopLeft(X , Y );
-					wood_light.ShowBitmap();
+					wood_light.ShowBitmap();			//顯示
 				}
 				else {
 					wood.SetTopLeft(X , Y );
-					wood.ShowBitmap();
+					wood.ShowBitmap();					//顯示
 				}
 				break;
 			case 2:
 				if (isLight) {
 					sand_light.SetTopLeft(X , Y );
-					sand_light.ShowBitmap();
+					sand_light.ShowBitmap();			//顯示
 				}
 				else {
 					sand.SetTopLeft(X , Y );
-					sand.ShowBitmap();
+					sand.ShowBitmap();					//顯示
 				}
 				break;
 			case 3:
-				sidewalk.SetTopLeft(X + MH, Y + MW);
-				sidewalk.ShowBitmap();
+				sidewalk.SetTopLeft(X + MH, Y + MW);	//人物路線的紅線
+				sidewalk.ShowBitmap();					//顯示
 				break;
 			case 4:
 				if (isLight) {
 					floor_1_Light.SetTopLeft(X, Y);
-					floor_1_Light.ShowBitmap();
+					floor_1_Light.ShowBitmap();			//顯示
 				}
 				else {
 					floor_1.SetTopLeft(X, Y);
-					floor_1.ShowBitmap();
+					floor_1.ShowBitmap();				//顯示
 				}
 				break;
 			case 5:
 				if (isLight) {
 					floor_2_Light.SetTopLeft(X, Y);
-					floor_2_Light.ShowBitmap();
+					floor_2_Light.ShowBitmap();			//顯示
 				}
 				else {
 					floor_2.SetTopLeft(X, Y);
-					floor_2.ShowBitmap();
+					floor_2.ShowBitmap();				//顯示
 				}
 				break;
 			case 6:
 				if (isLight) {
 					floor_3_Light.SetTopLeft(X , Y );
-					floor_3_Light.ShowBitmap();
+					floor_3_Light.ShowBitmap();			//顯示
 				}
 				else {
 					floor_3.SetTopLeft(X , Y );
-					floor_3.ShowBitmap();
+					floor_3.ShowBitmap();				//顯示
 				}
 				break;
 			default:
 				break;
 			}
 	}
-	void Back::SetLight(bool flag)
+	void Back::SetLight(bool flag)	//設定光亮
 	{
-		isLight = flag;
+		isLight = flag;				//設定以有無被看到，來此背景是否發亮
 	}
-	void Back::SetObject(int num)
+	void Back::SetObject(int num)	//設定圖片編號
 	{
 		ObjectNum = num;
 	}
