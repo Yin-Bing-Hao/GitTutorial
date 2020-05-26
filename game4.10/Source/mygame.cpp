@@ -92,7 +92,7 @@ CGameStateInit::CGameStateInit(CGame* g)
 {
 }
 
-void CGameStateInit::OnInit()
+void CGameStateInit::OnInit()	//遊戲開頭畫面 :: 讀取資料
 {
     //
     // 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
@@ -115,57 +115,57 @@ void CGameStateInit::OnBeginState()
 {
 	
 }
-void CGameStateInit::OnMove() {
+void CGameStateInit::OnMove() {	//遊戲開頭畫面 :: 持續動作(移動)
 	if (!init_audio_play)
 	{
 		CAudio::Instance()->Play(AUDIO_INIT_BACKGRUOND, true);
 		init_audio_play = true;
 	}
 }
-void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)	//遊戲開頭畫面 :: 鍵盤輸入
 {
-    const char KEY_ESC = 27;
-    const char KEY_SPACE = ' ';
+    const char KEY_ESC = 27;	//鍵盤ESC
+    const char KEY_SPACE = ' ';	//鍵盤空白鍵
 
-    if (nChar == KEY_SPACE)
-        GotoGameState(GAME_STATE_RUN);						// 切換至GAME_STATE_RUN
+    if (nChar == KEY_SPACE)									//鍵盤輸入為空白鍵
+        GotoGameState(GAME_STATE_RUN);						// 切換至GAME_STATE_RUN(跳至遊玩畫面)
     else if (nChar == KEY_ESC)								// Demo 關閉遊戲的方法
         PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
 }
 
-void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
+void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)	//遊戲開頭畫面::左鍵點擊
 {
-	if (point.x >= 65 && point.x <= 220 && point.y >= 649 && point.y <= 699)
+	if (point.x >= 65 && point.x <= 220 && point.y >= 649 && point.y <= 699)	//點擊範圍在"開始遊戲"裡
 	{
-		CAudio::Instance()->Stop(AUDIO_INIT_BACKGRUOND);
+		CAudio::Instance()->Stop(AUDIO_INIT_BACKGRUOND);						//停止BGM
 		init_audio_play = false;
-		GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
+		GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN(跳至遊玩畫面)
 	}
-	if (!About) {
-		if (point.x >= 65 && point.x <= 143 && point.y >= 722 && point.y <= 772) {
-			About = true;
+	if (!About) {	//About : 遊戲規則介面顯示Bool值
+		if (point.x >= 65 && point.x <= 143 && point.y >= 722 && point.y <= 772) {	//點擊範圍在"關於"裡
+			About = true;															//設定About Bool值為ture,呼叫出介紹UI
 		}
 	}
-	else {
-		if (point.x >= 460 && point.x <= 590 && point.y >= 800 && point.y <= 855) {
-			About = false;
+	else {																			//當介紹UI被呼叫出來
+		if (point.x >= 460 && point.x <= 590 && point.y >= 800 && point.y <= 855) {	//點擊範圍在介紹UI的 Back裡
+			About = false;															//設定About Bool值為false,關閉介紹UI
 		}
 	}
-	if (point.x >= 65 && point.x <= 220 && point.y >= 792 && point.y <= 842)
+	if (point.x >= 65 && point.x <= 220 && point.y >= 792 && point.y <= 842)		//點擊範圍在"離開遊戲"裡
 	{
 		PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
 	}
 	
 }
 
-void CGameStateInit::OnShow()
+void CGameStateInit::OnShow()		//遊戲開頭畫面 :: 顯示()
 {
-	background.SetTopLeft(0, 0);
-	background.ShowBitmap();
+	background.SetTopLeft(0, 0);	//設定背景XY軸
+	background.ShowBitmap();		//顯示圖片
 
-	if (About) {
-		about.SetTopLeft(190, 60);
-		about.ShowBitmap();
+	if (About) {					//如果About Bool值為Ture,顯示介紹UI
+		about.SetTopLeft(190, 60);	//設定介紹UI XY軸
+		about.ShowBitmap();			//顯示圖片
 	}
 }
 
@@ -178,20 +178,20 @@ CGameStateOver::CGameStateOver(CGame* g)
 {
 }
 
-void CGameStateOver::OnBeginState()
+void CGameStateOver::OnBeginState() //遊戲結束畫面 :: 初始動作
 {
-	CAudio::Instance()->Stop(AUDIO_FUCKYEA);
-	if (enemy_all_die) {
-		CAudio::Instance()->Play(AUDIO_MISSION_COMPLETE, false);
+	CAudio::Instance()->Stop(AUDIO_FUCKYEA);	//關閉音樂
+	if (enemy_all_die) {	//當完成任務(敵人全數殲滅)
+		CAudio::Instance()->Play(AUDIO_MISSION_COMPLETE, false);	//撥放成功音效(檔名,不重複撥放)
 		
 	}
-	else if (fail) {
-		CAudio::Instance()->Play(AUDIO_MISSION_FAIL, false);
+	else if (fail) {		//當任務失敗時
+		CAudio::Instance()->Play(AUDIO_MISSION_FAIL, false);		//撥放失敗音效(檔名,不重複撥放)
 		
 	}
 }
 
-void CGameStateOver::OnInit()
+void CGameStateOver::OnInit()	//遊戲結束畫面 :: 載入資料
 {
     //
     // 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
@@ -219,44 +219,42 @@ void CGameStateOver::OnMove()
 	
 }
 
-void CGameStateOver::OnLButtonDown(UINT nFlags, CPoint point)
+void CGameStateOver::OnLButtonDown(UINT nFlags, CPoint point)	//左鍵點擊
 {
-	if (enemy_all_die) 
+	if (enemy_all_die)	//當完成任務(敵人全數殲滅)
 	{
-		if (point.x > 690 && point.x < 825 && point.y>600 && point.y < 650) {
+		if (point.x > 690 && point.x < 825 && point.y>600 && point.y < 650) {		//點擊continued
 			CAudio::Instance()->Stop(AUDIO_MISSION_COMPLETE);
-			GotoGameState(GAME_STATE_RUN);
+			GotoGameState(GAME_STATE_RUN);		//回到 遊玩畫面
 		}
-		else if (point.x > 460 && point.x < 600 && point.y>600 && point.y < 650) {
+		else if (point.x > 460 && point.x < 600 && point.y>600 && point.y < 650) {	//點擊Back
 			CAudio::Instance()->Stop(AUDIO_MISSION_COMPLETE);
-			GotoGameState(GAME_STATE_INIT);
+			GotoGameState(GAME_STATE_INIT);		//回到 遊戲開頭畫面
 		}
 	}
-	else if (fail) 
+	else if (fail)		//當任務失敗時
 	{
 		TRACE("%d %d\n", point.x, point.y);
-		if (point.x > 570 && point.x < 705 && point.y>530 && point.y < 580) 
+		if (point.x > 570 && point.x < 705 && point.y>530 && point.y < 580)			//點擊continued
 		{
 			CAudio::Instance()->Stop(AUDIO_MISSION_FAIL);
-			GotoGameState(GAME_STATE_RUN);
+			GotoGameState(GAME_STATE_RUN);		//回到 遊玩畫面
 		}
 	}
 }
 
-void CGameStateOver::OnShow()
+void CGameStateOver::OnShow()	//遊戲結束畫面::顯示
 {
-    
-
-	if (enemy_all_die && in_time && no_injury) {
+	if (enemy_all_die && in_time && no_injury) {		// 三星標準(敵人全死 && 在150以內完成任務 && 沒有死亡)
 		Three_Star.ShowBitmap();
 	}
-	else if (enemy_all_die&&(in_time ||no_injury)) {
+	else if (enemy_all_die&&(in_time ||no_injury)) {	// 二星標準(敵人全死 && (在150以內完成任務 or 沒有死亡))
 		Two_Star.ShowBitmap();
 	}
-	else if (enemy_all_die) {
+	else if (enemy_all_die) {							// 一星標準(敵人全死)
 		One_Star.ShowBitmap();
 	}
-	else if (fail) {
+	else if (fail) {								// 任務失敗
 		Fail.ShowBitmap();
 		CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
 		CFont f, *fp;
@@ -432,9 +430,6 @@ void CGameMap::OnShow()
         {
             switch (map[j][i])
             {
-
-			
-
 				case 4:
 					glass_BrokenStraight.SetTopLeft(X + (MW * i), Y + (MH * j));
 					glass_BrokenStraight.ShowBitmap();
@@ -539,7 +534,7 @@ CGameMap::~CGameMap()
 	TRACE("Background size:%d\n", sizeof(*Background));
 }
 #pragma endregion
-CGamePauseButton::CGamePauseButton() : X(1200), Y(880) 
+CGamePauseButton::CGamePauseButton() : X(1200), Y(880) //暫停按鈕
 {
 	isSoviet = false;
 	isChoose = false;
@@ -553,7 +548,7 @@ void CGamePauseButton::LoadBitmap()
 }
 void CGamePauseButton::OnShow()
 {
-	if (isSoviet)
+	if (isSoviet)		//無敵時
 	{
 		soviet.SetTopLeft(X, Y);
 		soviet.ShowBitmap();
@@ -561,12 +556,12 @@ void CGamePauseButton::OnShow()
 	}
 	else
 	{
-		if (!isPause)
+		if (!isPause)	//進行時
 		{
 			stop.SetTopLeft(X, Y);
 			stop.ShowBitmap();
 		}
-		else
+		else			//暫停時
 		{
 			start.SetTopLeft(X, Y);
 			start.ShowBitmap();
@@ -605,7 +600,7 @@ CGameStateRun::CGameStateRun(CGame* g)
     : CGameState(g)
 {
 }
-void CGameStateRun::Clear()
+void CGameStateRun::Clear()	//清理
 {
 	for (vector<Enemy*>::iterator iter = enemy.begin();iter != enemy.end();iter++)
 	{
@@ -651,7 +646,7 @@ void CGameStateRun::OnBeginState()
 		run_init = false;
 	}
 }
-void CGameStateRun::Search()
+void CGameStateRun::Search()	//遊玩畫面 :: Soilder視線手電筒(搜尋)
 {
     Search_mutex.lock();
     for (int i = 0; i < 48; i++)
@@ -691,11 +686,11 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	}
 
 	counter--;
-	if (counter < 0) {
-		Clear();
-		fail = true;
+	if (counter < 0) {		//倒數時鐘時間龜0
+		Clear();			//呼叫CLEAR
+		fail = true;		//Bool 遊戲失敗 true
 		run_init = true;
-		GotoGameState(GAME_STATE_OVER);
+		GotoGameState(GAME_STATE_OVER);	//至遊戲結束畫面
 	}
     //
     // 如果希望修改cursor的樣式，則將下面程式的commment取消即可
@@ -817,8 +812,8 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
         map.OnMove();
         search_count++;
     }
-	if (counter < 4500) in_time = false;
-	if (player.empty()) {
+	if (counter < 4500) in_time = false;	//花費時間超過150s
+	if (player.empty()) {					//士兵全死
 		Clear();
 		run_init = true;
 		fail = true;
@@ -841,7 +836,8 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	ShowInitProgress(33);	// 接個前一個狀態的進度，此處進度視為33%
 	//
 	// 開始載入資料
-	//
+	//	Furniture->家具
+	//	Solider->士兵
 	furniture.push_back(new Furniture(7, 1, 36));
 	furniture.push_back(new Furniture(8, 2, 30));
 	furniture.push_back(new Furniture(7, 5, 35));
@@ -1011,29 +1007,29 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     const char KEY_RIGHT = 0x44; // keyboard向右看
     const char KEY_DOWN = 0x53; // keyboard向下看
 }
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作(左鍵按下)
 {
     TRACE("Mouse left button down\n");
-	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
+	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)	//選擇到士兵
 	{
-		if ((*iter)->IsSetRoadLine(point))
+		if ((*iter)->IsSetRoadLine(point))	//畫路線
 		{
 			TRACE("Get choosen\n");
 			(*iter)->SetChoosen(true);
 			break;
 		}
-		else if ((*iter)->IsSetAction(point))
+		else if ((*iter)->IsSetAction(point))	//做動作
 		{
 			TRACE("Action\n");
 		}
 
 	}
-    if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960)
+    if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960)	//暫停鍵
     {
         pause.SetChoosen(true);
     }
 }
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作(左鍵放開)
 {
     TRACE("Mouse left button up\n");
 	for (vector<Soldier*>::iterator iter = player.begin();iter != player.end();iter++)
@@ -1041,7 +1037,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)
 		(*iter)->SetChoosen(false);
 		(*iter)->SetInRoadLine(false);
 	}
-    if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960 && pause.isChoosen())
+    if (point.x >= 1200 && point.x <= 1280 && point.y >= 880 && point.y <= 960 && pause.isChoosen())	//暫停鍵
     {
         if (!pause.GetPause())
             pause.SetPause(true);
@@ -1049,7 +1045,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)
             pause.SetPause(false);
     }
 }
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作(滑鼠移動)
 {
     static int mouse_x, mouse_y;
     mouse_x = point.x / SIZE;
